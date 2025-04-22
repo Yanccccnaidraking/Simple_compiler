@@ -102,6 +102,10 @@ namespace Lexer {
 				return std::make_shared<Word>(w2);
 			}
 		}
+		// ´¦Àí×¢ÊÍ
+		if (peek == '/') {
+			// TODO
+		}
 		Token tok = Token(peek);
 		peek = ' ';
 		return std::make_shared<Token>(tok);
