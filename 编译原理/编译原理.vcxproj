@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,21 +128,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="inter.cpp" />
-    <ClCompile Include="lexer.cpp" />
+    <ClCompile Include="src\Inter\inter.cpp" />
+    <ClCompile Include="src\Lexer\lexer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="symbols.cpp" />
-    <ClCompile Include="Word.cpp" />
+    <ClCompile Include="src\Symbols\symbols.cpp" />
+    <ClCompile Include="src\Lexer\Word.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inter.h" />
-    <ClInclude Include="lexer.h" />
-    <ClInclude Include="Num.h" />
-    <ClInclude Include="Real.h" />
-    <ClInclude Include="symbols.h" />
-    <ClInclude Include="Tag.h" />
-    <ClInclude Include="Token.h" />
-    <ClInclude Include="Word.h" />
+    <ClInclude Include="include\Inter\inter.h" />
+    <ClInclude Include="include\Lexer\lexer.h" />
+    <ClInclude Include="include\Lexer\Num.h" />
+    <ClInclude Include="include\Lexer\Real.h" />
+    <ClInclude Include="include\Symbols\symbols.h" />
+    <ClInclude Include="include\Lexer\Tag.h" />
+    <ClInclude Include="include\Lexer\Token.h" />
+    <ClInclude Include="include\Lexer\Word.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

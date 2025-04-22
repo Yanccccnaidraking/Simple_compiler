@@ -1,7 +1,7 @@
 #pragma once
-#include "lexer.h"
-#include "Word.h"
-#include "symbols.h"
+#include "Lexer/lexer.h"
+#include "Lexer/Word.h"
+#include "Symbols/symbols.h"
 
 namespace Inter
 {

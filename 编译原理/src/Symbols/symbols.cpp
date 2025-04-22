@@ -1,5 +1,5 @@
-#include "symbols.h"
-#include "Token.h"
+#include "Symbols/symbols.h"
+#include "Lexer/Token.h"
 #include<math.h>
 
 namespace Symbols

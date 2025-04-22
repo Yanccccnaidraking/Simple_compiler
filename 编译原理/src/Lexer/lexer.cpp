@@ -1,7 +1,7 @@
-#include "Lexer.h"
-#include "Num.h"
-#include "Real.h"
-#include "symbols.h"
+#include "Lexer/Lexer.h"
+#include "Lexer/Num.h"
+#include "Lexer/Real.h"
+#include "Symbols/symbols.h"
 
 namespace Lexer {
 	int Lexer::line = 1;

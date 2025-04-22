@@ -27,42 +27,42 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="lexer.cpp">
+    <ClCompile Include="src\Lexer\lexer.cpp">
       <Filter>Lexer</Filter>
     </ClCompile>
-    <ClCompile Include="Word.cpp">
+    <ClCompile Include="src\Lexer\Word.cpp">
       <Filter>Lexer</Filter>
     </ClCompile>
-    <ClCompile Include="symbols.cpp">
+    <ClCompile Include="src\Symbols\symbols.cpp">
       <Filter>Symbols</Filter>
     </ClCompile>
-    <ClCompile Include="inter.cpp">
+    <ClCompile Include="src\Inter\inter.cpp">
       <Filter>Inter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="lexer.h">
+    <ClInclude Include="include\Lexer\lexer.h">
       <Filter>Lexer</Filter>
     </ClInclude>
-    <ClInclude Include="Num.h">
+    <ClInclude Include="include\Lexer\Num.h">
       <Filter>Lexer</Filter>
     </ClInclude>
-    <ClInclude Include="Real.h">
+    <ClInclude Include="include\Lexer\Real.h">
       <Filter>Lexer</Filter>
     </ClInclude>
-    <ClInclude Include="Tag.h">
+    <ClInclude Include="include\Lexer\Tag.h">
       <Filter>Lexer</Filter>
     </ClInclude>
-    <ClInclude Include="Token.h">
+    <ClInclude Include="include\Lexer\Token.h">
       <Filter>Lexer</Filter>
     </ClInclude>
-    <ClInclude Include="Word.h">
+    <ClInclude Include="include\Lexer\Word.h">
       <Filter>Lexer</Filter>
     </ClInclude>
-    <ClInclude Include="symbols.h">
+    <ClInclude Include="include\Symbols\symbols.h">
       <Filter>Symbols</Filter>
     </ClInclude>
-    <ClInclude Include="inter.h">
+    <ClInclude Include="include\Inter\inter.h">
       <Filter>Inter</Filter>
     </ClInclude>
   </ItemGroup>

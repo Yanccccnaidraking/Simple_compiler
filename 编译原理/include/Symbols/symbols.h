@@ -1,8 +1,8 @@
 #pragma once
 #include<unordered_map>
-#include "lexer.h"
-#include "inter.h"
-#include "Token.h"
+#include "Lexer/lexer.h"
+#include "Inter/inter.h"
+#include "Lexer/Token.h"
 using namespace std;
 
 namespace Symbols

@@ -1,4 +1,4 @@
-#include "Word.h"
+#include "Lexer/Word.h"
 namespace Lexer {
     const Word Word::and_("&&", Tag::AND);
     const Word Word::or_("||", Tag::OR);

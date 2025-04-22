@@ -1,6 +1,6 @@
-#include "inter.h"
-#include "Word.h"
-#include "symbols.h"
+#include "Inter/inter.h"
+#include "Lexer/Word.h"
+#include "Symbols/symbols.h"
 
 namespace Inter
 {
