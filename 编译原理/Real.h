@@ -1,0 +1,16 @@
+#pragma once
+#include "Token.h"
+#include "Tag.h"
+namespace Lexer {
+	// 类 Real 用于处理浮点数
+	class Real : public Token
+	{
+	public:
+		const float value;
+
+		Real(float v) : value(v), Token(Tag::REAL) {}
+
+		std::string toString() const { return std::to_string(value); }
+	};
+}
+
