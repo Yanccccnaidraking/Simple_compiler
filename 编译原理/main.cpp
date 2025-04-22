@@ -2,10 +2,10 @@
 #include <fstream>
 #include <memory>
 #include <map>
-#include "lexer.h"
-#include "Num.h"
-#include "Real.h"
-#include "Tag.h"
+#include "Lexer/lexer.h"
+#include "Lexer/Num.h"
+#include "Lexer/Real.h"
+#include "Lexer/Tag.h"
 
 
 // ∂®“Â”≥…‰
