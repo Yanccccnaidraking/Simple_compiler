@@ -3,8 +3,8 @@
 #include "Lexer/Word.h"
 #include "Symbols/symbols.h"
 
-namespace Symbols
-{
+// Ç°ÏòÉùÃ÷ Symbols::Type
+namespace Symbols {
 	class Type;
 }
 
