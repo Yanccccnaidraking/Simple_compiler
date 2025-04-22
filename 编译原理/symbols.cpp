@@ -31,7 +31,7 @@ namespace Symbols
 			auto found = e->table.find(w);
 			if (found != table.end())
 			{
-				return found->second;
+				return make_shared<Inter::Id>(found->second);
 			}
 		}
 		return nullptr;
