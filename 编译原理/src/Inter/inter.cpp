@@ -4,6 +4,11 @@
 
 namespace Inter
 {
+	Node::Node()
+	{
+		lexline = Lexer::Lexer::line;
+	}
+
 	Id::Id()
 	{
 		offset = 0;
@@ -11,6 +16,7 @@ namespace Inter
 
 	Id::Id(Lexer::Word id, Symbols::Type p,int b)
 	{
-
+		//ґэМоід
 	}
+	
 }

@@ -7,13 +7,15 @@ namespace Inter
 {
 	class Node
 	{
+	public:
 		int lexline = 0;
-		Node() { lexline = Lexer::Lexer::line; }
+		Node();
 	};
 
 	class Expr :public Node
 	{
-
+	public:
+		Expr() :Node(){}
 	};
 
 	class Id :public Expr
