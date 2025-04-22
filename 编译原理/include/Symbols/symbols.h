@@ -5,6 +5,7 @@
 #include "Lexer/Token.h"
 using namespace std;
 
+
 // Ç°ÏòÉùÃ÷ Inter::Id
 namespace Inter {
 	class Id;
