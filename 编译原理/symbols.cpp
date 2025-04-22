@@ -72,7 +72,7 @@ namespace Symbols
 	}
 
 	/// <summary>
-	/// 类型转换
+	/// 两数运算时的类型转换
 	/// </summary>
 	/// <param name="p1">类型1</param>
 	/// <param name="p2">类型2</param>

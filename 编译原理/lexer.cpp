@@ -1,6 +1,7 @@
 #include "Lexer.h"
 #include "Num.h"
 #include "Real.h"
+#include "symbols.h"
 
 namespace Lexer {
 	int Lexer::line = 1;
@@ -17,13 +18,16 @@ namespace Lexer {
 		reserve(Word("while", Tag::WHILE));
 		reserve(Word("do", Tag::DO));
 		reserve(Word("break", Tag::BREAK));
+		reserve(Word("switch", Tag::SWITCH));
+		reserve(Word("case", Tag::CASE));
+		reserve(Word("default", Tag::DEFAULT));
 		reserve(Word::true_);
 		reserve(Word::false_);
-		// TODO: 待完成的 Type 类
-		// reserve(Type::Int);
-		// reserve(Type::Bool);
-		// reserve(Type::Char);
-		// reserve(Type::Float);
+		// 初始化存储Type 类，由于Type类中的存储采用指针（方便后续的操作），所以此处需要*取值
+		reserve(*Symbols::Type::Int);
+		reserve(*Symbols::Type::Bool);
+		reserve(*Symbols::Type::Char);
+		reserve(*Symbols::Type::Float);
 	}
 
 
