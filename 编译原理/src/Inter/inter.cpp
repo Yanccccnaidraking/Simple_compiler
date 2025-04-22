@@ -16,7 +16,7 @@ namespace Inter
 
 	Id::Id(Lexer::Word id, Symbols::Type p,int b)
 	{
-		//ґэМоід
+		offset = b;
 	}
 	
 }

@@ -3,6 +3,11 @@
 #include "Lexer/Word.h"
 #include "Symbols/symbols.h"
 
+namespace Symbols
+{
+	class Type;
+}
+
 namespace Inter
 {
 	class Node

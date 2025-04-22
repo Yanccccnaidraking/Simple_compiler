@@ -5,6 +5,11 @@
 #include "Lexer/Token.h"
 using namespace std;
 
+
+namespace Inter {
+	class Id; 
+}
+
 namespace Symbols
 {
 	class Env {
