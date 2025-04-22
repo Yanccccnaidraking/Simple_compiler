@@ -11,12 +11,12 @@ namespace Inter
 		Node() { lexline = Lexer::Lexer::line; }
 	};
 
-	class Expr :Node
+	class Expr :public Node
 	{
 
 	};
 
-	class Id :Expr
+	class Id :public Expr
 	{
 	public:
 		int offset;

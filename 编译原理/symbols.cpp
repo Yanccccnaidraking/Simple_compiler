@@ -14,7 +14,7 @@ namespace Symbols
 	/// </summary>
 	/// <param name="w">词法单元</param>
 	/// <param name="i">对应的Id</param>
-	void Env::put(Lexer::Token w, Inter::Id i)
+	void Env::put(Lexer::Token w, shared_ptr<Inter::Id> i)
 	{
 		this->table[w] = i;
 	}
@@ -24,14 +24,14 @@ namespace Symbols
 	/// </summary>
 	/// <param name="w">词法单元</param>
 	/// <returns>Id类</returns>
-	Inter::Id* Env::get(Lexer::Token w)
+	shared_ptr<Inter::Id> Env::get(Lexer::Token w)
 	{
 		for (Env* e = this; e != nullptr; e = e->prev)
 		{
 			auto found = e->table.find(w);
 			if (found != table.end())
 			{
-				return &(found->second);
+				return found->second;
 			}
 		}
 		return nullptr;

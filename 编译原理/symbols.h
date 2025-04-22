@@ -9,16 +9,16 @@ namespace Symbols
 {
 	class Env {
 	private:
-		unordered_map<Lexer::Token,  Inter::Id> table;
+		unordered_map<Lexer::Token,  shared_ptr<Inter::Id>> table;
 	protected:
 		Env* prev;
 	public:
 		Env(Env* n);
-		void put(Lexer::Token w, Inter::Id i);
-		Inter::Id* get(Lexer::Token w);
+		void put(Lexer::Token w, shared_ptr<Inter::Id> i);
+		shared_ptr<Inter::Id> get(Lexer::Token w);
 	};
 
-	class Type :Lexer::Word
+	class Type :public Lexer::Word
 	{
 	public:
 		int width = 0;
