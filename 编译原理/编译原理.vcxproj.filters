@@ -13,48 +13,57 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Lexer">
+      <UniqueIdentifier>{5a76458e-6208-4f4b-bb89-6cdb132ebd8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Symbols">
+      <UniqueIdentifier>{c04ea030-f293-43f6-95e4-8ae2fb0642c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inter">
+      <UniqueIdentifier>{67632356-490a-4be9-ba2a-df8b77399295}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="lexer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="symbols.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="inter.cpp">
-      <Filter>源文件</Filter>
+      <Filter>Lexer</Filter>
     </ClCompile>
     <ClCompile Include="Word.cpp">
-      <Filter>源文件</Filter>
+      <Filter>Lexer</Filter>
+    </ClCompile>
+    <ClCompile Include="symbols.cpp">
+      <Filter>Symbols</Filter>
+    </ClCompile>
+    <ClCompile Include="inter.cpp">
+      <Filter>Inter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="symbols.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="lexer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="inter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Tag.h">
-      <Filter>头文件</Filter>
+      <Filter>Lexer</Filter>
     </ClInclude>
     <ClInclude Include="Num.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Token.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Word.h">
-      <Filter>头文件</Filter>
+      <Filter>Lexer</Filter>
     </ClInclude>
     <ClInclude Include="Real.h">
-      <Filter>头文件</Filter>
+      <Filter>Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="Tag.h">
+      <Filter>Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="Token.h">
+      <Filter>Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="Word.h">
+      <Filter>Lexer</Filter>
+    </ClInclude>
+    <ClInclude Include="symbols.h">
+      <Filter>Symbols</Filter>
+    </ClInclude>
+    <ClInclude Include="inter.h">
+      <Filter>Inter</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
