@@ -25,10 +25,6 @@ namespace Lexer
         bool isRollBack = false;
         void read()
         {
-            if (!stream)
-            {
-                return;
-            }
             if (isRollBack)
             {
                 if (curID == BufferID::FIRST)//当前在第一个缓冲区
@@ -44,6 +40,10 @@ namespace Lexer
             }
             else
             {
+                if (!stream)
+                {
+                    return;
+                }
                 if (curID == BufferID::FIRST)//当前在第一个缓冲区
                 {
                     stream.read(buffer2, size - 1);
@@ -160,17 +160,19 @@ namespace Lexer
 	    char pre()
 	    {
 		    char c = *forward;
-		    if (forward == buffer1)//判断当前是否在第一个缓冲区的起始位置
+		    if (forward == buffer1+1)//判断当前是否在第一个缓冲区的起始位置
 		    {
 			    if (buffer2[0] != '\0')//仅有当前已使用过二号缓冲区才回退
 			    {
 				    forward = buffer2+size - 1;//回退到上一个缓冲区末尾
+                    curID = BufferID::SECOND;
                     isRollBack = true;
 			    }
 		    }
-		    else if (forward == buffer2)
+		    else if (forward == buffer2+1)
 		    {
 			    forward = buffer1+size - 1;
+                curID = BufferID::FIRST;
                 isRollBack = true;
 		    }
 		    else
