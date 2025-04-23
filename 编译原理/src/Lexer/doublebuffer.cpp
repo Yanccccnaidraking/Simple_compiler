@@ -23,8 +23,8 @@ namespace Lexer
 	}
 	template<int size>
 	DoubleBuffer<size>::~DoubleBuffer() noexcept {
-		if (fileStream) {
-			fileStream.close();
+		if (stream) {
+			stream.close();
 		}
 	}
 	template<int size>
