@@ -34,12 +34,5 @@ namespace Lexer {
         static const Word true_;
         static const Word false_;
         static const Word temp;
-        static const Word while_;
-        static const Word if_;
-        static const Word for_;
-        static const Word else_;
-        static const Word switch_;
-        static const Word case_;
-        static const Word default_;
     };
 }

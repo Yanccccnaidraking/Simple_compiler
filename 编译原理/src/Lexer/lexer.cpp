@@ -21,13 +21,17 @@ namespace Lexer {
 		reserve(Word("switch", Tag::SWITCH));
 		reserve(Word("case", Tag::CASE));
 		reserve(Word("default", Tag::DEFAULT));
+		reserve(Word("return", Tag::RETURN));
+		reserve(Word("continue", Tag::CONTINUE));
 		reserve(Word::true_);
 		reserve(Word::false_);
 		// 初始化存储Type 类，由于Type类中的存储采用指针（方便后续的操作），所以此处需要*取值
 		reserve(*Symbols::Type::Int);
+		reserve(*Symbols::Type::Long);
 		reserve(*Symbols::Type::Bool);
 		reserve(*Symbols::Type::Char);
 		reserve(*Symbols::Type::Float);
+		reserve(*Symbols::Type::Double);
 	}
 
 
