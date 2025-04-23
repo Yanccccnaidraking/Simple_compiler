@@ -17,7 +17,8 @@ namespace Lexer
         };
         std::string filepath;
         std::ifstream stream;
-        BufferID curID = BufferID::FIRST;
+        BufferID curID = BufferID::FIRST;//forward所在的缓冲区
+        BufferID beginID = BufferID::FIRST;//lexemeBegin所在的缓冲区
         char buffer1[size];
         char buffer2[size];
         char* lexemeBegin = nullptr;
@@ -27,6 +28,7 @@ namespace Lexer
         {
             if (isRollBack)
             {
+                isRollBack = false;
                 if (curID == BufferID::FIRST)//当前在第一个缓冲区
                 {
                     forward = buffer2;//指针指向下一个缓冲区的起点
@@ -110,6 +112,7 @@ namespace Lexer
                 token += *curPos++;
             }
             lexemeBegin = forward;
+            beginID = curID;
             return token;
         }
 
@@ -137,12 +140,11 @@ namespace Lexer
                 }
                 else
                 {
-                    isRollBack = false;
+                    forward++;
                     this->end = true;
                     return EOF;
                 }
             }
-            isRollBack = false;
             return *forward++;
         }
         /// <summary>
@@ -181,5 +183,19 @@ namespace Lexer
 		    }
 		    return c;
 	    }
+
+        /// <summary>
+        /// 将forward指针重置回lexemeBegin的位置
+        /// </summary>
+        char resetForward()
+        {
+            if (curID != beginID)
+            {
+                curID = beginID;
+                isRollBack = true;
+            }
+            forward = lexemeBegin;
+            return ' ';
+        }
     };
 }
