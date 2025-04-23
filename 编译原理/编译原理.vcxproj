@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Inter\inter.cpp" />
+    <ClCompile Include="src\Lexer\doublebuffer.cpp" />
     <ClCompile Include="src\Lexer\lexer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Symbols\symbols.cpp" />
@@ -136,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Inter\inter.h" />
+    <ClInclude Include="include\Lexer\doublebuffer.h" />
     <ClInclude Include="include\Lexer\lexer.h" />
     <ClInclude Include="include\Lexer\Num.h" />
     <ClInclude Include="include\Lexer\Real.h" />

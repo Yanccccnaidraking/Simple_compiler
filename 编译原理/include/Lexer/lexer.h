@@ -10,6 +10,8 @@ namespace Lexer {
     public:
         static int line;
 
+
+
         char peek = ' ';
 
         std::unordered_map<std::string, Word> words;

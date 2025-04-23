@@ -39,6 +39,9 @@
     <ClCompile Include="src\Inter\inter.cpp">
       <Filter>Inter</Filter>
     </ClCompile>
+    <ClCompile Include="src\Lexer\doublebuffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Lexer\lexer.h">
@@ -64,6 +67,9 @@
     </ClInclude>
     <ClInclude Include="include\Inter\inter.h">
       <Filter>Inter</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Lexer\doublebuffer.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
