@@ -22,31 +22,48 @@ namespace Lexer
         char buffer2[size];
         char* lexemeBegin = nullptr;
         char* forward = nullptr;
+        bool isRollBack = false;
         void read()
         {
             if (!stream)
             {
                 return;
             }
-            if (curID == BufferID::FIRST)//当前在第一个缓冲区
+            if (isRollBack)
             {
-                stream.read(buffer2, size - 1);
-                if (stream.gcount() < size - 1)//标志着文件读取结束
+                if (curID == BufferID::FIRST)//当前在第一个缓冲区
                 {
-                    buffer2[stream.gcount()] = EOF;
+                    forward = buffer2;//指针指向下一个缓冲区的起点
+                    curID = BufferID::SECOND;//将ID切换
                 }
-                forward = buffer2;//指针指向下一个缓冲区的起点
-                curID = BufferID::SECOND;//将ID切换
+                else//当前在第二个缓冲区
+                {
+                    forward = buffer1;
+                    curID = BufferID::FIRST;
+                }
             }
-            else//当前在第二个缓冲区
+            else
             {
-                stream.read(buffer1, size - 1);
-                if (stream.gcount() < size - 1)
+                if (curID == BufferID::FIRST)//当前在第一个缓冲区
                 {
-                    buffer1[stream.gcount()] = EOF;
+                    stream.read(buffer2, size - 1);
+                    if (stream.gcount() < size - 1)//标志着文件读取结束
+                    {
+                        buffer2[stream.gcount()] = EOF;
+                    }
+                    forward = buffer2;//指针指向下一个缓冲区的起点
+                    curID = BufferID::SECOND;//将ID切换
                 }
-                forward = buffer1;
-                curID = BufferID::FIRST;
+                else//当前在第二个缓冲区
+                {
+                    stream.read(buffer1, size - 1);
+                    if (stream.gcount() < size - 1)
+                    {
+                        buffer1[stream.gcount()] = EOF;
+                    }
+                    forward = buffer1;
+                    curID = BufferID::FIRST;
+                }
             }
         }
 
@@ -79,7 +96,6 @@ namespace Lexer
         /// <summary>
         /// 提取目前分析出的词法单元
         /// </summary>
-        /// <typeparam name="size">缓冲区大小</typeparam>
         /// <returns>词法单元</returns>
         std::string getToken()
         {
@@ -100,7 +116,6 @@ namespace Lexer
         /// <summary>
         /// 获取当前字符，并将指针指向下一个字符
         /// </summary>
-        /// <typeparam name="size">缓冲区的大小</typeparam>
         /// <returns>当前的字符</returns>
         char next()
         {
@@ -122,16 +137,17 @@ namespace Lexer
                 }
                 else
                 {
+                    isRollBack = false;
                     this->end = true;
                     return EOF;
                 }
             }
+            isRollBack = false;
             return *forward++;
         }
         /// <summary>
         /// 获取当前向前指针所在位置的字符
         /// </summary>
-        /// <typeparam name="size">缓冲区大小</typeparam>
         /// <returns>当前指向的字符</returns>
         char cur()
         {
@@ -140,7 +156,6 @@ namespace Lexer
         /// <summary>
 	    /// 指针指向的前一个字符，用于自动机的回退操作
 	    /// </summary>
-	    /// <typeparam name="size">缓冲区大小</typeparam>
 	    /// <returns>当前字符</returns>
 	    char pre()
 	    {
@@ -150,11 +165,13 @@ namespace Lexer
 			    if (buffer2[0] != '\0')//仅有当前已使用过二号缓冲区才回退
 			    {
 				    forward = buffer2+size - 1;//回退到上一个缓冲区末尾
+                    isRollBack = true;
 			    }
 		    }
 		    else if (forward == buffer2)
 		    {
 			    forward = buffer1+size - 1;
+                isRollBack = true;
 		    }
 		    else
 		    {
