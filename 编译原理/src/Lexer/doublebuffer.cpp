@@ -1,3 +1,6 @@
+//已将实现转移到doublebuffer.h文件中
+// 
+// 
 //#include "Lexer/doublebuffer.h"
 //
 //namespace Lexer
