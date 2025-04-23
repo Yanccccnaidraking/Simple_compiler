@@ -63,7 +63,7 @@ namespace Lexer
             //初始时将两个缓冲区的结尾固定设置成EOF，表示缓冲区的末尾
             buffer1[size - 1] = EOF;
             buffer2[size - 1] = EOF;
-            //buffer2[0] = '\0';//将二号缓冲区起始位置设置成未使用的状态
+            buffer2[0] = '\0';//将二号缓冲区起始位置设置成未使用的状态
             stream.read(buffer1, size - 1);//初始缓冲区填充，文件中字符数不够就全部读入。
             std::streamsize count = stream.gcount();
             if (count < size - 1)//文件中字符数量不够
