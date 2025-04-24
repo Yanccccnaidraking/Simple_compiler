@@ -1,3 +1,6 @@
-if (a >= b) {
-	a = 1;
+   if  (a<= b){
+	a = a;
+	b = c;
+	c = d;
 }
+int c = a;
