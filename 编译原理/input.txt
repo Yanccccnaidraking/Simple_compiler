@@ -1,6 +1,9 @@
-   if  (a<= b){
+<= b){
 	a = a;
 	b = c;
 	c = d;
+
+
+	b = as;
 }
 int c = a;

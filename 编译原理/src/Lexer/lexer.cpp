@@ -62,7 +62,6 @@ namespace Lexer {
 	}
 
 	Lexer::CharType Lexer::getCharType(char c, State currentState) {
-		// 优先级从高到低判断
 		if (c == EOF) return CharType::EOF_CHAR;
 
 		if (currentState == State::END_DELIMITER) {
@@ -79,7 +78,7 @@ namespace Lexer {
 		case '\n': return CharType::NEW_LINE;
 		}
 
-		// 数字检测（用户暂未实现，保留占位）
+		// 数字检测
 		if (isdigit(c)) return CharType::DIGIT;
 
 		// 字母检测
@@ -94,7 +93,6 @@ namespace Lexer {
 		// 空格类检测
 		if (isspace(c)) return CharType::WHITESPACE;
 
-		// 默认归类为普通字符
 		return CharType::OTHER_CHAR;
 	}
 
@@ -145,8 +143,56 @@ namespace Lexer {
 
 			// 获取到一个词法单元
 			if (nextState == State::END) {
-				cout << buffer.getToken() << endl;
+				lexeme = buffer.getToken();
 				// 根据当前状态返回 Token
+				// TODO:完成各个状态对应Token的返回
+				switch (currentState)
+				{
+				case State::START:
+					break;
+				case State::IN_ID:
+					// 如果在 words 表中，则为关键字
+					if (words.find(lexeme) != words.end())
+						return make_shared<Word>(words.at(lexeme));
+					else
+						return make_shared<Word>(Word(lexeme, Tag::ID));
+					break;
+				case State::IN_STRING:
+					break;
+				case State::END_STRING:
+					break;
+				case State::START_CHAR:
+					break;
+				case State::IN_CHAR:
+					break;
+				case State::END_CHAR:
+					break;
+				case State::START_COMMENT:
+					break;
+				case State::IN_SINGLE_COMMENT:
+					break;
+				case State::IN_MUTI_COMMENT:
+					break;
+				case State::END_MUTI_COMMENT1:
+					break;
+				case State::END_MUTI_COMMENT2:
+					break;
+				case State::END_SINGLE_COMMENT:
+					break;
+				case State::IN_OP: // 单个运算符
+					return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
+					break;
+				case State::END_OP: // 复合运算符 TODO:修改Tag值
+					return make_shared<Word>(Word(lexeme, Tag::TEMP));
+					break;
+				case State::END_DELIMITER: // 界符
+					return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
+					break;
+				case State::END:
+					break;
+				default:
+					break;
+				}
 				return std::make_shared<Word>(Word::ne);
 			}
 			else {
