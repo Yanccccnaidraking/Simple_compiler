@@ -112,6 +112,24 @@ namespace Lexer {
 				return nullptr;
 			}
 
+			// 跳过空白字符和换行符
+			if (currentState == State::START) {
+				if (charType == CharType::WHITESPACE) {
+					buffer.next();
+					buffer.getToken();
+					continue;
+				}
+				else if (charType == CharType::NEW_LINE) {
+					if (c == '\n') line++;  // 处理换行符，更新行号
+					buffer.next();
+					buffer.getToken();
+					continue;
+				}
+				else if (charType == CharType::EOF_CHAR) {
+					return nullptr;
+				}
+			}
+
 			// 根据状态转移表进行状态转移
 			auto stateIt = transitionTable.find(currentState);
 			if (stateIt == transitionTable.end()) {
