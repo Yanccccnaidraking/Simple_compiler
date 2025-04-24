@@ -61,6 +61,7 @@ namespace Lexer {
 		return delimiters.find(c) != std::string::npos;
 	}
 
+	// TODO: ¸ü¸ÄÎª¶ÔÃ¿¸öcurrentStateµ¥¶ÀÅÐ¶Ï£¬±ÜÃâ³åÍ»
 	Lexer::CharType Lexer::getCharType(char c, State currentState) {
 		if (c == EOF) return CharType::EOF_CHAR;
 
@@ -78,14 +79,19 @@ namespace Lexer {
 		case '\n': return CharType::NEW_LINE;
 		}
 
+		// ²Ù×÷·û¼ì²â
+		if (is_operator(c)) return CharType::OPERATOR;
+
+		// ÔÚ²Ù×÷·û¼ì²âºóµÄ OP ×´Ì¬
+		if (currentState == State::IN_OP || currentState == State::END_OP) {
+			return CharType::OTHER_CHAR;
+		}
+
 		// Êý×Ö¼ì²â
 		if (isdigit(c)) return CharType::DIGIT;
 
 		// ×ÖÄ¸¼ì²â
 		if (isalpha(c) || c == '_') return CharType::LETTER;
-
-		// ²Ù×÷·û¼ì²â
-		if (is_operator(c)) return CharType::OPERATOR;
 
 		// ·Ö¸ô·û¼ì²â
 		if (is_delimiter(c)) return CharType::DELIMITER;

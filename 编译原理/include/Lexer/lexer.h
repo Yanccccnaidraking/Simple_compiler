@@ -131,7 +131,11 @@ namespace Lexer {
                 {CharType::OTHER_CHAR, State::IN_MUTI_COMMENT}
             }},
             {State::IN_OP, {
-                {CharType::OPERATOR, State::IN_OP},
+                {CharType::OPERATOR, State::END_OP},
+                {CharType::OTHER_CHAR, State::END},
+                {CharType::WHITESPACE, State::END},
+            }},
+            {State::END_OP, {
                 {CharType::OTHER_CHAR, State::END},
                 {CharType::WHITESPACE, State::END},
             }},
