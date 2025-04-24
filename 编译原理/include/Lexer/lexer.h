@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include "Word.h"
+#include "doublebuffer.h"
 
 namespace Lexer {
     class Lexer
@@ -10,13 +11,15 @@ namespace Lexer {
     public:
         static int line;
 
+        DoubleBuffer<4096> buffer;
+
         char peek = ' ';
 
         std::unordered_map<std::string, Word> words;
 
         void reserve(const Word& w);
 
-        Lexer();
+        Lexer(std::string filepath);
 
         // 把下一个输入字符读到变量 peek 中
         void readch();

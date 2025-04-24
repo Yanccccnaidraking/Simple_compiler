@@ -2,6 +2,7 @@
 #include "Lexer/Num.h"
 #include "Lexer/Real.h"
 #include "Symbols/symbols.h"
+#include <cctype>
 
 namespace Lexer {
 	int Lexer::line = 1;
@@ -11,7 +12,7 @@ namespace Lexer {
 		words.emplace(w.lexeme, w);
 	}
 
-	Lexer::Lexer()
+	Lexer::Lexer(std::string filepath): buffer(DoubleBuffer(filepath))
 	{
 		reserve(Word("if", Tag::IF));
 		reserve(Word("else", Tag::ELSE));
@@ -47,6 +48,7 @@ namespace Lexer {
 		peek = ' ';
 		return true;
 	}
+
 
 	std::shared_ptr<Token> Lexer::scan()
 	{

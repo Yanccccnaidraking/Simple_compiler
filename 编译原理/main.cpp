@@ -58,7 +58,7 @@ int main() {
     std::cin.rdbuf(file.rdbuf());
 
     // 创建Lexer对象
-    Lexer::Lexer lexer;
+    Lexer::Lexer lexer=Lexer::Lexer("input.txt");
 
     // 扫描并输出词法单元
     std::shared_ptr<Lexer::Token> token;

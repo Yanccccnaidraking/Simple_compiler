@@ -18,7 +18,6 @@ namespace Symbols
 	{
 		this->table[w] = i;
 	}
-
 	/// <summary>
 	/// 依据词法单元Token获取对应的Id
 	/// </summary>
@@ -51,8 +50,6 @@ namespace Symbols
 	{
 		this->width = w;
 	}
-
-
 
 
 	/// <summary>

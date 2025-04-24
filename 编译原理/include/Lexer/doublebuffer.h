@@ -92,6 +92,48 @@ namespace Lexer
             lexemeBegin = forward = buffer1;//初始化指针的位置
         }
 
+        // 移动构造函数
+        DoubleBuffer(DoubleBuffer&& other) noexcept
+            : filepath(std::move(other.filepath)),
+            stream(std::move(other.stream)),
+            curID(other.curID),
+            beginID(other.beginID),
+            lexemeBegin(other.lexemeBegin == other.buffer1 ? buffer1 : buffer2),
+            forward(other.forward == other.buffer1 ? buffer1 : buffer2),
+            isRollBack(other.isRollBack),
+            end(other.end)
+        {
+            std::memcpy(buffer1, other.buffer1, size);
+            std::memcpy(buffer2, other.buffer2, size);
+            other.lexemeBegin = nullptr;
+            other.forward = nullptr;
+            other.end = true;
+        }
+
+        // 移动赋值运算符
+        DoubleBuffer& operator=(DoubleBuffer&& other) noexcept {
+            if (this != &other) {
+                if (stream.is_open()) stream.close();
+
+                filepath = std::move(other.filepath);
+                stream = std::move(other.stream);
+                curID = other.curID;
+                beginID = other.beginID;
+                std::memcpy(buffer1, other.buffer1, size);
+                std::memcpy(buffer2, other.buffer2, size);
+
+                lexemeBegin = (other.lexemeBegin == other.buffer1) ? buffer1 : buffer2;
+                forward = (other.forward == other.buffer1) ? buffer1 : buffer2;
+                isRollBack = other.isRollBack;
+                end = other.end;
+
+                other.lexemeBegin = nullptr;
+                other.forward = nullptr;
+                other.end = true;
+            }
+            return *this;
+        }
+
         ~DoubleBuffer() noexcept {
             if (stream) stream.close();
         }
