@@ -103,11 +103,13 @@ namespace Lexer {
                 {CharType::DELIMITER, State::END_DELIMITER}, // 0 -> 701
                 {CharType::WHITESPACE, State::START}, // 0 -> 0
                 {CharType::NEW_LINE, State::START},
+                {CharType::OTHER_CHAR, State::END},
                 {CharType::EOF_CHAR, State::END}
             }},
             {State::IN_ID, {
                 {CharType::LETTER, State::IN_ID},
                 {CharType::DIGIT, State::IN_ID},
+                {CharType::OTHER_CHAR, State::END},
                 {CharType::WHITESPACE, State::END},
                 {CharType::DELIMITER, State::END},
                 {CharType::OPERATOR, State::END},
@@ -116,31 +118,37 @@ namespace Lexer {
             {State::IN_STRING, {
                 {CharType::CHAR, State::IN_STRING},
                 {CharType::DOUBLE_QOUTE, State::END_STRING},
+                {CharType::OTHER_CHAR, State::END},
             }},
             {State::END_STRING, {
                 {CharType::DOUBLE_QOUTE, State::END},
+                {CharType::OTHER_CHAR, State::END},
             }},
             {State::START_CHAR, {
-                {CharType::CHAR, State::IN_CHAR}
+                {CharType::CHAR, State::IN_CHAR},
+                {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_CHAR, {
-                {CharType::SINGLE_QOUTE, State::END}
+                {CharType::SINGLE_QOUTE, State::END},
+                {CharType::OTHER_CHAR, State::END},
             }},
             {State::START_COMMENT, {
                 {CharType::FORWARD_SLASH, State::IN_SINGLE_COMMENT},
-                {CharType::STAR, State::IN_MUTI_COMMENT}
+                {CharType::STAR, State::IN_MUTI_COMMENT},
+                {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_SINGLE_COMMENT, {
                 {CharType::CHAR, State::IN_SINGLE_COMMENT},
-                {CharType::NEW_LINE, State::END}
+                {CharType::NEW_LINE, State::END},
+                {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_MUTI_COMMENT, {
                 {CharType::STAR, State::END_MUTI_COMMENT1}, // 遇到*可能结束注释
-                {CharType::OTHER_CHAR, State::IN_MUTI_COMMENT}
+                {CharType::CHAR, State::IN_MUTI_COMMENT}
             }},
             {State::END_MUTI_COMMENT1, {
                 {CharType::FORWARD_SLASH, State::END}, // 遇到/结束注释
-                {CharType::OTHER_CHAR, State::IN_MUTI_COMMENT}
+                {CharType::CHAR, State::IN_MUTI_COMMENT}
             }},
             {State::IN_OP, {
                 {CharType::OPERATOR, State::END_OP},

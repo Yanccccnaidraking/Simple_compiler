@@ -59,6 +59,9 @@ void generateAndSaveMap() {
     }
     table[Lexer::Lexer::State::START]['.'] = Lexer::Lexer::CharType::DOT;
     table[Lexer::Lexer::State::START]['0'] = Lexer::Lexer::CharType::ZERO;
+    transform(0, " \t\r\v\f", Type::WHITESPACE);
+    transform(0, '\n', Type::NEW_LINE);
+
 
     //101
     for (char i = 'a'; i <= 'z'; i++)
@@ -71,10 +74,7 @@ void generateAndSaveMap() {
         table[(Lexer::Lexer::State)101][i] = Lexer::Lexer::CharType::DIGIT;
     }
     //201
-    for (char i = 'a'; i <= 'z'; i++)
-    {
-        table[(Lexer::Lexer::State)201][i] = Lexer::Lexer::CharType::LETTER;
-    }
+    transform(201, 'a','z', Type::LETTER);
     transform(201, '"', Type::DOUBLE_QOUTE);
     //301
     transform(301, '0', '9', Type::DIGIT);

@@ -35,7 +35,10 @@ namespace Lexer {
 		reserve(*Symbols::Type::Double);
 		loadTableFromFile("CharTypeTable.txt");
 	}
-
+	/// <summary>
+	/// 加载字符类型表
+	/// </summary>
+	/// <param name="filename"></param>
 	void Lexer::loadTableFromFile(const std::string& filename) {
 		std::ifstream in(filename);
 		int stateInt, charInt, typeInt;
@@ -72,80 +75,90 @@ namespace Lexer {
 
 	// TODO: 更改为对每个currentState单独判断，避免冲突
 	Lexer::CharType Lexer::getCharType(char c, State currentState) {
+		c = tolower(c);
 		if (c == EOF) return CharType::EOF_CHAR;
-
-		if (currentState == State::END_DELIMITER) {
-			return CharType::OTHER_CHAR;
-		}
-
-		if (currentState == State::START) {
-			if (c > '0' && c <= '9')
-				return CharType::DIGIT_ONE;
-			else if (c == '0')
-				return CharType::ZERO;
-		}
-
-		if (((int)currentState) / 100 == 3) {//判断是否在数字分支中（以3开头的状态）
-			switch (tolower(c))
-			{
-			case 'l':
-				return CharType::LONG_SIGN;
-				break;
-			case 'e':
-				return CharType::SCI_SIGN;
-				break;
-			case 'f':
-				return CharType::FLOAT_SIGN;
-				break;
-			case 'x':
-				return CharType::HEX_SIGN;
-				break;
-			case 'b':
-				return CharType::BIN_SIGN;
-				break;
-			default:
-				break;
+		//查表，如果存在即返回对应的类型，如果不存在就返回OTHER_CHAR
+		auto stateIt = charTypeTable.find(currentState);
+		if (stateIt != charTypeTable.end()) {
+			auto charIt = stateIt->second.find(c);
+			if (charIt != stateIt->second.end()) {
+				return charIt->second;
 			}
 		}
-
-		if (currentState == State::IN_OCT_NUM)
-		{
-			if (c >= '0' && c < '8')
-				return CharType::DIGIT;//重定义合法数字
-		}
-
-		// 符号类检测
-		switch (c) {
-		case '\'': return CharType::SINGLE_QOUTE;
-		case '"':  return CharType::DOUBLE_QOUTE;
-		case '/':  return CharType::FORWARD_SLASH;
-		case '\\': return CharType::BACWARD_SLASH;
-		case '*':  return CharType::STAR;
-		case '\n': return CharType::NEW_LINE;
-		}
-
-		// 操作符检测
-		if (is_operator(c)) return CharType::OPERATOR;
-
-		// 在操作符检测后的 OP 状态
-		if (currentState == State::IN_OP || currentState == State::END_OP) {
-			return CharType::OTHER_CHAR;
-		}
-
-		// 数字检测
-		if (isdigit(c)) return CharType::DIGIT;
-
-
-		// 字母检测
-		if (isalpha(c) || c == '_') return CharType::LETTER;
-
-		// 分隔符检测
-		if (is_delimiter(c)) return CharType::DELIMITER;
-
-		// 空格类检测
-		if (isspace(c)) return CharType::WHITESPACE;
-
 		return CharType::OTHER_CHAR;
+
+		//if (currentState == State::END_DELIMITER) {
+		//	return CharType::OTHER_CHAR;
+		//}
+
+		//if (currentState == State::START) {
+		//	if (c > '0' && c <= '9')
+		//		return CharType::DIGIT_ONE;
+		//	else if (c == '0')
+		//		return CharType::ZERO;
+		//}
+
+		//if (((int)currentState) / 100 == 3) {//判断是否在数字分支中（以3开头的状态）
+		//	switch (tolower(c))
+		//	{
+		//	case 'l':
+		//		return CharType::LONG_SIGN;
+		//		break;
+		//	case 'e':
+		//		return CharType::SCI_SIGN;
+		//		break;
+		//	case 'f':
+		//		return CharType::FLOAT_SIGN;
+		//		break;
+		//	case 'x':
+		//		return CharType::HEX_SIGN;
+		//		break;
+		//	case 'b':
+		//		return CharType::BIN_SIGN;
+		//		break;
+		//	default:
+		//		break;
+		//	}
+		//}
+
+		//if (currentState == State::IN_OCT_NUM)
+		//{
+		//	if (c >= '0' && c < '8')
+		//		return CharType::DIGIT;//重定义合法数字
+		//}
+
+		//// 符号类检测
+		//switch (c) {
+		//case '\'': return CharType::SINGLE_QOUTE;
+		//case '"':  return CharType::DOUBLE_QOUTE;
+		//case '/':  return CharType::FORWARD_SLASH;
+		//case '\\': return CharType::BACWARD_SLASH;
+		//case '*':  return CharType::STAR;
+		//case '\n': return CharType::NEW_LINE;
+		//}
+
+		//// 操作符检测
+		//if (is_operator(c)) return CharType::OPERATOR;
+
+		//// 在操作符检测后的 OP 状态
+		//if (currentState == State::IN_OP || currentState == State::END_OP) {
+		//	return CharType::OTHER_CHAR;
+		//}
+
+		//// 数字检测
+		//if (isdigit(c)) return CharType::DIGIT;
+
+
+		//// 字母检测
+		//if (isalpha(c) || c == '_') return CharType::LETTER;
+
+		//// 分隔符检测
+		//if (is_delimiter(c)) return CharType::DELIMITER;
+
+		//// 空格类检测
+		//if (isspace(c)) return CharType::WHITESPACE;
+
+		//return CharType::OTHER_CHAR;
 	}
 
 
