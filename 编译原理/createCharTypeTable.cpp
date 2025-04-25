@@ -33,11 +33,8 @@ void transform(int state, std::string str, Type type)
 void generateAndSaveMap() {
 
     //初始状态
-    for (char i = 'a'; i <= 'z'; i++)
-    {
-        table[Lexer::Lexer::State::START][i] = Lexer::Lexer::CharType::LETTER;
-    }
-    table[Lexer::Lexer::State::START]['_'] = Lexer::Lexer::CharType::LETTER;
+    transform(0, 'a', 'z', Type::LETTER);
+    transform(0, '_', Type::LETTER);
 
     std::string str1 = "(){}[],;:.?";
     for (auto i : str1)
@@ -64,15 +61,9 @@ void generateAndSaveMap() {
 
 
     //101
-    for (char i = 'a'; i <= 'z'; i++)
-    {
-        table[(Lexer::Lexer::State)101][i] = Lexer::Lexer::CharType::LETTER;
-    }
-    table[(Lexer::Lexer::State)101]['_'] = Lexer::Lexer::CharType::ZERO;
-    for (char i = '0'; i <= '9'; i++)
-    {
-        table[(Lexer::Lexer::State)101][i] = Lexer::Lexer::CharType::DIGIT;
-    }
+    transform(101, 'a', 'z', Type::LETTER);
+    transform(101, '_', Type::LETTER);
+    transform(101, '0', '9', Type::DIGIT);
     //201
     transform(201, 'a','z', Type::LETTER);
     transform(201, '"', Type::DOUBLE_QOUTE);
