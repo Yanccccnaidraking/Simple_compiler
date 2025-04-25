@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="createCharTypeTable.cpp" />
     <ClCompile Include="src\Inter\inter.cpp" />
     <ClCompile Include="src\Lexer\doublebuffer.cpp" />
     <ClCompile Include="src\Lexer\lexer.cpp" />
@@ -146,6 +147,9 @@
     <ClInclude Include="include\Lexer\Tag.h" />
     <ClInclude Include="include\Lexer\Token.h" />
     <ClInclude Include="include\Lexer\Word.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CharTypeTable.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

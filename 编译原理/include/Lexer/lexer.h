@@ -57,7 +57,7 @@ namespace Lexer {
             IN_OP = 601,
             END_OP = 602,
             END_DELIMITER = 701,
-            END
+            END=999
         };
 
         // 定义字符类型枚举
@@ -84,7 +84,10 @@ namespace Lexer {
             FLOAT_SIGN,//float类型的结束符
             HEX_SIGN,//十六进制的起始符号x
             BIN_SIGN,//二进制的起始符号b
+            SCI_SIGN_PULS_MINUS,//科学技术法的 +、- 符号
         };
+
+        std::unordered_map<State, std::unordered_map<char, CharType>> charTypeTable;
 
         // 状态转移表
         std::unordered_map<State, std::unordered_map<CharType, State>> transitionTable = {
@@ -175,6 +178,8 @@ namespace Lexer {
         };
 
         CharType getCharType(char c, State currentState);
+
+        void loadTableFromFile(const std::string& filename);
 
         std::shared_ptr<Token> scan();
 

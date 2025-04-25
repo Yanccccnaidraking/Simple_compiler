@@ -33,8 +33,17 @@ namespace Lexer {
 		reserve(*Symbols::Type::Char);
 		reserve(*Symbols::Type::Float);
 		reserve(*Symbols::Type::Double);
+		loadTableFromFile("CharTypeTable.txt");
 	}
 
+	void Lexer::loadTableFromFile(const std::string& filename) {
+		std::ifstream in(filename);
+		int stateInt, charInt, typeInt;
+		while (in >> stateInt >> charInt >> typeInt) {
+			charTypeTable[static_cast<State>(stateInt)][static_cast<char>(charInt)] = static_cast<CharType>(typeInt);
+		}
+		in.close();
+	}
 
 	void Lexer::readch()
 	{
