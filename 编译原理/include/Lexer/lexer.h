@@ -34,17 +34,17 @@ namespace Lexer {
             IN_STRING = 201,
             END_STRING = 202,
             // 数字部分
-            //IN_NUM = 302,
-            //END_NUM = 312,    
-            //IN_OCT_NUM = 303,
-            //IN_REAL = 304,
-            //END_REAL = 305,
-            //IN_SCI_NUM = 306,
-            //IN_SCI_SIGN = 307, 
-            //END_SCI_NUM = 308,
-            //END_SCI_NUM_F = 311,
-            //IN_BIN_NUM = 309,
-            //IN_HEX_NUM = 310,
+            IN_NUM = 301,
+            END_NUM_LONG=302,
+            IN_OCT_NUM = 303,
+            IN_REAL = 304,
+            END_REAL = 305,
+            IN_SCI_NUM = 306,
+            IN_SCI_SIGN = 307, 
+            END_SCI_NUM = 308,
+            IN_BIN_NUM = 309,
+            IN_HEX_NUM = 310,
+            END_SCI_NUM_F = 311,
             START_CHAR = 401,
             IN_CHAR = 402,
             END_CHAR = 403,
@@ -64,6 +64,7 @@ namespace Lexer {
         enum class CharType : int {
             LETTER,
             DIGIT,
+            DIGIT_ONE,
             DOT,
             WHITESPACE,
             OPERATOR,
@@ -77,7 +78,12 @@ namespace Lexer {
             ZERO,
             NEW_LINE,
             OTHER_CHAR,
-            EOF_CHAR
+            EOF_CHAR,
+            LONG_SIGN,//long类型的结束符
+            SCI_SIGN,//科学计数法符号
+            FLOAT_SIGN,//float类型的结束符
+            HEX_SIGN,//十六进制的起始符号x
+            BIN_SIGN,//二进制的起始符号b
         };
 
         // 状态转移表
@@ -85,6 +91,9 @@ namespace Lexer {
             {State::START, {
                 {CharType::LETTER, State::IN_ID}, // 0 -> 101
                 {CharType::DOUBLE_QOUTE, State::IN_STRING}, // 0 -> 201
+                {CharType::DIGIT_ONE, State::IN_NUM}, // 0 -> 301
+                {CharType::ZERO, State::IN_OCT_NUM}, // 0 -> 303
+                {CharType::DOT,State::IN_REAL}, // 0 -> 304
                 {CharType::SINGLE_QOUTE, State::START_CHAR}, // 0 -> 401
                 {CharType::FORWARD_SLASH, State::START_COMMENT}, // 0 -> 501
                 {CharType::OPERATOR, State::IN_OP}, // 0 -> 601
@@ -143,6 +152,26 @@ namespace Lexer {
                 {CharType::OTHER_CHAR, State::END},
                 {CharType::EOF_CHAR, State::END}
             }},
+            //添加数字部分的状态转移
+            {State::IN_NUM,{
+                {CharType::OTHER_CHAR, State::END},
+                {CharType::DIGIT,State::IN_NUM},
+                {CharType::LONG_SIGN,State::END_NUM_LONG},
+                {CharType::SCI_SIGN,State::IN_SCI_NUM},
+                {CharType::DOT,State::END_REAL},
+            }},
+            {State::IN_REAL,{
+                {CharType::OTHER_CHAR, State::END},
+                {CharType::DIGIT,State::END_REAL},
+            }},
+            {State::IN_OCT_NUM,{
+                {CharType::OTHER_CHAR, State::END},
+                {CharType::DOT,State::END_REAL},
+                {CharType::DIGIT, State::IN_OCT_NUM},
+                {CharType::HEX_SIGN, State::IN_HEX_NUM},
+                {CharType::BIN_SIGN,State::IN_BIN_NUM},
+            }},
+
         };
 
         CharType getCharType(char c, State currentState);

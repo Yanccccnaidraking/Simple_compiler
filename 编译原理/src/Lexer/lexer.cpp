@@ -69,6 +69,42 @@ namespace Lexer {
 			return CharType::OTHER_CHAR;
 		}
 
+		if (currentState == State::START) {
+			if (c > '0' && c <= '9')
+				return CharType::DIGIT_ONE;
+			else if (c == '0')
+				return CharType::ZERO;
+		}
+
+		if (((int)currentState) / 100 == 3) {//判断是否在数字分支中（以3开头的状态）
+			switch (tolower(c))
+			{
+			case 'l':
+				return CharType::LONG_SIGN;
+				break;
+			case 'e':
+				return CharType::SCI_SIGN;
+				break;
+			case 'f':
+				return CharType::FLOAT_SIGN;
+				break;
+			case 'x':
+				return CharType::HEX_SIGN;
+				break;
+			case 'b':
+				return CharType::BIN_SIGN;
+				break;
+			default:
+				break;
+			}
+		}
+
+		if (currentState == State::IN_OCT_NUM)
+		{
+			if (c >= '0' && c < '8')
+				return CharType::DIGIT;//重定义合法数字
+		}
+
 		// 符号类检测
 		switch (c) {
 		case '\'': return CharType::SINGLE_QOUTE;
@@ -89,6 +125,7 @@ namespace Lexer {
 
 		// 数字检测
 		if (isdigit(c)) return CharType::DIGIT;
+
 
 		// 字母检测
 		if (isalpha(c) || c == '_') return CharType::LETTER;
