@@ -4,7 +4,10 @@ string s = "\a\v\x12abcGHIJKsss\002\0001""123""456""\n\t""\"\v\f""\0123\xabcd123
 =======
 "abc";0b1010<= b){
 >>>>>>> b716705c50abcf0d53af70d07a0160cedfd8daad
-
+/*
+123124
+dwaqw//d
+*/ //1213
 	a = 0b1010;
 	a = 0B1010;
 	a = 123;

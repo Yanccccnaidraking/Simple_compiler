@@ -301,10 +301,16 @@ namespace Lexer {
 				case State::START_COMMENT:
 					break;
 				case State::IN_SINGLE_COMMENT:
+					currentState = State::START;
+					continue;
 					break;
 				case State::IN_MUTI_COMMENT:
 					break;
 				case State::END_MUTI_COMMENT1:
+					currentState = State::START;
+					buffer.next();
+					buffer.getToken();
+					continue;
 					break;
 				case State::END_MUTI_COMMENT2:
 					break;
