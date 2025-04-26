@@ -143,6 +143,7 @@
     <ClInclude Include="include\Lexer\lexer.h" />
     <ClInclude Include="include\Lexer\Num.h" />
     <ClInclude Include="include\Lexer\Real.h" />
+    <ClInclude Include="include\Lexer\String.h" />
     <ClInclude Include="include\Symbols\symbols.h" />
     <ClInclude Include="include\Lexer\Tag.h" />
     <ClInclude Include="include\Lexer\Token.h" />
