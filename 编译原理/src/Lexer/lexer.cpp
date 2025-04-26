@@ -1,6 +1,9 @@
 #include "Lexer/Lexer.h"
 #include "Lexer/Num.h"
 #include "Lexer/Real.h"
+#include "Lexer/Bool.h"
+#include "Lexer/Char.h"
+#include "Lexer/String.h"
 #include "Symbols/symbols.h"
 //#include <chrono>
 #include <cctype>
@@ -287,6 +290,7 @@ namespace Lexer {
 				case State::IN_STRING:
 					break;
 				case State::END_STRING:
+					return make_shared<String>(String(lexeme));
 					break;
 				case State::START_CHAR:
 					break;
