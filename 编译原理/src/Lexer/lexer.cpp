@@ -4,6 +4,7 @@
 #include "Symbols/symbols.h"
 //#include <chrono>
 #include <cctype>
+#include <map>
 
 namespace Lexer {
 	int Lexer::line = 1;
@@ -76,6 +77,37 @@ namespace Lexer {
 		// 计算耗时（单位：毫秒）
 		//auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 		//std::cout << "耗时：" << duration.count() << " 毫秒" << std::endl;
+	}
+
+	std::shared_ptr<Word> Lexer::getOperationToken(const std::string& op)
+	{
+		static std::map<std::string, Tag> opToTag = {
+			{"++", Tag::PLUS_PLUS},
+			{"--", Tag::MINUS_MINUS},
+			{"+=", Tag::PLUS_EQ},
+			{"-=", Tag::MINUS_EQ},
+			{"*=", Tag::MULT_EQ},
+			{"/=", Tag::DIV_EQ},
+			{"%=", Tag::MOD_EQ},
+			{"&=", Tag::AND_EQ},
+			{"|=", Tag::OR_EQ},
+			{"^=", Tag::XOR_EQ},
+			{"<<", Tag::LEFT_SHIFT},
+			{">>", Tag::RIGHT_SHIFT},
+			{"->", Tag::ARROW},
+			{">=", Tag::GE},
+			{"==", Tag::EQ},
+			{"<=", Tag::LE},
+			{"&&", Tag::AND},
+			{"||", Tag::OR},
+			{"!=", Tag::NE},
+		};
+
+		auto it = opToTag.find(op);
+		if (it != opToTag.end()) {
+			return std::make_shared<Word>(op, it->second);
+		}
+		return std::make_shared<Word>(op, Tag::TEMP);
 	}
 
 	void Lexer::readch()
@@ -278,7 +310,7 @@ namespace Lexer {
 					return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
 					break;
 				case State::END_OP: // 复合运算符 TODO:修改Tag值
-					return make_shared<Word>(Word(lexeme, Tag::TEMP));
+					return getOperationToken(lexeme);
 					break;
 				case State::END_DELIMITER: // 界符
 					return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
