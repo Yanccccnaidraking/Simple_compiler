@@ -13,6 +13,27 @@ namespace Lexer {
 		words.emplace(w.lexeme, w);
 	}
 
+	void Lexer::transform(int state, char start, char end, CharType type)
+	{
+		for (char i = start; i <= end; i++)
+		{
+			charTypeTable[(State)state][i] = type;
+		}
+	}
+
+	void Lexer::transform(int state, char c, CharType type)
+	{
+		charTypeTable[(State)state][c] = type;
+	}
+
+	void Lexer::transform(int state, std::string str, CharType type)
+	{
+		for (auto c : str)
+		{
+			charTypeTable[(State)state][c] = type;
+		}
+	}
+
 	Lexer::Lexer(std::string filepath) : buffer(DoubleBuffer(filepath))
 	{
 		reserve(Word("if", Tag::IF));
@@ -34,7 +55,8 @@ namespace Lexer {
 		reserve(*Symbols::Type::Char);
 		reserve(*Symbols::Type::Float);
 		reserve(*Symbols::Type::Double);
-		loadTableFromFile("CharTypeTable.txt");
+		//loadTableFromFile("CharTypeTable.txt");
+		generateAndSaveMap();
 	}
 	/// <summary>
 	/// 加载字符类型表

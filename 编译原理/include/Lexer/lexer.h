@@ -221,6 +221,10 @@ namespace Lexer {
 
         void loadTableFromFile(const std::string& filename);
 
+        void generateAndSaveMap();
+        void transform(int state, std::string str, CharType type);
+        void transform(int state, char c, CharType type);
+        void transform(int state, char start, char end, CharType type);
         std::shared_ptr<Token> scan();
 
         // 字符转为十进制数值
