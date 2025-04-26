@@ -174,7 +174,7 @@ namespace Lexer {
 
             }},
             {State::END_STRING, {//209
-                
+                {CharType::OTHER_CHAR, State::END},
             }},
             /*½âÎö×Ö·û*/
             {State::START_CHAR, {
