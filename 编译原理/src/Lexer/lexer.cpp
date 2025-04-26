@@ -253,6 +253,49 @@ namespace Lexer {
 				case State::END_DELIMITER: // 界符
 					return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
 					break;
+				case State::IN_NUM:
+				{
+					int value = std::stoi(lexeme);
+					return make_shared<Num>(Num(value));
+					break;
+				}
+				case State::END_NUM_LONG:
+				{
+					long value_long = std::stol(lexeme);
+					return make_shared<Num>(Num(value_long));
+					break;
+				}
+				case State::END_SCI_NUM://和下面的状态返回类型一致，不重复编写
+				case State::END_REAL:
+				{
+					double value_double = std::stod(lexeme);
+					return make_shared<Real>(Real(value_double));
+					break;
+				}
+				case State::IN_OCT_NUM:
+				{
+					int value_oct = std::stoi(lexeme, nullptr, 8);
+					return make_shared<Num>(Num(value_oct));
+					break;
+				}
+				case State::END_SCI_NUM_F:
+				{
+					float value_float = std::stof(lexeme);
+					return make_shared<Real>(Real(value_float));
+				}
+				case State::IN_HEX_NUM:
+				{
+					int value_hex = std::stoi(lexeme, nullptr, 16);
+					return make_shared<Num>(Num(value_hex));
+				}
+				case State::IN_BIN_NUM:
+				{
+					if (lexeme.rfind("0b", 0) == 0) {
+						lexeme = lexeme.substr(2);
+					}
+					int value_bin = std::stoi(lexeme, nullptr, 2);
+					return make_shared<Num>(Num(value_bin));
+				}
 				case State::END:
 					break;
 				default:

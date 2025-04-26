@@ -11,7 +11,7 @@ std::unordered_map<Lexer::Lexer::State, std::unordered_map<char, Lexer::Lexer::C
 
 void transform(int state, char start, char end, Type type)
 {
-    for (char i = start; i < end; i++)
+    for (char i = start; i <= end; i++)
     {
         table[(State)state][i] = type;
     }
@@ -88,11 +88,11 @@ void generateAndSaveMap() {
     transform(305, 'e', Type::SCI_SIGN);
     transform(305, 'f', Type::FLOAT_SIGN);
     //306
-    transform(306, '1', '9', Type::DIGIT_ONE);
+    transform(306, '0', '9', Type::DIGIT);
     transform(306, '+',Type::SCI_SIGN_PULS_MINUS );
     transform(306, '-', Type::SCI_SIGN_PULS_MINUS);
     //307
-    transform(307, '1', '9', Type::DIGIT_ONE);
+    transform(307, '0', '9', Type::DIGIT);
     //308
     transform(308, '0', '9', Type::DIGIT);
     transform(308, 'f', Type::FLOAT_SIGN);
@@ -102,17 +102,17 @@ void generateAndSaveMap() {
     transform(310, '0', '9', Type::DIGIT);
     transform(310, 'a', 'f', Type::DIGIT);
     //401
-    transform(401, 0, 127, Type::CHAR);
+    transform(401, 0, 126, Type::CHAR);
     //402
     transform(402, '\'', Type::SINGLE_QOUTE);
     //501
     transform(501, '*', Type::STAR);
     transform(501, '/', Type::FORWARD_SLASH);
     //502
-    transform(502, 0, 127, Type::CHAR);
+    transform(502, 0, 126, Type::CHAR);
     transform(502, '\n', Type::NEW_LINE);
     //503
-    transform(503, 0, 127, Type::CHAR);
+    transform(503, 0, 126, Type::CHAR);
     transform(503, '*', Type::STAR);
     //504
     transform(504, '/', Type::FORWARD_SLASH);

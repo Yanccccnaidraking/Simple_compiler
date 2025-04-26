@@ -171,6 +171,9 @@ namespace Lexer {
                 {CharType::SCI_SIGN,State::IN_SCI_NUM},
                 {CharType::DOT,State::END_REAL},
             }},
+            {State::END_NUM_LONG,{
+                {CharType::OTHER_CHAR, State::END},
+            }},
             {State::IN_REAL,{
                 {CharType::OTHER_CHAR, State::END},
                 {CharType::DIGIT,State::END_REAL},
@@ -182,7 +185,36 @@ namespace Lexer {
                 {CharType::HEX_SIGN, State::IN_HEX_NUM},
                 {CharType::BIN_SIGN,State::IN_BIN_NUM},
             }},
-
+            {State::END_REAL, {
+                {CharType::OTHER_CHAR, State::END},
+                {CharType::DIGIT,State::END_REAL},
+                {CharType::SCI_SIGN,State::IN_SCI_NUM},
+                {CharType::FLOAT_SIGN,State::END_SCI_NUM_F},
+            }},
+            {State::IN_SCI_NUM, {
+                {CharType::OTHER_CHAR, State::END},
+                {CharType::SCI_SIGN_PULS_MINUS,State::IN_SCI_SIGN},
+                {CharType::DIGIT,State::END_SCI_NUM},
+            }},
+            { State::IN_SCI_SIGN, {
+                {CharType::OTHER_CHAR, State::END},
+                {CharType::DIGIT,State::END_SCI_NUM},
+            }},
+            { State::END_SCI_NUM, {
+                {CharType::OTHER_CHAR, State::END},
+                {CharType::DIGIT,State::END_SCI_NUM},
+                {CharType::FLOAT_SIGN,State::END_SCI_NUM_F},
+            }},
+            { State::IN_HEX_NUM, {
+                {CharType::OTHER_CHAR, State::END},
+                {CharType::DIGIT,State::IN_HEX_NUM},
+            } },
+            { State::IN_BIN_NUM, {
+                {CharType::OTHER_CHAR, State::END},
+                {CharType::DIGIT,State::IN_BIN_NUM},
+            } }, { State::END_SCI_NUM_F, {
+                {CharType::OTHER_CHAR, State::END},
+            } },
         };
 
         CharType getCharType(char c, State currentState);
