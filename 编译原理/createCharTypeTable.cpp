@@ -1,6 +1,7 @@
 ﻿#include <fstream>
 #include <unordered_map>
 #include <string>
+#include <chrono>
 #include "Lexer/lexer.h"
 
 using State = Lexer::Lexer::State;
@@ -36,26 +37,15 @@ void generateAndSaveMap() {
     transform(0, 'a', 'z', Type::LETTER);
     transform(0, '_', Type::LETTER);
 
-    std::string str1 = "(){}[],;:.?";
-    for (auto i : str1)
-    {
-        table[Lexer::Lexer::State::START][i] = Lexer::Lexer::CharType::DELIMITER;
-    }
-    table[Lexer::Lexer::State::START]['/'] = Lexer::Lexer::CharType::FORWARD_SLASH;
+    transform(0, "(){}[],;:.?", Type::DELIMITER);
+    transform(0, '/', Type::FORWARD_SLASH);
     
-    str1 = "++--~!*/%+−<<>><><=>===!=&&||&|^=+=−=*=/=%=&=|=^=<<=>>=->->*.*:";
-    for (auto i : str1)
-    {
-        table[Lexer::Lexer::State::START][i] = Lexer::Lexer::CharType::OPERATOR;
-    }
-    table[Lexer::Lexer::State::START]['\''] = Lexer::Lexer::CharType::SINGLE_QOUTE;
-    table[Lexer::Lexer::State::START]['"'] = Lexer::Lexer::CharType::DOUBLE_QOUTE;
-    for (char i = '1'; i <= '9'; i++)
-    {
-        table[Lexer::Lexer::State::START][i] = Lexer::Lexer::CharType::DIGIT_ONE;
-    }
-    table[Lexer::Lexer::State::START]['.'] = Lexer::Lexer::CharType::DOT;
-    table[Lexer::Lexer::State::START]['0'] = Lexer::Lexer::CharType::ZERO;
+    transform(0, "++--~!*/%+−<<>><><=>===!=&&||&|^=+=−=*=/=%=&=|=^=<<=>>=->->*.*:", Type::OPERATOR);
+    transform(0, '\'', Type::SINGLE_QOUTE);
+    transform(0, '"', Type::DOUBLE_QOUTE);
+    transform(0, '1', '9', Type::DIGIT_ONE);
+    transform(0, '.', Type::DOT);
+    transform(0, '0', Type::ZERO);
     transform(0, " \t\r\v\f", Type::WHITESPACE);
     transform(0, '\n', Type::NEW_LINE);
 
@@ -141,7 +131,16 @@ void saveTableToFile(const std::string& filename) {
 /// <returns></returns>
 //int main()
 //{
+//    // 记录开始时间
+//    auto start = std::chrono::high_resolution_clock::now();
 //    generateAndSaveMap();
-//    saveTableToFile("CharTypeTable.txt");
+//    /*saveTableToFile("CharTypeTable.txt");*/
+//    // 记录结束时间
+//    auto end = std::chrono::high_resolution_clock::now();
+//
+//    // 计算耗时（单位：毫秒）
+//    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+//
+//    std::cout << "耗时：" << duration.count() << " 毫秒" << std::endl;
 //    return 0;
 //}

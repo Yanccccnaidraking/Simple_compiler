@@ -2,6 +2,7 @@
 #include "Lexer/Num.h"
 #include "Lexer/Real.h"
 #include "Symbols/symbols.h"
+//#include <chrono>
 #include <cctype>
 
 namespace Lexer {
@@ -40,12 +41,19 @@ namespace Lexer {
 	/// </summary>
 	/// <param name="filename"></param>
 	void Lexer::loadTableFromFile(const std::string& filename) {
+		// 记录开始时间
+		//auto start = std::chrono::high_resolution_clock::now();
 		std::ifstream in(filename);
 		int stateInt, charInt, typeInt;
 		while (in >> stateInt >> charInt >> typeInt) {
 			charTypeTable[static_cast<State>(stateInt)][static_cast<char>(charInt)] = static_cast<CharType>(typeInt);
 		}
 		in.close();
+		// 记录结束时间
+		//auto end = std::chrono::high_resolution_clock::now();
+		// 计算耗时（单位：毫秒）
+		//auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+		//std::cout << "耗时：" << duration.count() << " 毫秒" << std::endl;
 	}
 
 	void Lexer::readch()
