@@ -276,6 +276,8 @@ namespace Lexer {
 
         void loadTableFromFile(const std::string& filename);
 
+        std::shared_ptr<Word> getOperationToken(const std::string& op);
+
         void generateAndSaveMap();
         void transform(int state, std::string str, CharType type);
         void transform(int state, char c, CharType type);

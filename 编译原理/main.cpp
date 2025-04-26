@@ -30,10 +30,26 @@ std::map<Lexer::Tag, std::string> tagToString = {
     {Lexer::Tag::NUM, "NUM"},
     {Lexer::Tag::OR, "OR"},
     {Lexer::Tag::REAL, "REAL"},
+    {Lexer::Tag::RETURN, "RETURN"},
     {Lexer::Tag::SWITCH, "SWITCH"},
     {Lexer::Tag::TEMP, "TEMP"},
     {Lexer::Tag::TRUE, "TRUE"},
-    {Lexer::Tag::WHILE, "WHILE"}
+    {Lexer::Tag::VOID, "VOID"},
+    {Lexer::Tag::WHILE, "WHILE"},
+    {Lexer::Tag::PLUS_PLUS, "PLUS_PLUS"},
+    {Lexer::Tag::MINUS_MINUS, "MINUS_MINUS"},
+    {Lexer::Tag::PLUS_EQ, "PLUS_EQ"},
+    {Lexer::Tag::MINUS_EQ, "MINUS_EQ"},
+    {Lexer::Tag::MULT_EQ, "MULT_EQ"},
+    {Lexer::Tag::DIV_EQ, "DIV_EQ"},
+    {Lexer::Tag::MOD_EQ, "MOD_EQ"},
+    {Lexer::Tag::AND_EQ, "AND_EQ"},
+    {Lexer::Tag::OR_EQ, "OR_EQ"},
+    {Lexer::Tag::XOR_EQ, "XOR_EQ"},
+    {Lexer::Tag::LEFT_SHIFT, "LEFT_SHIFT"},
+    {Lexer::Tag::RIGHT_SHIFT, "RIGHT_SHIFT"},
+    {Lexer::Tag::ARROW, "ARROW"},
+    
 };
 
 // 获取枚举对应的字符串
