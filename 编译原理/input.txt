@@ -1,5 +1,9 @@
 
+<<<<<<< HEAD
+string s = "\a\v\x12abcGHIJKsss\002\0001""123""456""\n\t""\"\v\f""\0123\xabcd123"return c;0b1010<= b){
+=======
 "abc";0b1010<= b){
+>>>>>>> b716705c50abcf0d53af70d07a0160cedfd8daad
 
 	a = 0b1010;
 	a = 0B1010;
@@ -11,10 +15,16 @@
 	a = .2f;
 	a = .f;
 	a = 16.e2f;
+string s = "\a\v\x12abcGHIJKsss\002\0001"
 	b = c;
 	c = d;
 	b = as;
 	a <= 1;
 	if (b>=3) {c = a!=1 ? 12 : 123;}
 }
+int a = b;
 int c = a;
+<<<<<<< HEAD
+string s = "\a\v\x12abcGHIJKsss\002\0001";
+=======
+>>>>>>> b716705c50abcf0d53af70d07a0160cedfd8daad
