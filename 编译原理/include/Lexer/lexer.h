@@ -31,8 +31,16 @@ namespace Lexer {
         enum class State : int {
             START = 0,
             IN_ID = 101,
-            IN_STRING = 201,
-            END_STRING = 202,
+            // 字符串
+            IN_STRING = 201, 
+            IN_NORMAL_CHAR = 202, // 普通字符 [^\"]
+            IN_ESCAPE_STATE = 203, // 接收\开始转义
+            IN_PARSE_OBT_1 = 204, // 解析8进制第1个数字
+            IN_PARSE_OBT_2 = 205, // 解析8进制第2个数字
+            IN_PARSE_OBT_3 = 206, // 解析8进制第3个数字
+            IN_PARSE_HEX_1 = 207, // 解析16进制第1个数字
+            IN_PARSE_HEX_n = 208, // 解析16进制第n个数字
+            END_STRING = 209, // 结束字符串
             // 数字部分
             IN_NUM = 301,
             END_NUM_LONG=302,
@@ -45,6 +53,7 @@ namespace Lexer {
             IN_BIN_NUM = 309,
             IN_HEX_NUM = 310,
             END_SCI_NUM_F = 311,
+            // 单个字符
             START_CHAR = 401,
             IN_CHAR = 402,
             END_CHAR = 403,
@@ -62,29 +71,33 @@ namespace Lexer {
 
         // 定义字符类型枚举
         enum class CharType : int {
-            LETTER,
-            DIGIT,
-            DIGIT_ONE,
-            DOT,
-            WHITESPACE,
-            OPERATOR,
-            SINGLE_QOUTE,
-            DOUBLE_QOUTE,
-            FORWARD_SLASH,
-            BACWARD_SLASH,
-            DELIMITER,
-            CHAR,
-            STAR,
-            ZERO,
-            NEW_LINE,
-            OTHER_CHAR,
-            EOF_CHAR,
-            LONG_SIGN,//long类型的结束符
-            SCI_SIGN,//科学计数法符号
-            FLOAT_SIGN,//float类型的结束符
-            HEX_SIGN,//十六进制的起始符号x
-            BIN_SIGN,//二进制的起始符号b
-            SCI_SIGN_PULS_MINUS,//科学技术法的 +、- 符号
+            LETTER, //[a-zA-Z_]
+            DIGIT, // [0-9]
+            DIGIT_ONE, // [1-9]
+            DOT, // [.]
+            WHITESPACE, // 
+            OPERATOR, // 
+            SINGLE_QOUTE, // [']
+            DOUBLE_QOUTE, // ["]
+            FORWARD_SLASH, // [/]
+            BACWARD_SLASH, // [\]
+            DELIMITER, // 界限符
+            CHAR, // 所有字符
+            STAR, // [*]
+            ZERO, // [0]
+            NEW_LINE, // [\n]
+            OTHER_CHAR, 
+            EOF_CHAR, // [\0]
+            LONG_SIGN,//long类型的结束符 [L]
+            SCI_SIGN,//科学计数法符号 [eE]
+            FLOAT_SIGN,//float类型的结束符 [f]
+            HEX_SIGN,//十六进制的起始符号 [x]
+            BIN_SIGN,//二进制的起始符号 [b]
+            SCI_SIGN_PULS_MINUS,//科学技术法的 +、- 符号 [+-]
+            ESCAPABLE_CHAR, // 可转义字符 ["ntrvfabe\']
+            HEX_DIGIT,// 16进制数字 [0-9a-fA-F]
+            OCT_DIGIT,// 8进制数字 [0-7]
+            NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, // 非反斜杠和双引号 [^\"]
         };
 
         std::unordered_map<State, std::unordered_map<char, CharType>> charTypeTable;
@@ -115,15 +128,56 @@ namespace Lexer {
                 {CharType::OPERATOR, State::END},
                 {CharType::EOF_CHAR, State::END}
             }},
+            /*解析字符串*/
             {State::IN_STRING, {
-                {CharType::CHAR, State::IN_STRING},
-                {CharType::DOUBLE_QOUTE, State::END_STRING},
-                {CharType::OTHER_CHAR, State::END},
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
+                {CharType::DOUBLE_QOUTE, State::END},
+                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_ESCAPE_STATE},
+            }},
+            {State::IN_NORMAL_CHAR, {
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
+                {CharType::DOUBLE_QOUTE, State::END},
+                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
+            }},
+            {State::IN_ESCAPE_STATE, {
+                {CharType::ESCAPABLE_CHAR, State::IN_STRING},
+                {CharType::OCT_DIGIT, State::IN_PARSE_OBT_1},
+                {CharType::HEX_DIGIT, State::IN_PARSE_HEX_1},
+            }},
+            {State::IN_PARSE_OBT_1, {
+                {CharType::OCT_DIGIT, State::IN_PARSE_OBT_2},
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
+                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
+                {CharType::DOUBLE_QOUTE, State::END},
+
+            }},
+            {State::IN_PARSE_OBT_2, {
+                {CharType::OCT_DIGIT, State::IN_PARSE_OBT_3},
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
+                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
+                {CharType::DOUBLE_QOUTE, State::END},
+
+            }},
+            {State::IN_PARSE_OBT_3, {
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
+                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
+                {CharType::DOUBLE_QOUTE, State::END},
+
+            }},
+            {State::IN_PARSE_HEX_1, {
+                {CharType::HEX_DIGIT, State::IN_PARSE_HEX_n},
+            }},
+            {State::IN_PARSE_HEX_n, {
+                {CharType::HEX_DIGIT, State::IN_PARSE_HEX_n},
+                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
+                {CharType::DOUBLE_QOUTE, State::END},
+
             }},
             {State::END_STRING, {
                 {CharType::DOUBLE_QOUTE, State::END},
                 {CharType::OTHER_CHAR, State::END},
             }},
+            /*解析字符*/
             {State::START_CHAR, {
                 {CharType::CHAR, State::IN_CHAR},
                 {CharType::OTHER_CHAR, State::END},
@@ -132,6 +186,7 @@ namespace Lexer {
                 {CharType::SINGLE_QOUTE, State::END},
                 {CharType::OTHER_CHAR, State::END},
             }},
+            /*解析注释*/
             {State::START_COMMENT, {
                 {CharType::FORWARD_SLASH, State::IN_SINGLE_COMMENT},
                 {CharType::STAR, State::IN_MUTI_COMMENT},

@@ -33,8 +33,33 @@ namespace Lexer {
         transform(101, '_', Type::LETTER);
         transform(101, '0', '9', Type::DIGIT);
         //201
-        transform(201, 'a', 'z', Type::LETTER);
-        transform(201, '"', Type::DOUBLE_QOUTE);
+        transform(201, '\\', Type::BACWARD_SLASH);
+        transform(201, '\"', Type::DOUBLE_QOUTE);
+        transform(201, 0,'\"'-1, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
+        transform(201, '\"'+1, '\\'-1, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
+        transform(201, '\\'+1, 126, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
+        // 202
+        transform(202, '\\', Type::BACWARD_SLASH);
+        transform(202, '\"', Type::DOUBLE_QOUTE);
+        transform(202, 0, '\"' - 1, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
+        transform(202, '\"' + 1, '\\' - 1, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
+        transform(202, '\\' + 1, 126, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
+        // 203
+        transform(203, '\\', Type::ESCAPABLE_CHAR);
+        transform(203, 'n', Type::ESCAPABLE_CHAR);
+        transform(203, 't', Type::ESCAPABLE_CHAR);
+        transform(203, 'r', Type::ESCAPABLE_CHAR);
+        transform(203, 'v', Type::ESCAPABLE_CHAR);
+        transform(203, 'f', Type::ESCAPABLE_CHAR);
+        transform(203, 'a', Type::ESCAPABLE_CHAR);
+        transform(203, 'b', Type::ESCAPABLE_CHAR);
+        transform(203, 'e', Type::ESCAPABLE_CHAR);
+        transform(203, '"', Type::ESCAPABLE_CHAR);
+        transform(203, '\'', Type::ESCAPABLE_CHAR);
+        transform(203, '0','7', Type::OCT_DIGIT);
+        transform(203, '0','9', Type::HEX_DIGIT);
+        transform(203, 'a','f', Type::HEX_DIGIT);
+        transform(203, 'A','F', Type::HEX_DIGIT);
         //301
         transform(301, '0', '9', Type::DIGIT);
         transform(301, 'l', Type::LONG_SIGN);
