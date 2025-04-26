@@ -18,8 +18,9 @@ return c;0b1010<= b){
 	if (b>=3) {c = a!=1 ? 12 : 123;}
 }
 int c = a;
-string s1 = "123";
-string s2 ="abc";
-string s3 ="\x123abc";
-string s4 ="078";
-string s5 ="003";
+/*string s1 = "123";*/
+//string s2 ="abc";
+//string s3 ="\x123abc";
+//string s4 ="078";
+//string s5 ="003";
+string s6 = "";

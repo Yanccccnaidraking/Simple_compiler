@@ -358,6 +358,20 @@ namespace Lexer {
 					int value_bin = std::stoi(lexeme, nullptr, 2);
 					return make_shared<Num>(Num(value_bin));
 				}
+				case State::IN_NORMAL_CHAR: // 202
+					break;
+				case State::IN_ESCAPE_STATE: // 203
+					break;
+				case State::IN_PARSE_OBT_1://204
+					break;
+				case State::IN_PARSE_OBT_2://205
+					break;
+				case State::IN_PARSE_OBT_3://206
+					break;
+				case State::IN_PARSE_HEX_1://207
+					break;
+				case State::IN_PARSE_HEX_n://208
+					break;
 				case State::END:
 					break;
 				default:

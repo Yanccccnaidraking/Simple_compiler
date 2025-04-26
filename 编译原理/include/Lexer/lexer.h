@@ -129,53 +129,52 @@ namespace Lexer {
                 {CharType::EOF_CHAR, State::END}
             }},
             /*½âÎö×Ö·û´®*/
-            {State::IN_STRING, {
+            {State::IN_STRING, { //201
                 {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
                 {CharType::DOUBLE_QOUTE, State::END},
                 {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_ESCAPE_STATE},
             }},
-            {State::IN_NORMAL_CHAR, {
+            {State::IN_NORMAL_CHAR, { //202
                 {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
                 {CharType::DOUBLE_QOUTE, State::END},
                 {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
             }},
-            {State::IN_ESCAPE_STATE, {
+            {State::IN_ESCAPE_STATE, {//203
                 {CharType::ESCAPABLE_CHAR, State::IN_STRING},
                 {CharType::OCT_DIGIT, State::IN_PARSE_OBT_1},
                 {CharType::HEX_DIGIT, State::IN_PARSE_HEX_1},
             }},
-            {State::IN_PARSE_OBT_1, {
+            {State::IN_PARSE_OBT_1, {//204
                 {CharType::OCT_DIGIT, State::IN_PARSE_OBT_2},
                 {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
                 {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
                 {CharType::DOUBLE_QOUTE, State::END},
 
             }},
-            {State::IN_PARSE_OBT_2, {
+            {State::IN_PARSE_OBT_2, {//205
                 {CharType::OCT_DIGIT, State::IN_PARSE_OBT_3},
                 {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
                 {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
                 {CharType::DOUBLE_QOUTE, State::END},
 
             }},
-            {State::IN_PARSE_OBT_3, {
+            {State::IN_PARSE_OBT_3, {//206
                 {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
                 {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
                 {CharType::DOUBLE_QOUTE, State::END},
 
             }},
-            {State::IN_PARSE_HEX_1, {
+            {State::IN_PARSE_HEX_1, {//207
                 {CharType::HEX_DIGIT, State::IN_PARSE_HEX_n},
             }},
-            {State::IN_PARSE_HEX_n, {
+            {State::IN_PARSE_HEX_n, {//208
                 {CharType::HEX_DIGIT, State::IN_PARSE_HEX_n},
                 {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
                 {CharType::DOUBLE_QOUTE, State::END},
 
             }},
-            {State::END_STRING, {
-                {CharType::DOUBLE_QOUTE, State::END},
-                {CharType::OTHER_CHAR, State::END},
+            {State::END_STRING, {//209
+                
             }},
             /*½âÎö×Ö·û*/
             {State::START_CHAR, {
