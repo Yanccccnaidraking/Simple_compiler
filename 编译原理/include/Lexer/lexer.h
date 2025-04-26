@@ -132,7 +132,7 @@ namespace Lexer {
             {State::IN_STRING, { //201
                 {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
                 {CharType::DOUBLE_QOUTE, State::END_STRING},
-                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_ESCAPE_STATE},
+                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
                 {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_NORMAL_CHAR, { //202
