@@ -208,7 +208,8 @@ namespace Lexer {
             }},
             {State::END_MUTI_COMMENT1, {
                 {CharType::FORWARD_SLASH, State::END}, // Óöµ½/½áÊø×¢ÊÍ
-                {CharType::CHAR, State::IN_MUTI_COMMENT}
+                {CharType::CHAR, State::IN_MUTI_COMMENT},
+                {CharType::STAR, State::END_MUTI_COMMENT1},
             }},
             {State::IN_OP, {
                 {CharType::OPERATOR, State::END_OP},
