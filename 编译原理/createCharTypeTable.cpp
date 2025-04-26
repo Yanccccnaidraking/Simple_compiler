@@ -61,18 +61,18 @@ namespace Lexer {
         transform(203, 'a','f', Type::HEX_DIGIT);
         transform(203, 'A','F', Type::HEX_DIGIT);
         //204
-        transform(204, '0', '7', Type::OCT_DIGIT);
         transform(204, '\\', Type::BACWARD_SLASH);
         transform(204, 0, '\"' - 1, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
         transform(204, '\"' + 1, '\\' - 1, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
         transform(204, '\\' + 1, 126, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
+        transform(204, '0', '7', Type::OCT_DIGIT);
         transform(204, '"', Type::DOUBLE_QOUTE);
         //205
-        transform(205, '0', '7', Type::OCT_DIGIT);
         transform(205, '\\', Type::BACWARD_SLASH);
         transform(205, 0, '\"' - 1, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
         transform(205, '\"' + 1, '\\' - 1, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
         transform(205, '\\' + 1, 126, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
+        transform(205, '0', '7', Type::OCT_DIGIT);
         transform(205, '"', Type::DOUBLE_QOUTE);
         //206
         transform(206, '\\', Type::BACWARD_SLASH);
@@ -85,12 +85,14 @@ namespace Lexer {
         transform(207, 'a', 'f', Type::HEX_DIGIT);
         transform(207, 'A', 'F', Type::HEX_DIGIT);
         //208
-        transform(208, '0', '9', Type::HEX_DIGIT);
-        transform(208, 'a', 'f', Type::HEX_DIGIT);
-        transform(208, 'A', 'F', Type::HEX_DIGIT);
+        
         transform(208, 0, '\"' - 1, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
         transform(208, '\"' + 1, '\\' - 1, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
         transform(208, '\\' + 1, 126, Type::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE);
+
+        transform(208, '0', '9', Type::HEX_DIGIT);
+        transform(208, 'a', 'f', Type::HEX_DIGIT);
+        transform(208, 'A', 'F', Type::HEX_DIGIT);
         transform(208, '"', Type::DOUBLE_QOUTE);
         //301
         transform(301, '0', '9', Type::DIGIT);
