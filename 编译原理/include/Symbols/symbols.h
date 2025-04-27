@@ -34,5 +34,19 @@ namespace Symbols
 		const static Type* Int, * Short, * Float, * Char, * Bool, * Double, * Long;
 		static const Type* max(const Type* p1, const Type* p2);
 		static int typePriority(const Type* type);
+		Type& operator= (const Type& t) { this->width = t.width;  return *this; }
+	};
+
+	class Array : public Type {
+	public:
+		Type of;
+		int size = 1;
+		Array(int sz, Type p):Type("[]",Lexer::Tag::INDEX,sz*p.width) {
+			size = sz;
+			of = p;
+		}
+		std::string toString() {
+			return "[" + std::to_string(size) + "]" + of.toString();
+		}
 	};
 }
