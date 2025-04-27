@@ -261,6 +261,11 @@ namespace Lexer {
 					buffer.getToken();
 					continue;
 				}
+				else if (charType == CharType::OTHER_CHAR) {
+					buffer.next();
+					buffer.getToken();
+					return std::make_shared<Word>(Word::ne);
+				}
 				else if (charType == CharType::EOF_CHAR) {
 					return nullptr;
 				}

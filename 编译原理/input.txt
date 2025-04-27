@@ -17,10 +17,12 @@ dwaqw//d
 	a = 0x123ab;
 	a = 0X123AB;
 	a = 0x123AB;
+	a = 123Ò»;
 	a = .2f;
 	a = .f;
 	a = 16.e2f;
 string s = "\a\v\x12abcGHIJKsss\002\0001"
+Ò»¶þ
 	b = c;
 	c = d;
 	b = as;
