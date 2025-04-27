@@ -62,22 +62,12 @@ static std::string getEnumString(Lexer::Tag tag) {
 }
 
 int main() {
-    // 打开代码文本文件
-    std::ifstream file("input.txt");
-    if (!file.is_open()) {
-        std::cerr << "无法打开文件" << std::endl;
-        return 1;
-    }
-
-    // 重定向标准输入到文件
-    std::streambuf* cinbuf = std::cin.rdbuf();
-    std::cin.rdbuf(file.rdbuf());
-
     // 创建Lexer对象
-    Lexer::Lexer lexer=Lexer::Lexer("input.txt");
+    Lexer::Lexer lexer = Lexer::Lexer("input.txt");
 
     // 扫描并输出词法单元
     std::shared_ptr<Lexer::Token> token;
+
     while ((token = lexer.scan()) != nullptr) {
         if (auto num = std::dynamic_pointer_cast<Lexer::Num>(token)) {
             std::cout << "<" << num->toString() << ", " << getEnumString((Lexer::Tag)num->tag) << ">" << std::endl;
@@ -93,9 +83,10 @@ int main() {
         }
     }
 
-    // 恢复标准输入
-    std::cin.rdbuf(cinbuf);
-    file.close();
+    // 输出错误信息
+    std::cout << "错误信息：\n" << lexer.error_info << std::endl;
+
+
 
     return 0;
 }

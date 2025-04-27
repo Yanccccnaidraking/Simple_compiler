@@ -110,7 +110,8 @@ namespace Lexer {
 		if (it != opToTag.end()) {
 			return std::make_shared<Word>(op, it->second);
 		}
-		return std::make_shared<Word>(op, Tag::TEMP);
+		throw std::runtime_error("line " + to_string(line) + ": Invalid opearation.");
+		return nullptr;
 	}
 
 	void Lexer::readch()
@@ -239,6 +240,14 @@ namespace Lexer {
 				return nullptr;
 			}
 
+			// 记录注释中的换行
+			if (currentState == State::IN_MUTI_COMMENT ||
+				currentState == State::END_MUTI_COMMENT1) {
+				if (c == '\n') {
+					line++;
+				}
+			}
+
 			// 跳过空白字符和换行符
 			if (currentState == State::START) {
 				if (charType == CharType::WHITESPACE) {
@@ -252,22 +261,27 @@ namespace Lexer {
 					buffer.getToken();
 					continue;
 				}
+				else if (charType == CharType::OTHER_CHAR) {
+					buffer.next();
+					buffer.getToken();
+					return std::make_shared<Word>(Word::ne);
+				}
 				else if (charType == CharType::EOF_CHAR) {
 					return nullptr;
 				}
 			}
 
-
-			// 根据状态转移表进行状态转移
-			auto stateIt = transitionTable.find(currentState);
-			if (stateIt == transitionTable.end()) {
-				throw std::runtime_error("Invalid state in transition table");
-			}
-			auto nextStateIt = stateIt->second.find(charType);
-			if (nextStateIt == stateIt->second.end()) {
-				throw std::runtime_error("Invalid character type for current state");
-			}
-			State nextState = nextStateIt->second;
+			try {
+				// 根据状态转移表进行状态转移
+				auto stateIt = transitionTable.find(currentState);
+				if (stateIt == transitionTable.end()) {
+					throw std::runtime_error("line " + to_string(line) + ": Invalid state in transition table");
+				}
+				auto nextStateIt = stateIt->second.find(charType);
+				if (nextStateIt == stateIt->second.end()) {
+					throw std::runtime_error("line " + to_string(line) + ": Invalid character type for current state");
+				}
+				State nextState = nextStateIt->second;
 
 
 
@@ -355,12 +369,12 @@ namespace Lexer {
 					float value_float = std::stof(lexeme);
 					return make_shared<Real>(Real(value_float));
 				}
-				case State::IN_HEX_NUM:
+				case State::END_HEX_NUM:
 				{
 					int value_hex = std::stoi(lexeme, nullptr, 16);
 					return make_shared<Num>(Num(value_hex));
 				}
-				case State::IN_BIN_NUM:
+				case State::END_BIN_NUM:
 				{
 					if (lexeme.rfind("0b", 0) == 0) {
 						lexeme = lexeme.substr(2);
@@ -406,7 +420,16 @@ namespace Lexer {
 				buffer.next();
 			}
 
-			currentState = nextState;
+				currentState = nextState;
+
+			}
+			catch (std::runtime_error err) {
+				error_info += err.what();
+				error_info += '\n';
+				currentState = State::START;
+				buffer.next();
+				buffer.getToken();
+			}
 		}
 	}
 
