@@ -162,7 +162,7 @@ namespace Lexer {
         transform(504, '*', Type::STAR);
         transform(504, '/', Type::FORWARD_SLASH);
         //601
-        transform(601, "++--~!*/%+−<<>><><=>===!=&&||&|^=+=−=*=/=%=&=|=^=<<=>>=->->*.*:", Type::OPERATOR);
+        transform(601, "+-~!*/%<>=&|^.:", Type::OPERATOR);
     }
 }
 
