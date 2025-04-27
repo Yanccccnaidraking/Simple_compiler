@@ -42,6 +42,12 @@
     <ClCompile Include="src\Lexer\doublebuffer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="createCharTypeTable.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Parser\parser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Lexer\lexer.h">
@@ -65,11 +71,35 @@
     <ClInclude Include="include\Symbols\symbols.h">
       <Filter>Symbols</Filter>
     </ClInclude>
-    <ClInclude Include="include\Inter\inter.h">
-      <Filter>Inter</Filter>
-    </ClInclude>
     <ClInclude Include="include\Lexer\doublebuffer.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\Lexer\Bool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Lexer\Char.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Lexer\String.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\expr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\node.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\id.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parser\parser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\stmt.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CharTypeTable.txt" />
   </ItemGroup>
 </Project>

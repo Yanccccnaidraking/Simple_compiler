@@ -134,11 +134,15 @@
     <ClCompile Include="src\Lexer\doublebuffer.cpp" />
     <ClCompile Include="src\Lexer\lexer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\Parser\parser.cpp" />
     <ClCompile Include="src\Symbols\symbols.cpp" />
     <ClCompile Include="src\Lexer\Word.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Inter\inter.h" />
+    <ClInclude Include="include\Inter\expr.h" />
+    <ClInclude Include="include\Inter\id.h" />
+    <ClInclude Include="include\Inter\node.h" />
+    <ClInclude Include="include\Inter\stmt.h" />
     <ClInclude Include="include\Lexer\Bool.h" />
     <ClInclude Include="include\Lexer\Char.h" />
     <ClInclude Include="include\Lexer\doublebuffer.h" />
@@ -146,6 +150,7 @@
     <ClInclude Include="include\Lexer\Num.h" />
     <ClInclude Include="include\Lexer\Real.h" />
     <ClInclude Include="include\Lexer\String.h" />
+    <ClInclude Include="include\Parser\parser.h" />
     <ClInclude Include="include\Symbols\symbols.h" />
     <ClInclude Include="include\Lexer\Tag.h" />
     <ClInclude Include="include\Lexer\Token.h" />
