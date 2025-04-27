@@ -109,7 +109,7 @@ namespace Lexer {
             HEX_SIGN,//十六进制的起始符号 [x]
             BIN_SIGN,//二进制的起始符号 [b]
             SCI_SIGN_PULS_MINUS,//科学技术法的 +、- 符号 [+-]
-            ESCAPABLE_CHAR, // 可转义字符 ["ntrvfabe\']
+            ESCAPABLE_CHAR, // 可转义字符 ["ntrvfab\']
             HEX_DIGIT,// 16进制数字 [0-9a-fA-F]
             OCT_DIGIT,// 8进制数字 [0-7]
             NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, // 非反斜杠和双引号 [^\"]

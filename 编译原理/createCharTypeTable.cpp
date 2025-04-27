@@ -56,7 +56,6 @@ namespace Lexer {
         transform(203, 'f', Type::ESCAPABLE_CHAR);
         transform(203, 'a', Type::ESCAPABLE_CHAR);
         transform(203, 'b', Type::ESCAPABLE_CHAR);
-        transform(203, 'e', Type::ESCAPABLE_CHAR);
         transform(203, '"', Type::ESCAPABLE_CHAR);
         transform(203, '\'', Type::ESCAPABLE_CHAR);
         transform(203, '0','7', Type::OCT_DIGIT);
@@ -159,7 +158,6 @@ namespace Lexer {
         transform(403, 'f', Type::ESCAPABLE_CHAR);
         transform(403, 'a', Type::ESCAPABLE_CHAR);
         transform(403, 'b', Type::ESCAPABLE_CHAR);
-        transform(403, 'e', Type::ESCAPABLE_CHAR);
         transform(403, '"', Type::ESCAPABLE_CHAR);
         transform(403, '\'', Type::ESCAPABLE_CHAR);
         transform(403, '0', '7', Type::OCT_DIGIT);
