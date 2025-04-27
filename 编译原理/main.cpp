@@ -6,6 +6,7 @@
 #include "Lexer/Num.h"
 #include "Lexer/Real.h"
 #include "Lexer/String.h"
+#include "Lexer/Char.h"
 #include "Lexer/Tag.h"
 
 
@@ -51,6 +52,7 @@ std::map<Lexer::Tag, std::string> tagToString = {
     {Lexer::Tag::RIGHT_SHIFT, "RIGHT_SHIFT"},
     {Lexer::Tag::ARROW, "ARROW"},
     {Lexer::Tag::STRING,"STRING"},
+    {Lexer::Tag::CHAR,"CHAR"},
 };
 
 // 获取枚举对应的字符串
@@ -80,6 +82,9 @@ int main() {
             std::cout << "<" << word->toString() << ", " << getEnumString((Lexer::Tag)word->tag) << ">" << std::endl;
         }
         else if (auto str = std::dynamic_pointer_cast<Lexer::String>(token)) {
+            std::cout << "<" << str->toString() << ", " << getEnumString((Lexer::Tag)str->tag) << ">" << std::endl;
+        }
+        else if (auto str = std::dynamic_pointer_cast<Lexer::Char>(token)) {
             std::cout << "<" << str->toString() << ", " << getEnumString((Lexer::Tag)str->tag) << ">" << std::endl;
         }
         else {
