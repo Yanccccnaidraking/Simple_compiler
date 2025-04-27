@@ -298,6 +298,7 @@ namespace Lexer {
 				case State::END_CHAR:
 					break;
 				case State::START_COMMENT:
+					return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
 					break;
 				case State::IN_SINGLE_COMMENT:
 					currentState = State::START;

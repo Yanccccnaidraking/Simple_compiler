@@ -144,6 +144,7 @@ namespace Lexer {
         //501
         transform(501, '*', Type::STAR);
         transform(501, '/', Type::FORWARD_SLASH);
+        transform(501, '=', Type::OPERATOR);
         //502
         transform(502, 0, 126, Type::CHAR);
         transform(502, '\n', Type::NEW_LINE);

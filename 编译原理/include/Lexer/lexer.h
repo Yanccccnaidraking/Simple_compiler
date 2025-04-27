@@ -196,6 +196,7 @@ namespace Lexer {
             {State::START_COMMENT, {
                 {CharType::FORWARD_SLASH, State::IN_SINGLE_COMMENT},
                 {CharType::STAR, State::IN_MUTI_COMMENT},
+                {CharType::OPERATOR,State::END_OP},
                 {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_SINGLE_COMMENT, {
