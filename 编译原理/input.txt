@@ -20,6 +20,7 @@ dwaqw//d
 	a = 0x123ab;
 	a = 0X123AB;
 	a = 0x123AB;
+	a = ;
 	a = 123һ;
 	a = .2f;
 	a = .f;
