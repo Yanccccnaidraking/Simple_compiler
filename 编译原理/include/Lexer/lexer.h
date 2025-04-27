@@ -35,7 +35,7 @@ namespace Lexer {
             START = 0,
             IN_ID = 101,
             // 字符串
-            IN_STRING = 201, 
+            IN_STRING = 201,
             IN_NORMAL_CHAR = 202, // 普通字符 [^\"]
             IN_ESCAPE_STATE = 203, // 接收\开始转义
             IN_PARSE_OBT_1 = 204, // 解析8进制第1个数字
@@ -46,16 +46,18 @@ namespace Lexer {
             END_STRING = 209, // 结束字符串
             // 数字部分
             IN_NUM = 301,
-            END_NUM_LONG=302,
+            END_NUM_LONG = 302,
             IN_OCT_NUM = 303,
             IN_REAL = 304,
             END_REAL = 305,
             IN_SCI_NUM = 306,
-            IN_SCI_SIGN = 307, 
+            IN_SCI_SIGN = 307,
             END_SCI_NUM = 308,
             IN_BIN_NUM = 309,
             IN_HEX_NUM = 310,
             END_SCI_NUM_F = 311,
+            END_BIN_NUM = 312,
+            END_HEX_NUM = 313,
             // 单个字符
             START_CHAR = 401,
             IN_CHAR = 402,
@@ -272,12 +274,21 @@ namespace Lexer {
             }},
             { State::IN_HEX_NUM, {
                 {CharType::OTHER_CHAR, State::END},
-                {CharType::DIGIT,State::IN_HEX_NUM},
+                {CharType::DIGIT,State::END_HEX_NUM},
+            } },
+            { State::END_HEX_NUM, {
+                {CharType::OTHER_CHAR, State::END},
+                {CharType::DIGIT,State::END_HEX_NUM},
             } },
             { State::IN_BIN_NUM, {
                 {CharType::OTHER_CHAR, State::END},
-                {CharType::DIGIT,State::IN_BIN_NUM},
-            } }, { State::END_SCI_NUM_F, {
+                {CharType::DIGIT,State::END_BIN_NUM},
+            } }, 
+            { State::END_BIN_NUM, {
+                {CharType::OTHER_CHAR, State::END},
+                {CharType::DIGIT,State::END_BIN_NUM},
+            } },
+            { State::END_SCI_NUM_F, {
                 {CharType::OTHER_CHAR, State::END},
             } },
         };

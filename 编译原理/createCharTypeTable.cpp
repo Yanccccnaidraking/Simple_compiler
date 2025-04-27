@@ -137,6 +137,12 @@ namespace Lexer {
         transform(310, '0', '9', Type::DIGIT);
         transform(310, 'a', 'f', Type::DIGIT);
         transform(310, 'A', 'F', Type::DIGIT);
+        //312
+        transform(312, '0', '1', Type::DIGIT);
+        //313
+        transform(313, '0', '9', Type::DIGIT);
+        transform(313, 'a', 'f', Type::DIGIT);
+        transform(313, 'A', 'F', Type::DIGIT);
         //401
         transform(401, 0, 126, Type::CHAR);
         //402

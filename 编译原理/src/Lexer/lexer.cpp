@@ -357,12 +357,12 @@ namespace Lexer {
 					float value_float = std::stof(lexeme);
 					return make_shared<Real>(Real(value_float));
 				}
-				case State::IN_HEX_NUM:
+				case State::END_HEX_NUM:
 				{
 					int value_hex = std::stoi(lexeme, nullptr, 16);
 					return make_shared<Num>(Num(value_hex));
 				}
-				case State::IN_BIN_NUM:
+				case State::END_BIN_NUM:
 				{
 					if (lexeme.rfind("0b", 0) == 0) {
 						lexeme = lexeme.substr(2);
