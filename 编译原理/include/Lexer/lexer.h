@@ -197,6 +197,7 @@ namespace Lexer {
 
             }},
             {State::END_STRING, {//209
+                {CharType::EOF_CHAR, State::END},
                 {CharType::OTHER_CHAR, State::END},
             }},
             /*½âÎö×Ö·û*/
@@ -243,6 +244,7 @@ namespace Lexer {
                 {CharType::OTHER_CHAR, State::END},
             } },
             {State::END_CHAR, { // 410
+                {CharType::EOF_CHAR, State::END},
                 {CharType::OTHER_CHAR, State::END},
             }},
             /*½âÎö×¢ÊÍ*/
