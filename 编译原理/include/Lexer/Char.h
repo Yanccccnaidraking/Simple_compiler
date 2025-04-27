@@ -7,9 +7,14 @@ namespace Lexer {
 	{
 	public:
 		const char value;
+		const std::string string_value;
+		Char(std::string v) :  string_value(v), value(transformToChar()), Token(Tag::CHAR) {}
 
-		Char(char v) : value(v), Token(Tag::CHAR){}
+		std::string toString() const { return string_value; }
 
-		std::string toString() const { return ""+value; }
+		// TODO:Íê³É×ª»»
+        inline char transformToChar() {
+			return 'x';
+        }
 	};
 }
