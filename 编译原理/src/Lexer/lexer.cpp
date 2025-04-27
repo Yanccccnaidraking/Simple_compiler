@@ -240,6 +240,14 @@ namespace Lexer {
 				return nullptr;
 			}
 
+			// 记录注释中的换行
+			if (currentState == State::IN_MUTI_COMMENT ||
+				currentState == State::END_MUTI_COMMENT1) {
+				if (c == '\n') {
+					line++;
+				}
+			}
+
 			// 跳过空白字符和换行符
 			if (currentState == State::START) {
 				if (charType == CharType::WHITESPACE) {
