@@ -139,9 +139,11 @@
     <ClCompile Include="src\Lexer\Word.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Inter\access.h" />
     <ClInclude Include="include\Inter\expr.h" />
     <ClInclude Include="include\Inter\id.h" />
     <ClInclude Include="include\Inter\node.h" />
+    <ClInclude Include="include\Inter\op.h" />
     <ClInclude Include="include\Inter\stmt.h" />
     <ClInclude Include="include\Lexer\Bool.h" />
     <ClInclude Include="include\Lexer\Char.h" />

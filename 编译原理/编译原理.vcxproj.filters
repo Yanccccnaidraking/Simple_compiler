@@ -98,6 +98,12 @@
     <ClInclude Include="include\Inter\stmt.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\Inter\op.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\access.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="CharTypeTable.txt" />

@@ -1,10 +1,7 @@
 #pragma once
 #include<unordered_map>
 #include "Lexer/lexer.h"
-#include "Inter/id.h"
-#include "Inter/expr.h"
-#include "Inter/node.h"
-#include "Lexer/Token.h"
+#include "Lexer/Word.h"
 using namespace std;
 
 
