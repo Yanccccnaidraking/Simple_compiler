@@ -6,6 +6,7 @@
 #include "Lexer/String.h"
 #include "Symbols/symbols.h"
 //#include <chrono>
+#include <charconv>
 #include <cctype>
 #include <map>
 
@@ -226,7 +227,49 @@ namespace Lexer {
 		//return CharType::OTHER_CHAR;
 	}
 
+	bool canConvertToInt(const std::string& str)
+	{
+		int base = 10;
+		const char* begin = str.data();
+		const char* end = str.data() + str.size();
 
+		// 检查前缀判断进制
+		if (str.size() > 2 && str[0] == '0') {
+			char second = std::tolower(str[1]);
+			if (second == 'x') {
+				base = 16;
+				begin += 2; // 跳过 0x
+			}
+			else if (second == 'b') {
+				base = 2;
+				begin += 2; // 跳过 0b
+			}
+			else if (std::isdigit(str[1])) {
+				base = 8;
+				begin += 1; // 0开头，八进制（注意不要跳过第一个数字）
+			}
+		}
+
+		int value;
+		auto result = std::from_chars(begin, end, value, base);
+		return result.ec == std::errc();
+	}
+
+	bool canConvertToFloat(const std::string& str) {
+		const char* begin = str.data();
+		const char* end = str.data() + str.size();
+		float value;
+		auto result = std::from_chars(begin, end, value);
+		return result.ec == std::errc() && result.ptr == end;
+	}
+
+	bool canConvertToDouble(const std::string& str) {
+		const char* begin = str.data();
+		const char* end = str.data() + str.size();
+		double value;
+		auto result = std::from_chars(begin, end, value);
+		return result.ec == std::errc() && result.ptr == end;
+	}
 
 	std::shared_ptr<Token> Lexer::scan() {
 		State currentState = State::START;
@@ -260,6 +303,11 @@ namespace Lexer {
 					buffer.next();
 					buffer.getToken();
 					continue;
+				}
+				else if (charType == CharType::OTHER_CHAR) {
+					buffer.next();
+					buffer.getToken();
+					return std::make_shared<Word>(Word::ne);
 				}
 				else if (charType == CharType::EOF_CHAR) {
 					return nullptr;
@@ -296,16 +344,15 @@ namespace Lexer {
 					else
 						return make_shared<Word>(Word(lexeme, Tag::ID));
 					break;
-				case State::IN_STRING:
+				case State::START_STRING:
 					break;
 				case State::END_STRING:
+					break;
+				case State::IN_CHAR: //401
+					break;
+				case State::END_CHAR: //410
 					return make_shared<String>(String(lexeme));
-					break;
-				case State::START_CHAR:
-					break;
-				case State::IN_CHAR:
-					break;
-				case State::END_CHAR:
+					//return make_shared<Char>(Char(lexeme));
 					break;
 				case State::START_COMMENT:
 					return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
@@ -337,27 +384,55 @@ namespace Lexer {
 					break;
 				case State::IN_NUM:
 				{
-					int value = std::stoi(lexeme);
-					return make_shared<Num>(Num(value));
+					if (canConvertToInt(lexeme))
+					{
+						int value = std::stoi(lexeme);
+						return make_shared<Num>(Num(value));
+					}
+					else
+					{
+						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large");
+					}
 					break;
 				}
 				case State::END_NUM_LONG:
 				{
-					long value_long = std::stol(lexeme);
-					return make_shared<Num>(Num(value_long));
+					if (canConvertToInt(lexeme))
+					{
+						long value_long = std::stol(lexeme);
+						return make_shared<Num>(Num(value_long));
+					}
+					else
+					{
+						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large");
+					}
 					break;
 				}
 				case State::END_SCI_NUM://和下面的状态返回类型一致，不重复编写
 				case State::END_REAL:
 				{
-					double value_double = std::stod(lexeme);
-					return make_shared<Real>(Real(value_double));
+					if (canConvertToDouble(lexeme))
+					{
+						double value_double = std::stod(lexeme);
+						return make_shared<Real>(Real(value_double));
+					}
+					else
+					{
+						throw std::runtime_error("line " + to_string(line) + ": Floating-point constant exceeds allowed range");
+					}
 					break;
 				}
 				case State::IN_OCT_NUM:
 				{
-					int value_oct = std::stoi(lexeme, nullptr, 8);
-					return make_shared<Num>(Num(value_oct));
+					if (canConvertToInt(lexeme))
+					{
+						int value_oct = std::stoi(lexeme, nullptr, 8);
+						return make_shared<Num>(Num(value_oct));
+					}
+					else
+					{
+						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large");
+					}
 					break;
 				}
 				case State::END_SCI_NUM_F:
@@ -365,32 +440,61 @@ namespace Lexer {
 					float value_float = std::stof(lexeme);
 					return make_shared<Real>(Real(value_float));
 				}
-				case State::IN_HEX_NUM:
+				case State::END_HEX_NUM:
 				{
-					int value_hex = std::stoi(lexeme, nullptr, 16);
-					return make_shared<Num>(Num(value_hex));
-				}
-				case State::IN_BIN_NUM:
-				{
-					if (lexeme.rfind("0b", 0) == 0) {
-						lexeme = lexeme.substr(2);
+					if (canConvertToInt(lexeme))
+					{
+						int value_hex = std::stoi(lexeme, nullptr, 16);
+						return make_shared<Num>(Num(value_hex));
 					}
-					int value_bin = std::stoi(lexeme, nullptr, 2);
-					return make_shared<Num>(Num(value_bin));
+					else
+					{
+						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large");
+					}
+					break;
 				}
-				case State::IN_NORMAL_CHAR: // 202
+				case State::END_BIN_NUM:
+				{
+					if (canConvertToInt(lexeme))
+					{
+						if (lexeme.rfind("0b", 0) == 0) {
+							lexeme = lexeme.substr(2);
+						}
+						int value_bin = std::stoi(lexeme, nullptr, 2);
+						return make_shared<Num>(Num(value_bin));
+					}
+					else
+					{
+						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large");
+					}
 					break;
-				case State::IN_ESCAPE_STATE: // 203
+				}
+				case State::IN_NORMAL_STRING_CHAR: //202
 					break;
-				case State::IN_PARSE_OBT_1://204
+				case State::IN_ESCAPE_STATE: //203
 					break;
-				case State::IN_PARSE_OBT_2://205
+				case State::IN_PARSE_OCT_1://204
 					break;
-				case State::IN_PARSE_OBT_3://206
+				case State::IN_PARSE_OCT_2://205
+					break;
+				case State::IN_PARSE_OCT_3://206
 					break;
 				case State::IN_PARSE_HEX_1://207
 					break;
 				case State::IN_PARSE_HEX_n://208
+					break;
+				case State::IN_ESCAPE_CHAR://403
+					break;
+				case State::IN_PARSE_OCT_CHAR_2://405
+					break;
+				case State::IN_PARSE_HEX_CHAR_1://407
+					break;
+				case State::IN_PARSE_OCT_CHAR_3://406
+				case State::IN_PARSE_HEX_CHAR_n://408
+				case State::IN_PARSE_ESCAPABLE_CHAR://409
+				case State::IN_PARSE_OCT_CHAR_1://404
+				case State::IN_NORMAL_CHAR://402
+					
 					break;
 				case State::END:
 					break;

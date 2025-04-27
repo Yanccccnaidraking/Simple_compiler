@@ -35,31 +35,41 @@ namespace Lexer {
             START = 0,
             IN_ID = 101,
             // 字符串
-            IN_STRING = 201, 
-            IN_NORMAL_CHAR = 202, // 普通字符 [^\"]
+            START_STRING = 201, 
+            IN_NORMAL_STRING_CHAR = 202, // 普通字符 [^\"]
             IN_ESCAPE_STATE = 203, // 接收\开始转义
-            IN_PARSE_OBT_1 = 204, // 解析8进制第1个数字
-            IN_PARSE_OBT_2 = 205, // 解析8进制第2个数字
-            IN_PARSE_OBT_3 = 206, // 解析8进制第3个数字
+            IN_PARSE_OCT_1 = 204, // 解析8进制第1个数字
+            IN_PARSE_OCT_2 = 205, // 解析8进制第2个数字
+            IN_PARSE_OCT_3 = 206, // 解析8进制第3个数字
             IN_PARSE_HEX_1 = 207, // 解析16进制第1个数字
             IN_PARSE_HEX_n = 208, // 解析16进制第n个数字
             END_STRING = 209, // 结束字符串
             // 数字部分
             IN_NUM = 301,
-            END_NUM_LONG=302,
+            END_NUM_LONG = 302,
             IN_OCT_NUM = 303,
             IN_REAL = 304,
             END_REAL = 305,
             IN_SCI_NUM = 306,
-            IN_SCI_SIGN = 307, 
+            IN_SCI_SIGN = 307,
             END_SCI_NUM = 308,
             IN_BIN_NUM = 309,
             IN_HEX_NUM = 310,
             END_SCI_NUM_F = 311,
+            END_BIN_NUM = 312,
+            END_HEX_NUM = 313,
             // 单个字符
-            START_CHAR = 401,
-            IN_CHAR = 402,
-            END_CHAR = 403,
+            IN_CHAR = 401,
+            IN_NORMAL_CHAR = 402,
+            IN_ESCAPE_CHAR = 403,
+            IN_PARSE_OCT_CHAR_1 = 404,
+            IN_PARSE_OCT_CHAR_2 = 405,
+            IN_PARSE_OCT_CHAR_3 = 406,
+            IN_PARSE_HEX_CHAR_1 = 407,
+            IN_PARSE_HEX_CHAR_n = 408,
+            IN_PARSE_ESCAPABLE_CHAR = 409,
+            END_CHAR = 410,
+            // 注释
             START_COMMENT = 501,
             IN_SINGLE_COMMENT = 502,
             IN_MUTI_COMMENT = 503,
@@ -101,6 +111,7 @@ namespace Lexer {
             HEX_DIGIT,// 16进制数字 [0-9a-fA-F]
             OCT_DIGIT,// 8进制数字 [0-7]
             NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, // 非反斜杠和双引号 [^\"]
+            NOT_BACKWARD_SLASH_OR_SINGLE_QOUTE, // 非反斜杠和单引号 [^\']
         };
 
         std::unordered_map<State, std::unordered_map<char, CharType>> charTypeTable;
@@ -109,11 +120,11 @@ namespace Lexer {
         std::unordered_map<State, std::unordered_map<CharType, State>> transitionTable = {
             {State::START, {
                 {CharType::LETTER, State::IN_ID}, // 0 -> 101
-                {CharType::DOUBLE_QOUTE, State::IN_STRING}, // 0 -> 201
+                {CharType::DOUBLE_QOUTE, State::START_STRING}, // 0 -> 201
                 {CharType::DIGIT_ONE, State::IN_NUM}, // 0 -> 301
                 {CharType::ZERO, State::IN_OCT_NUM}, // 0 -> 303
                 {CharType::DOT,State::IN_REAL}, // 0 -> 304
-                {CharType::SINGLE_QOUTE, State::START_CHAR}, // 0 -> 401
+                {CharType::SINGLE_QOUTE, State::IN_CHAR}, // 0 -> 401
                 {CharType::FORWARD_SLASH, State::START_COMMENT}, // 0 -> 501
                 {CharType::OPERATOR, State::IN_OP}, // 0 -> 601
                 {CharType::DELIMITER, State::END_DELIMITER}, // 0 -> 701
@@ -132,42 +143,42 @@ namespace Lexer {
                 {CharType::EOF_CHAR, State::END}
             }},
             /*解析字符串*/
-            {State::IN_STRING, { //201
+            {State::START_STRING, { //201
                 {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
                 {CharType::DOUBLE_QOUTE, State::END_STRING},
-                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
+                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_STRING_CHAR},
                 {CharType::OTHER_CHAR, State::END},
             }},
-            {State::IN_NORMAL_CHAR, { //202
+            {State::IN_NORMAL_STRING_CHAR, { //202
                 {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
                 {CharType::DOUBLE_QOUTE, State::END_STRING},
-                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
+                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_STRING_CHAR},
                 {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_ESCAPE_STATE, {//203
-                {CharType::ESCAPABLE_CHAR, State::IN_STRING},
-                {CharType::OCT_DIGIT, State::IN_PARSE_OBT_1},
+                {CharType::ESCAPABLE_CHAR, State::START_STRING},
+                {CharType::OCT_DIGIT, State::IN_PARSE_OCT_1},
                 {CharType::HEX_SIGN, State::IN_PARSE_HEX_1},
                 {CharType::OTHER_CHAR, State::END},
             }},
-            {State::IN_PARSE_OBT_1, {//204
-                {CharType::OCT_DIGIT, State::IN_PARSE_OBT_2},
+            {State::IN_PARSE_OCT_1, {//204
+                {CharType::OCT_DIGIT, State::IN_PARSE_OCT_2},
                 {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
-                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
+                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_STRING_CHAR},
                 {CharType::DOUBLE_QOUTE, State::END_STRING},
                 {CharType::OTHER_CHAR, State::END},
             }},
-            {State::IN_PARSE_OBT_2, {//205
-                {CharType::OCT_DIGIT, State::IN_PARSE_OBT_3},
+            {State::IN_PARSE_OCT_2, {//205
+                {CharType::OCT_DIGIT, State::IN_PARSE_OCT_3},
                 {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
-                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
+                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_STRING_CHAR},
                 {CharType::DOUBLE_QOUTE, State::END_STRING},
                 {CharType::OTHER_CHAR, State::END},
 
             }},
-            {State::IN_PARSE_OBT_3, {//206
+            {State::IN_PARSE_OCT_3, {//206
                 {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
-                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
+                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_STRING_CHAR},
                 {CharType::DOUBLE_QOUTE, State::END_STRING},
                 {CharType::OTHER_CHAR, State::END},
 
@@ -178,7 +189,7 @@ namespace Lexer {
             }},
             {State::IN_PARSE_HEX_n, {//208
                 {CharType::HEX_DIGIT, State::IN_PARSE_HEX_n},
-                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_CHAR},
+                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_STRING_CHAR},
                 {CharType::DOUBLE_QOUTE, State::END_STRING},
                 {CharType::OTHER_CHAR, State::END},
 
@@ -187,12 +198,49 @@ namespace Lexer {
                 {CharType::OTHER_CHAR, State::END},
             }},
             /*解析字符*/
-            {State::START_CHAR, {
-                {CharType::CHAR, State::IN_CHAR},
+            {State::IN_CHAR, { // 401
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_CHAR},
+                {CharType::NOT_BACKWARD_SLASH_OR_SINGLE_QOUTE, State::IN_NORMAL_CHAR},
                 {CharType::OTHER_CHAR, State::END},
             }},
-            {State::IN_CHAR, {
+            {State::IN_NORMAL_CHAR, { // 402
+                {CharType::SINGLE_QOUTE, State::END_CHAR},
+                {CharType::OTHER_CHAR, State::END},
+            }},
+            {State::IN_ESCAPE_CHAR, { // 403
+                {CharType::ESCAPABLE_CHAR, State::IN_PARSE_ESCAPABLE_CHAR},
+                {CharType::HEX_SIGN, State::IN_PARSE_HEX_CHAR_1},
+                {CharType::OCT_DIGIT, State::IN_PARSE_OCT_CHAR_1},
+                {CharType::OTHER_CHAR, State::END},
+            }},
+            {State::IN_PARSE_OCT_CHAR_1, { // 404
+                {CharType::OCT_DIGIT, State::IN_PARSE_OCT_CHAR_2},
                 {CharType::SINGLE_QOUTE, State::END},
+                {CharType::OTHER_CHAR, State::END},
+            }},
+            {State::IN_PARSE_OCT_CHAR_2, { // 405
+                {CharType::OCT_DIGIT, State::IN_PARSE_OCT_CHAR_3},
+                {CharType::SINGLE_QOUTE, State::END},
+                {CharType::OTHER_CHAR, State::END},
+            }},
+            { State::IN_PARSE_OCT_CHAR_3, { // 406
+                {CharType::SINGLE_QOUTE, State::END_CHAR},
+                {CharType::OTHER_CHAR, State::END},
+            } },
+            { State::IN_PARSE_HEX_CHAR_1, { // 407
+                {CharType::HEX_DIGIT, State::IN_PARSE_HEX_CHAR_n},
+                {CharType::OTHER_CHAR, State::END},
+            } },
+            { State::IN_PARSE_HEX_CHAR_n, { // 408
+                {CharType::SINGLE_QOUTE, State::END_CHAR},
+                {CharType::HEX_DIGIT, State::IN_PARSE_HEX_CHAR_n},
+                {CharType::OTHER_CHAR, State::END},
+            } },
+            { State::IN_PARSE_ESCAPABLE_CHAR, { // 409
+                {CharType::SINGLE_QOUTE, State::END_CHAR},
+                {CharType::OTHER_CHAR, State::END},
+            } },
+            {State::END_CHAR, { // 410
                 {CharType::OTHER_CHAR, State::END},
             }},
             /*解析注释*/
@@ -272,12 +320,21 @@ namespace Lexer {
             }},
             { State::IN_HEX_NUM, {
                 {CharType::OTHER_CHAR, State::END},
-                {CharType::DIGIT,State::IN_HEX_NUM},
+                {CharType::DIGIT,State::END_HEX_NUM},
+            } },
+            { State::END_HEX_NUM, {
+                {CharType::OTHER_CHAR, State::END},
+                {CharType::DIGIT,State::END_HEX_NUM},
             } },
             { State::IN_BIN_NUM, {
                 {CharType::OTHER_CHAR, State::END},
-                {CharType::DIGIT,State::IN_BIN_NUM},
-            } }, { State::END_SCI_NUM_F, {
+                {CharType::DIGIT,State::END_BIN_NUM},
+            } }, 
+            { State::END_BIN_NUM, {
+                {CharType::OTHER_CHAR, State::END},
+                {CharType::DIGIT,State::END_BIN_NUM},
+            } },
+            { State::END_SCI_NUM_F, {
                 {CharType::OTHER_CHAR, State::END},
             } },
         };
