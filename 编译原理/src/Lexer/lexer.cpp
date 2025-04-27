@@ -353,6 +353,7 @@ namespace Lexer {
 				case State::START_STRING:
 					break;
 				case State::END_STRING:
+					return make_shared<String>(String(lexeme));
 					break;
 				case State::IN_CHAR: //401
 					break;
