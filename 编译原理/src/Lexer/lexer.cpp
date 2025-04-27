@@ -358,8 +358,9 @@ namespace Lexer {
 				case State::IN_CHAR: //401
 					break;
 				case State::END_CHAR: //410
-					return make_shared<String>(String(lexeme));
-					//return make_shared<Char>(Char(lexeme));
+					//return make_shared<String>(String(lexeme));
+					//std::cout << make_shared<Char>(Char(lexeme)).get()->value << std::endl;
+					return make_shared<Char>(Char(lexeme));
 					break;
 				case State::START_COMMENT:
 					return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
