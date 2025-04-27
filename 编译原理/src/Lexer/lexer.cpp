@@ -140,7 +140,6 @@ namespace Lexer {
 
 	// TODO: 更改为对每个currentState单独判断，避免冲突
 	Lexer::CharType Lexer::getCharType(char c, State currentState) {
-		c = tolower(c);
 		if (c == EOF) return CharType::EOF_CHAR;
 		//查表，如果存在即返回对应的类型，如果不存在就返回OTHER_CHAR
 		auto stateIt = charTypeTable.find(currentState);

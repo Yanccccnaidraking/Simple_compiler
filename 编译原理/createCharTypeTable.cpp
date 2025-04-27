@@ -13,6 +13,7 @@ namespace Lexer {
 
         //初始状态
         transform(0, 'a', 'z', Type::LETTER);
+        transform(0, 'A', 'Z', Type::LETTER);
         transform(0, '_', Type::LETTER);
 
         transform(0, "(){}[],;:.?", Type::DELIMITER);
@@ -31,6 +32,7 @@ namespace Lexer {
 
         //101
         transform(101, 'a', 'z', Type::LETTER);
+        transform(101, 'A', 'Z', Type::LETTER);
         transform(101, '_', Type::LETTER);
         transform(101, '0', '9', Type::DIGIT);
         //201
@@ -95,24 +97,30 @@ namespace Lexer {
         transform(208, '"', Type::DOUBLE_QOUTE);
         //301
         transform(301, '0', '9', Type::DIGIT);
-        transform(301, 'l', Type::LONG_SIGN);
-        transform(301, 'e', Type::SCI_SIGN);
+        transform(301, "Ll", Type::LONG_SIGN);
+        transform(301, "Ee", Type::SCI_SIGN);
         transform(301, '.', Type::DOT);
 
         //303
         transform(303, '0', '7', Type::DIGIT);
         transform(303, 'f', Type::FLOAT_SIGN);
+        transform(303, 'F', Type::FLOAT_SIGN);
         transform(303, '.', Type::DOT);
         transform(303, 'e', Type::SCI_SIGN);
+        transform(303, 'E', Type::SCI_SIGN);
         transform(303, 'x', Type::HEX_SIGN);
+        transform(303, 'X', Type::HEX_SIGN);
         transform(303, 'b', Type::BIN_SIGN);
+        transform(303, 'B', Type::BIN_SIGN);
         //304
         transform(304, '0', '9', Type::DIGIT);
 
         //305
         transform(305, '0', '9', Type::DIGIT);
         transform(305, 'e', Type::SCI_SIGN);
+        transform(305, 'E', Type::SCI_SIGN);
         transform(305, 'f', Type::FLOAT_SIGN);
+        transform(305, 'F', Type::FLOAT_SIGN);
         //306
         transform(306, '0', '9', Type::DIGIT);
         transform(306, '+', Type::SCI_SIGN_PULS_MINUS);
@@ -122,11 +130,13 @@ namespace Lexer {
         //308
         transform(308, '0', '9', Type::DIGIT);
         transform(308, 'f', Type::FLOAT_SIGN);
+        transform(308, 'F', Type::FLOAT_SIGN);
         //309
         transform(309, '0', '1', Type::DIGIT);
         //310
         transform(310, '0', '9', Type::DIGIT);
         transform(310, 'a', 'f', Type::DIGIT);
+        transform(310, 'A', 'F', Type::DIGIT);
         //401
         transform(401, 0, 126, Type::CHAR);
         //402
