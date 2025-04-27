@@ -56,7 +56,6 @@ namespace Lexer {
         transform(203, 'f', Type::ESCAPABLE_CHAR);
         transform(203, 'a', Type::ESCAPABLE_CHAR);
         transform(203, 'b', Type::ESCAPABLE_CHAR);
-        transform(203, 'e', Type::ESCAPABLE_CHAR);
         transform(203, '"', Type::ESCAPABLE_CHAR);
         transform(203, '\'', Type::ESCAPABLE_CHAR);
         transform(203, '0','7', Type::OCT_DIGIT);
@@ -159,7 +158,6 @@ namespace Lexer {
         transform(403, 'f', Type::ESCAPABLE_CHAR);
         transform(403, 'a', Type::ESCAPABLE_CHAR);
         transform(403, 'b', Type::ESCAPABLE_CHAR);
-        transform(403, 'e', Type::ESCAPABLE_CHAR);
         transform(403, '"', Type::ESCAPABLE_CHAR);
         transform(403, '\'', Type::ESCAPABLE_CHAR);
         transform(403, '0', '7', Type::OCT_DIGIT);
@@ -183,8 +181,6 @@ namespace Lexer {
         transform(408, 'A', 'F', Type::HEX_DIGIT);
         //409
         transform(409, '\'', Type::SINGLE_QOUTE);
-        //410
-        transform(410, 0, 126, Type::OTHER_CHAR);
         //501
         transform(501, '*', Type::STAR);
         transform(501, '/', Type::FORWARD_SLASH);
@@ -196,11 +192,11 @@ namespace Lexer {
         transform(503, -128, 126, Type::CHAR);
         transform(503, '*', Type::STAR);
         //504
-        transform(504, 0, 126, Type::CHAR);
+        transform(504, -128, 126, Type::CHAR);
         transform(504, '*', Type::STAR);
         transform(504, '/', Type::FORWARD_SLASH);
         //601
-        transform(601, "++--~!*/%+−<<>><><=>===!=&&||&|^=+=−=*=/=%=&=|=^=<<=>>=->->*.*:", Type::OPERATOR);
+        transform(601, "+-~!*/%<>=&|^.:", Type::OPERATOR);
     }
 }
 

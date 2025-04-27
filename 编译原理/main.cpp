@@ -5,6 +5,8 @@
 #include "Lexer/lexer.h"
 #include "Lexer/Num.h"
 #include "Lexer/Real.h"
+#include "Lexer/String.h"
+#include "Lexer/Char.h"
 #include "Lexer/Tag.h"
 
 
@@ -49,7 +51,8 @@ std::map<Lexer::Tag, std::string> tagToString = {
     {Lexer::Tag::LEFT_SHIFT, "LEFT_SHIFT"},
     {Lexer::Tag::RIGHT_SHIFT, "RIGHT_SHIFT"},
     {Lexer::Tag::ARROW, "ARROW"},
-    
+    {Lexer::Tag::STRING,"STRING"},
+    {Lexer::Tag::CHAR,"CHAR"},
 };
 
 // 获取枚举对应的字符串
@@ -78,8 +81,14 @@ int main() {
         else if (auto word = std::dynamic_pointer_cast<Lexer::Word>(token)) {
             std::cout << "<" << word->toString() << ", " << getEnumString((Lexer::Tag)word->tag) << ">" << std::endl;
         }
+        else if (auto str = std::dynamic_pointer_cast<Lexer::String>(token)) {
+            std::cout << "<" << str->toString() << ", " << getEnumString((Lexer::Tag)str->tag) << ">" << std::endl;
+        }
+        else if (auto str = std::dynamic_pointer_cast<Lexer::Char>(token)) {
+            std::cout << "<" << str->toString() << ", " << getEnumString((Lexer::Tag)str->tag) << ">" << std::endl;
+        }
         else {
-            std::cout << "<" << token->toString() << ">" << std::endl;
+            std::cout << "<" << token->toString() <<","<<token->toString() << ">" << std::endl;
         }
     }
 
