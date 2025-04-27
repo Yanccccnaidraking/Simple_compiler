@@ -63,6 +63,12 @@ namespace Lexer {
 		//loadTableFromFile("CharTypeTable.txt");
 		generateAndSaveMap();
 	}
+
+	Lexer& Lexer::operator=(Lexer& lexer)
+	{
+		return lexer;
+	}
+
 	/// <summary>
 	/// 加载字符类型表
 	/// </summary>
@@ -257,7 +263,7 @@ namespace Lexer {
 
 	bool canConvertToFloat(const std::string& str) {
 		const char* begin = str.data();
-		const char* end = str.data() + str.size();
+		const char* end = str.data() + str.size()-1;
 		float value;
 		auto result = std::from_chars(begin, end, value);
 		return result.ec == std::errc() && result.ptr == end;
@@ -392,7 +398,7 @@ namespace Lexer {
 					}
 					else
 					{
-						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large");
+						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large(整型常数太大)");
 					}
 					break;
 				}
@@ -405,7 +411,7 @@ namespace Lexer {
 					}
 					else
 					{
-						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large");
+						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large(整型常数太大)");
 					}
 					break;
 				}
@@ -419,7 +425,7 @@ namespace Lexer {
 					}
 					else
 					{
-						throw std::runtime_error("line " + to_string(line) + ": Floating-point constant exceeds allowed range");
+						throw std::runtime_error("line " + to_string(line) + ": Floating-point constant exceeds allowed range(浮点常数超出范围)");
 					}
 					break;
 				}
@@ -432,14 +438,22 @@ namespace Lexer {
 					}
 					else
 					{
-						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large");
+						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large(整型常数太大)");
 					}
 					break;
 				}
 				case State::END_SCI_NUM_F:
 				{
-					float value_float = std::stof(lexeme);
-					return make_shared<Real>(Real(value_float));
+					if (canConvertToFloat(lexeme))
+					{
+						float value_float = std::stof(lexeme);
+						return make_shared<Real>(Real(value_float));
+					}
+					else
+					{
+						throw std::runtime_error("line " + to_string(line) + ": Floating-point constant exceeds allowed range(浮点常数超出范围)");
+					}
+					break;
 				}
 				case State::END_HEX_NUM:
 				{
@@ -450,7 +464,7 @@ namespace Lexer {
 					}
 					else
 					{
-						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large");
+						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large(整型常数太大)");
 					}
 					break;
 				}
@@ -466,7 +480,7 @@ namespace Lexer {
 					}
 					else
 					{
-						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large");
+						throw std::runtime_error("line " + to_string(line) + ": Integer constant is too large(整型常数太大)");
 					}
 					break;
 				}

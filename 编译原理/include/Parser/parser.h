@@ -6,13 +6,13 @@
 namespace Parser {
 	class Parser {
 	private:
-		Lexer::Lexer lexer;
-		Lexer::Token look;
+		Lexer::Lexer& lexer;
+		shared_ptr<Lexer::Token> look;
 		Symbols::Env top; // 当前或顶部的符号表
 		int used = 0; // storage used for declarations
 
 	public:
-		Parser(Lexer::Lexer lexer);
+		Parser(Lexer::Lexer& l);
 
 		// 获取下一个词法单元到 look
 		void move();

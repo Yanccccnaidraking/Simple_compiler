@@ -24,6 +24,8 @@ namespace Lexer {
 
         Lexer(std::string filepath);
 
+        Lexer& operator=(Lexer& lexer);
+
         // 把下一个输入字符读到变量 peek 中
         void readch();
 
@@ -195,6 +197,7 @@ namespace Lexer {
 
             }},
             {State::END_STRING, {//209
+                {CharType::EOF_CHAR, State::END},
                 {CharType::OTHER_CHAR, State::END},
             }},
             /*解析字符*/
@@ -241,6 +244,7 @@ namespace Lexer {
                 {CharType::OTHER_CHAR, State::END},
             } },
             {State::END_CHAR, { // 410
+                {CharType::EOF_CHAR, State::END},
                 {CharType::OTHER_CHAR, State::END},
             }},
             /*解析注释*/
