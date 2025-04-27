@@ -24,6 +24,8 @@ namespace Lexer {
 
         Lexer(std::string filepath);
 
+        Lexer& operator=(Lexer& lexer);
+
         // 把下一个输入字符读到变量 peek 中
         void readch();
 

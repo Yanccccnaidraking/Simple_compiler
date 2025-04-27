@@ -7,7 +7,5 @@ namespace Inter {
 	{
 	public:
 		int offset;
-		Id();
-		Id(Lexer::Word id, Symbols::Type p, int b);
 	};
 }

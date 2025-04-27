@@ -63,6 +63,12 @@ namespace Lexer {
 		//loadTableFromFile("CharTypeTable.txt");
 		generateAndSaveMap();
 	}
+
+	Lexer& Lexer::operator=(Lexer& lexer)
+	{
+		return lexer;
+	}
+
 	/// <summary>
 	/// 加载字符类型表
 	/// </summary>
