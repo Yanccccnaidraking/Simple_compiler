@@ -110,7 +110,8 @@ namespace Lexer {
 		if (it != opToTag.end()) {
 			return std::make_shared<Word>(op, it->second);
 		}
-		return std::make_shared<Word>(op, Tag::TEMP);
+		throw std::runtime_error("line " + to_string(line) + ": Invalid opearation.");
+		return nullptr;
 	}
 
 	void Lexer::readch()
@@ -258,142 +259,153 @@ namespace Lexer {
 				}
 			}
 
-			// 根据状态转移表进行状态转移
-			auto stateIt = transitionTable.find(currentState);
-			if (stateIt == transitionTable.end()) {
-				throw std::runtime_error("Invalid state in transition table");
-			}
-			auto nextStateIt = stateIt->second.find(charType);
-			if (nextStateIt == stateIt->second.end()) {
-				throw std::runtime_error("Invalid character type for current state");
-			}
-			State nextState = nextStateIt->second;
+			try {
+				// 根据状态转移表进行状态转移
+				auto stateIt = transitionTable.find(currentState);
+				if (stateIt == transitionTable.end()) {
+					throw std::runtime_error("line " + to_string(line) + ": Invalid state in transition table");
+				}
+				auto nextStateIt = stateIt->second.find(charType);
+				if (nextStateIt == stateIt->second.end()) {
+					throw std::runtime_error("line " + to_string(line) + ": Invalid character type for current state");
+				}
+				State nextState = nextStateIt->second;
 
 
 
-			// 获取到一个词法单元
-			if (nextState == State::END) {
-				lexeme = buffer.getToken();
-				// 根据当前状态返回 Token
-				// TODO:完成各个状态对应Token的返回
-				switch (currentState)
-				{
-				case State::START:
-					break;
-				case State::IN_ID:
-					// 如果在 words 表中，则为关键字
-					if (words.find(lexeme) != words.end())
-						return make_shared<Word>(words.at(lexeme));
-					else
-						return make_shared<Word>(Word(lexeme, Tag::ID));
-					break;
-				case State::IN_STRING:
-					break;
-				case State::END_STRING:
-					return make_shared<String>(String(lexeme));
-					break;
-				case State::START_CHAR:
-					break;
-				case State::IN_CHAR:
-					break;
-				case State::END_CHAR:
-					break;
-				case State::START_COMMENT:
-					break;
-				case State::IN_SINGLE_COMMENT:
-					currentState = State::START;
-					continue;
-					break;
-				case State::IN_MUTI_COMMENT:
-					break;
-				case State::END_MUTI_COMMENT1:
-					currentState = State::START;
-					buffer.next();
-					buffer.getToken();
-					continue;
-					break;
-				case State::END_MUTI_COMMENT2:
-					break;
-				case State::END_SINGLE_COMMENT:
-					break;
-				case State::IN_OP: // 单个运算符
-					return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
-					break;
-				case State::END_OP: // 复合运算符 TODO:修改Tag值
-					return getOperationToken(lexeme);
-					break;
-				case State::END_DELIMITER: // 界符
-					return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
-					break;
-				case State::IN_NUM:
-				{
-					int value = std::stoi(lexeme);
-					return make_shared<Num>(Num(value));
-					break;
-				}
-				case State::END_NUM_LONG:
-				{
-					long value_long = std::stol(lexeme);
-					return make_shared<Num>(Num(value_long));
-					break;
-				}
-				case State::END_SCI_NUM://和下面的状态返回类型一致，不重复编写
-				case State::END_REAL:
-				{
-					double value_double = std::stod(lexeme);
-					return make_shared<Real>(Real(value_double));
-					break;
-				}
-				case State::IN_OCT_NUM:
-				{
-					int value_oct = std::stoi(lexeme, nullptr, 8);
-					return make_shared<Num>(Num(value_oct));
-					break;
-				}
-				case State::END_SCI_NUM_F:
-				{
-					float value_float = std::stof(lexeme);
-					return make_shared<Real>(Real(value_float));
-				}
-				case State::IN_HEX_NUM:
-				{
-					int value_hex = std::stoi(lexeme, nullptr, 16);
-					return make_shared<Num>(Num(value_hex));
-				}
-				case State::IN_BIN_NUM:
-				{
-					if (lexeme.rfind("0b", 0) == 0) {
-						lexeme = lexeme.substr(2);
+
+				// 获取到一个词法单元
+				if (nextState == State::END) {
+					lexeme = buffer.getToken();
+					// 根据当前状态返回 Token
+					// TODO:完成各个状态对应Token的返回
+					switch (currentState)
+					{
+					case State::START:
+						break;
+					case State::IN_ID:
+						// 如果在 words 表中，则为关键字
+						if (words.find(lexeme) != words.end())
+							return make_shared<Word>(words.at(lexeme));
+						else
+							return make_shared<Word>(Word(lexeme, Tag::ID));
+						break;
+					case State::IN_STRING:
+						break;
+					case State::END_STRING:
+						return make_shared<String>(String(lexeme));
+						break;
+					case State::START_CHAR:
+						break;
+					case State::IN_CHAR:
+						break;
+					case State::END_CHAR:
+						break;
+					case State::START_COMMENT:
+						break;
+					case State::IN_SINGLE_COMMENT:
+						currentState = State::START;
+						continue;
+						break;
+					case State::IN_MUTI_COMMENT:
+						break;
+					case State::END_MUTI_COMMENT1:
+						currentState = State::START;
+						buffer.next();
+						buffer.getToken();
+						continue;
+						break;
+					case State::END_MUTI_COMMENT2:
+						break;
+					case State::END_SINGLE_COMMENT:
+						break;
+					case State::IN_OP: // 单个运算符
+						return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
+						break;
+					case State::END_OP: // 复合运算符 TODO:修改Tag值
+						return getOperationToken(lexeme);
+						break;
+					case State::END_DELIMITER: // 界符
+						return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
+						break;
+					case State::IN_NUM:
+					{
+						int value = std::stoi(lexeme);
+						return make_shared<Num>(Num(value));
+						break;
 					}
-					int value_bin = std::stoi(lexeme, nullptr, 2);
-					return make_shared<Num>(Num(value_bin));
+					case State::END_NUM_LONG:
+					{
+						long value_long = std::stol(lexeme);
+						return make_shared<Num>(Num(value_long));
+						break;
+					}
+					case State::END_SCI_NUM://和下面的状态返回类型一致，不重复编写
+					case State::END_REAL:
+					{
+						double value_double = std::stod(lexeme);
+						return make_shared<Real>(Real(value_double));
+						break;
+					}
+					case State::IN_OCT_NUM:
+					{
+						int value_oct = std::stoi(lexeme, nullptr, 8);
+						return make_shared<Num>(Num(value_oct));
+						break;
+					}
+					case State::END_SCI_NUM_F:
+					{
+						float value_float = std::stof(lexeme);
+						return make_shared<Real>(Real(value_float));
+					}
+					case State::IN_HEX_NUM:
+					{
+						int value_hex = std::stoi(lexeme, nullptr, 16);
+						return make_shared<Num>(Num(value_hex));
+					}
+					case State::IN_BIN_NUM:
+					{
+						if (lexeme.rfind("0b", 0) == 0) {
+							lexeme = lexeme.substr(2);
+						}
+						int value_bin = std::stoi(lexeme, nullptr, 2);
+						return make_shared<Num>(Num(value_bin));
+					}
+					case State::IN_NORMAL_CHAR: // 202
+						break;
+					case State::IN_ESCAPE_STATE: // 203
+						break;
+					case State::IN_PARSE_OBT_1://204
+						break;
+					case State::IN_PARSE_OBT_2://205
+						break;
+					case State::IN_PARSE_OBT_3://206
+						break;
+					case State::IN_PARSE_HEX_1://207
+						break;
+					case State::IN_PARSE_HEX_n://208
+						break;
+					case State::END:
+						break;
+					default:
+						break;
+					}
+					return std::make_shared<Word>(Word::ne);
 				}
-				case State::IN_NORMAL_CHAR: // 202
-					break;
-				case State::IN_ESCAPE_STATE: // 203
-					break;
-				case State::IN_PARSE_OBT_1://204
-					break;
-				case State::IN_PARSE_OBT_2://205
-					break;
-				case State::IN_PARSE_OBT_3://206
-					break;
-				case State::IN_PARSE_HEX_1://207
-					break;
-				case State::IN_PARSE_HEX_n://208
-					break;
-				case State::END:
-					break;
-				default:
-					break;
+				else {
+					buffer.next();
 				}
-				return std::make_shared<Word>(Word::ne);
-			}
-			else {
-				buffer.next();
-			}
 
-			currentState = nextState;
+				currentState = nextState;
+
+			}
+			catch (std::runtime_error err) {
+				error_info += err.what();
+				error_info += '\n';
+				currentState = State::START;
+				buffer.next();
+				buffer.getToken();
+			}
 		}
 	}
 

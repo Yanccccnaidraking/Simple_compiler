@@ -11,6 +11,9 @@ namespace Lexer {
     public:
         static int line;
 
+        // ´íÎóĞÅÏ¢
+        std::string error_info;
+
         DoubleBuffer<4096> buffer;
 
         char peek = ' ';

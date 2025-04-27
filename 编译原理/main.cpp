@@ -74,10 +74,11 @@ int main() {
     std::cin.rdbuf(file.rdbuf());
 
     // 创建Lexer对象
-    Lexer::Lexer lexer=Lexer::Lexer("input.txt");
+    Lexer::Lexer lexer = Lexer::Lexer("input.txt");
 
     // 扫描并输出词法单元
     std::shared_ptr<Lexer::Token> token;
+
     while ((token = lexer.scan()) != nullptr) {
         if (auto num = std::dynamic_pointer_cast<Lexer::Num>(token)) {
             std::cout << "<" << num->toString() << ", " << getEnumString((Lexer::Tag)num->tag) << ">" << std::endl;
@@ -92,6 +93,9 @@ int main() {
             std::cout << "<" << token->toString() << ">" << std::endl;
         }
     }
+
+    // 输出错误信息
+    std::cout << "错误信息：\n" << lexer.error_info << std::endl;
 
     // 恢复标准输入
     std::cin.rdbuf(cinbuf);
