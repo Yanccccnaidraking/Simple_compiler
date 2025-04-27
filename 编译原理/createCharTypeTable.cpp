@@ -144,9 +144,47 @@ namespace Lexer {
         transform(313, 'a', 'f', Type::DIGIT);
         transform(313, 'A', 'F', Type::DIGIT);
         //401
-        transform(401, 0, 126, Type::CHAR);
+        transform(401, '\\', Type::BACWARD_SLASH);
+        transform(401, 0, '\''-1, Type::NOT_BACKWARD_SLASH_OR_SINGLE_QOUTE);
+        transform(401, '\''+1,'\\'-1, Type::NOT_BACKWARD_SLASH_OR_SINGLE_QOUTE);
+        transform(401, '\\'+1, 126, Type::NOT_BACKWARD_SLASH_OR_SINGLE_QOUTE);
         //402
         transform(402, '\'', Type::SINGLE_QOUTE);
+        //403
+        transform(403, '\\', Type::ESCAPABLE_CHAR);
+        transform(403, 'n', Type::ESCAPABLE_CHAR);
+        transform(403, 't', Type::ESCAPABLE_CHAR);
+        transform(403, 'r', Type::ESCAPABLE_CHAR);
+        transform(403, 'v', Type::ESCAPABLE_CHAR);
+        transform(403, 'f', Type::ESCAPABLE_CHAR);
+        transform(403, 'a', Type::ESCAPABLE_CHAR);
+        transform(403, 'b', Type::ESCAPABLE_CHAR);
+        transform(403, 'e', Type::ESCAPABLE_CHAR);
+        transform(403, '"', Type::ESCAPABLE_CHAR);
+        transform(403, '\'', Type::ESCAPABLE_CHAR);
+        transform(403, '0', '7', Type::OCT_DIGIT);
+        transform(403, 'x', Type::HEX_SIGN);
+        //404
+        transform(404, '\'', Type::SINGLE_QOUTE);
+        transform(404, '0','7', Type::OCT_DIGIT);
+        //405
+        transform(405, '\'', Type::SINGLE_QOUTE);
+        transform(405, '0', '7', Type::OCT_DIGIT);
+        //406
+        transform(406, '\'', Type::SINGLE_QOUTE);
+        //407
+        transform(407, '0', '9', Type::HEX_DIGIT);
+        transform(407, 'a', 'f', Type::HEX_DIGIT);
+        transform(407, 'A', 'F', Type::HEX_DIGIT);
+        //408
+        transform(408, '\'', Type::SINGLE_QOUTE);
+        transform(408, '0', '9', Type::HEX_DIGIT);
+        transform(408, 'a', 'f', Type::HEX_DIGIT);
+        transform(408, 'A', 'F', Type::HEX_DIGIT);
+        //409
+        transform(409, '\'', Type::SINGLE_QOUTE);
+        //410
+        transform(410, 0, 126, Type::OTHER_CHAR);
         //501
         transform(501, '*', Type::STAR);
         transform(501, '/', Type::FORWARD_SLASH);
