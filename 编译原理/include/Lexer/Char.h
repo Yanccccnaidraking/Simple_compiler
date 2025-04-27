@@ -8,7 +8,7 @@ namespace Lexer {
 	public:
 		const char value;
 
-		Char(char v) : value(v), Token(Tag::CHAR) {}
+		Char(char v) : value(v), Token(Tag::CHAR){}
 
 		std::string toString() const { return ""+value; }
 	};

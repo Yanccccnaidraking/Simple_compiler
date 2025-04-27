@@ -257,6 +257,7 @@ namespace Lexer {
 				}
 			}
 
+
 			// 根据状态转移表进行状态转移
 			auto stateIt = transitionTable.find(currentState);
 			if (stateIt == transitionTable.end()) {
@@ -286,16 +287,15 @@ namespace Lexer {
 					else
 						return make_shared<Word>(Word(lexeme, Tag::ID));
 					break;
-				case State::IN_STRING:
+				case State::START_STRING:
 					break;
 				case State::END_STRING:
+					break;
+				case State::IN_CHAR: //401
+					break;
+				case State::END_CHAR: //410
 					return make_shared<String>(String(lexeme));
-					break;
-				case State::START_CHAR:
-					break;
-				case State::IN_CHAR:
-					break;
-				case State::END_CHAR:
+					//return make_shared<Char>(Char(lexeme));
 					break;
 				case State::START_COMMENT:
 					return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
@@ -368,19 +368,32 @@ namespace Lexer {
 					int value_bin = std::stoi(lexeme, nullptr, 2);
 					return make_shared<Num>(Num(value_bin));
 				}
-				case State::IN_NORMAL_CHAR: // 202
+				case State::IN_NORMAL_STRING_CHAR: //202
 					break;
-				case State::IN_ESCAPE_STATE: // 203
+				case State::IN_ESCAPE_STATE: //203
 					break;
-				case State::IN_PARSE_OBT_1://204
+				case State::IN_PARSE_OCT_1://204
 					break;
-				case State::IN_PARSE_OBT_2://205
+				case State::IN_PARSE_OCT_2://205
 					break;
-				case State::IN_PARSE_OBT_3://206
+				case State::IN_PARSE_OCT_3://206
 					break;
 				case State::IN_PARSE_HEX_1://207
 					break;
 				case State::IN_PARSE_HEX_n://208
+					break;
+				case State::IN_ESCAPE_CHAR://403
+					break;
+				case State::IN_PARSE_OCT_CHAR_2://405
+					break;
+				case State::IN_PARSE_HEX_CHAR_1://407
+					break;
+				case State::IN_PARSE_OCT_CHAR_3://406
+				case State::IN_PARSE_HEX_CHAR_n://408
+				case State::IN_PARSE_ESCAPABLE_CHAR://409
+				case State::IN_PARSE_OCT_CHAR_1://404
+				case State::IN_NORMAL_CHAR://402
+					
 					break;
 				case State::END:
 					break;
