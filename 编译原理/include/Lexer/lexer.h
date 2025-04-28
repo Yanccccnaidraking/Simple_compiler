@@ -288,13 +288,16 @@ namespace Lexer {
                 {CharType::LONG_SIGN,State::END_NUM_LONG},
                 {CharType::SCI_SIGN,State::IN_SCI_NUM},
                 {CharType::DOT,State::END_REAL},
+                {CharType::EOF_CHAR, State::END},
             }},
             {State::END_NUM_LONG,{
                 {CharType::OTHER_CHAR, State::END},
+                {CharType::EOF_CHAR, State::END},
             }},
             {State::IN_REAL,{
                 {CharType::OTHER_CHAR, State::END},
                 {CharType::DIGIT,State::END_REAL},
+                {CharType::EOF_CHAR, State::END},
             }},
             {State::IN_OCT_NUM,{
                 {CharType::OTHER_CHAR, State::END},
@@ -302,45 +305,55 @@ namespace Lexer {
                 {CharType::DIGIT, State::IN_OCT_NUM},
                 {CharType::HEX_SIGN, State::IN_HEX_NUM},
                 {CharType::BIN_SIGN,State::IN_BIN_NUM},
+                {CharType::EOF_CHAR, State::END},
             }},
             {State::END_REAL, {
                 {CharType::OTHER_CHAR, State::END},
                 {CharType::DIGIT,State::END_REAL},
                 {CharType::SCI_SIGN,State::IN_SCI_NUM},
                 {CharType::FLOAT_SIGN,State::END_SCI_NUM_F},
+                {CharType::EOF_CHAR, State::END},
             }},
             {State::IN_SCI_NUM, {
                 {CharType::OTHER_CHAR, State::END},
                 {CharType::SCI_SIGN_PULS_MINUS,State::IN_SCI_SIGN},
                 {CharType::DIGIT,State::END_SCI_NUM},
+                {CharType::EOF_CHAR, State::END},
             }},
             { State::IN_SCI_SIGN, {
                 {CharType::OTHER_CHAR, State::END},
                 {CharType::DIGIT,State::END_SCI_NUM},
+                {CharType::EOF_CHAR, State::END},
             }},
             { State::END_SCI_NUM, {
                 {CharType::OTHER_CHAR, State::END},
                 {CharType::DIGIT,State::END_SCI_NUM},
                 {CharType::FLOAT_SIGN,State::END_SCI_NUM_F},
+                {CharType::EOF_CHAR, State::END},
             }},
             { State::IN_HEX_NUM, {
                 {CharType::OTHER_CHAR, State::END},
                 {CharType::DIGIT,State::END_HEX_NUM},
+                {CharType::EOF_CHAR, State::END},
             } },
             { State::END_HEX_NUM, {
                 {CharType::OTHER_CHAR, State::END},
                 {CharType::DIGIT,State::END_HEX_NUM},
+                {CharType::EOF_CHAR, State::END},
             } },
             { State::IN_BIN_NUM, {
                 {CharType::OTHER_CHAR, State::END},
                 {CharType::DIGIT,State::END_BIN_NUM},
+                {CharType::EOF_CHAR, State::END},
             } }, 
             { State::END_BIN_NUM, {
                 {CharType::OTHER_CHAR, State::END},
                 {CharType::DIGIT,State::END_BIN_NUM},
+                {CharType::EOF_CHAR, State::END},
             } },
             { State::END_SCI_NUM_F, {
                 {CharType::OTHER_CHAR, State::END},
+                {CharType::EOF_CHAR, State::END},
             } },
         };
 

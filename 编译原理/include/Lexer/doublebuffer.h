@@ -182,7 +182,7 @@ namespace Lexer
                 }
                 else
                 {
-                    forward++;
+                    forward;
                     this->end = true;
                     return EOF;
                 }
