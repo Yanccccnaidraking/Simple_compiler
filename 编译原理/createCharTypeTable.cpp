@@ -199,23 +199,3 @@ namespace Lexer {
         transform(601, "+-~!*/%<>=&|^.:", Type::OPERATOR);
     }
 }
-
-/// <summary>
-/// 运行前把main.cpp注释掉
-/// </summary>
-/// <returns></returns>
-//int main()
-//{
-//    // 记录开始时间
-//    auto start = std::chrono::high_resolution_clock::now();
-//    generateAndSaveMap();
-//    /*saveTableToFile("CharTypeTable.txt");*/
-//    // 记录结束时间
-//    auto end = std::chrono::high_resolution_clock::now();
-//
-//    // 计算耗时（单位：毫秒）
-//    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-//
-//    std::cout << "耗时：" << duration.count() << " 毫秒" << std::endl;
-//    return 0;
-//}

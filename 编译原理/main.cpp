@@ -93,7 +93,7 @@ int main() {
     }
 
     // 输出错误信息
-    std::cout << "错误信息：\n" << lexer.error_info << std::endl;
+    std::cout << "\n错误信息：\n" << "\033[31m" << lexer.error_info << "\033[0m" << std::endl;
 
 
 

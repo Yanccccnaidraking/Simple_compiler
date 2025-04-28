@@ -10,11 +10,11 @@
  321 0X /*****1**/
 123123//1231232//321312
 123/=/123
-<<<<<<< HEAD ssdaADSsda121s12
+ssdaADSsda121s12
 string s = "\a\v\x12abcGHIJKsss\002\0001""123""456""\n\t""\"\v\f""\0123\xabcd123"return c;0b1010<= b){
-=======
+
 "abc";0b1010<= b){
->>>>>>> b716705c50abcf0d53af70d07a0160cedfd8daad
+b716705c50abcf0d53af70d07a0160cedfd8daad
 /*
 123124
 dwaqw//d
@@ -43,17 +43,14 @@ string s = "\a\v\x12abcGHIJKsss\002\0001"
 }
 int a = b;
 int c = a;
-<<<<<<< HEAD
 string s = "\a\v\x12abcGHIJKsss\002\0001";
-=======
->>>>>>> b716705c50abcf0d53af70d07a0160cedfd8daad
+b716705c50abcf0d53af70d07a0160cedfd8daad
 /*1**/
 123123//1231232//321312
-<<<<<<< HEAD ssdaADSsda121s12SAD
+ssdaADSsda121s12SAD
 string s = "\a\v\x12abcGHIJKsss\002\0001""123""456""\n\t""\"\v\f""\0123\xabcd123"return c;0b1010<= b){
-=======
 "abc";0b1010<= b){
->>>>>>> b716705c50abcf0d53af70d07a0160cedfd8daad
+b716705c50abcf0d53af70d07a0160cedfd8daad
 /*123124dwaqw//d*/ //1213
 	a = 0b1010;
 	a = 0B1010;
@@ -76,7 +73,6 @@ int a = b;
 v ** d;
 a */ b;
 int c = a;
-<<<<<<< HEAD
 string s = "\a\v\x12abcGHIJKsss\002\0001";
-=======
->>>>>>> b716705c50abcf0d53af70d07a0160cedfd8daad
+b716705c50abcf0d53af70d07a0160cedfd8daad
+'1v * d;
