@@ -1,5 +1,6 @@
 #include "Symbols/symbols.h"
 #include "Lexer/Token.h"
+#include "Inter/id.h"
 #include<math.h>
 
 namespace Symbols
