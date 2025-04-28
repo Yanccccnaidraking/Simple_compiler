@@ -258,6 +258,7 @@ namespace Lexer {
                 {CharType::CHAR, State::IN_SINGLE_COMMENT},
                 {CharType::EOF_CHAR ,State::END},
                 {CharType::NEW_LINE, State::END},
+                {CharType::EOF_CHAR, State::END},
             }},
             {State::IN_MUTI_COMMENT, {
                 {CharType::STAR, State::END_MUTI_COMMENT1}, // 遇到*可能结束注释
