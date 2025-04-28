@@ -1,20 +1,31 @@
 #include "Parser/parser.h"
 #include "Lexer/lexer.h"
+#include "Inter/stmt.h"
 namespace Parser {
 	Parser::Parser(Lexer::Lexer& l) : lexer(l), top(nullptr)
 	{
+		move();
 	}
 	void Parser::move()
 	{
+		look = lexer.scan();
 	}
 	void Parser::error(std::string s)
 	{
+		throw runtime_error("line " + std::to_string(lexer.line) + ": " + s);
 	}
 	void Parser::match(int t)
 	{
+		if (look->tag == t) move();
+		else error("Óï·¨´íÎó");
 	}
 	void Parser::program()
 	{
+		//shared_ptr<Inter::Stmt> s = block();
+		//int begin = s->newlabel();
+		//int after = s->newlabel();
+		//s->emitlabel(begin);
+		
 	}
 	shared_ptr<Inter::Stmt> Parser::block()
 	{
