@@ -279,15 +279,7 @@ namespace Lexer {
 					break;
 				case State::START_STRING:
 					break;
-				case State::END_STRING:
-					return make_shared<String>(String(lexeme));
-					break;
-				case State::IN_CHAR: //401
-					break;
-				case State::END_CHAR: //410
-					//return make_shared<String>(String(lexeme));
-					//std::cout << make_shared<Char>(Char(lexeme)).get()->value << std::endl;
-					return make_shared<Char>(Char(lexeme));
+				case State::START_CHAR: //401
 					break;
 				case State::START_COMMENT:
 					return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
@@ -426,18 +418,35 @@ namespace Lexer {
 					break;
 				case State::IN_PARSE_HEX_n://208
 					break;
+				case State::END_STRING://209
+					return make_shared<String>(String(lexeme));
+					break;
+				case State::ERROR_UNCLOSED_STRING://210
+					throw std::runtime_error("line " + to_string(line) + ": missing terminating \" character."+"Primitive string:"+ lexeme);
+					return make_shared<String>(String(lexeme));
+					break;
+				case State::IN_NORMAL_CHAR://402
+					break;
 				case State::IN_ESCAPE_CHAR://403
+					break;
+				case State::IN_PARSE_OCT_CHAR_1://404
 					break;
 				case State::IN_PARSE_OCT_CHAR_2://405
 					break;
+				case State::IN_PARSE_OCT_CHAR_3://406
+					break;
 				case State::IN_PARSE_HEX_CHAR_1://407
 					break;
-				case State::IN_PARSE_OCT_CHAR_3://406
 				case State::IN_PARSE_HEX_CHAR_n://408
-				case State::IN_PARSE_ESCAPABLE_CHAR://409
-				case State::IN_PARSE_OCT_CHAR_1://404
-				case State::IN_NORMAL_CHAR://402
-					
+					break;
+				case State::END_CHAR: //409
+					//return make_shared<String>(String(lexeme));
+					//std::cout << lexeme << std::endl;
+					return make_shared<Char>(Char(lexeme));
+					break;
+				case State::ERROR_UNCLOSED_CHAR://410
+					break;
+				case State::ERROR_EMPTY_CHAR://411
 					break;
 				case State::END:
 					break;

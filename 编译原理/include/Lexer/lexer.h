@@ -46,6 +46,7 @@ namespace Lexer {
             IN_PARSE_HEX_1 = 207, // 解析16进制第1个数字
             IN_PARSE_HEX_n = 208, // 解析16进制第n个数字
             END_STRING = 209, // 结束字符串
+            ERROR_UNCLOSED_STRING = 210, //缺少关闭引号字符串
             // 数字部分
             IN_NUM = 301,
             END_NUM_LONG = 302,
@@ -61,7 +62,7 @@ namespace Lexer {
             END_BIN_NUM = 312,
             END_HEX_NUM = 313,
             // 单个字符
-            IN_CHAR = 401,
+            START_CHAR = 401,
             IN_NORMAL_CHAR = 402,
             IN_ESCAPE_CHAR = 403,
             IN_PARSE_OCT_CHAR_1 = 404,
@@ -69,8 +70,9 @@ namespace Lexer {
             IN_PARSE_OCT_CHAR_3 = 406,
             IN_PARSE_HEX_CHAR_1 = 407,
             IN_PARSE_HEX_CHAR_n = 408,
-            IN_PARSE_ESCAPABLE_CHAR = 409,
-            END_CHAR = 410,
+            END_CHAR = 409,
+            ERROR_UNCLOSED_CHAR = 410,
+            ERROR_EMPTY_CHAR = 411,
             // 注释
             START_COMMENT = 501,
             IN_SINGLE_COMMENT = 502,
@@ -100,7 +102,7 @@ namespace Lexer {
             CHAR, // 所有字符
             STAR, // [*]
             ZERO, // [0]
-            NEW_LINE, // [\n]
+            NEW_LINE, // [\r:13]
             OTHER_CHAR, 
             EOF_CHAR, // [\0]
             LONG_SIGN,//long类型的结束符 [L]
@@ -112,8 +114,10 @@ namespace Lexer {
             ESCAPABLE_CHAR, // 可转义字符 ["ntrvfab\']
             HEX_DIGIT,// 16进制数字 [0-9a-fA-F]
             OCT_DIGIT,// 8进制数字 [0-7]
-            NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, // 非反斜杠和双引号 [^\"]
-            NOT_BACKWARD_SLASH_OR_SINGLE_QOUTE, // 非反斜杠和单引号 [^\']
+            NORMAL_STRING_CHAR, // 正常字符 [^\"EOF\r]
+            NORMAL_CHAR, // 非反斜杠和单引号 [^\']
+            NOT_STRING_END_SIGN, // 非字符串结束符号 [^"EOF\r]
+            NOT_ESCAPABLE_CHAR, // 非可转义字符 [^"ntrvfab\']
         };
 
         std::unordered_map<State, std::unordered_map<char, CharType>> charTypeTable;
@@ -126,7 +130,7 @@ namespace Lexer {
                 {CharType::DIGIT_ONE, State::IN_NUM}, // 0 -> 301
                 {CharType::ZERO, State::IN_OCT_NUM}, // 0 -> 303
                 {CharType::DOT,State::IN_REAL}, // 0 -> 304
-                {CharType::SINGLE_QOUTE, State::IN_CHAR}, // 0 -> 401
+                {CharType::SINGLE_QOUTE, State::START_CHAR}, // 0 -> 401
                 {CharType::FORWARD_SLASH, State::START_COMMENT}, // 0 -> 501
                 {CharType::OPERATOR, State::IN_OP}, // 0 -> 601
                 {CharType::DELIMITER, State::END_DELIMITER}, // 0 -> 701
@@ -146,53 +150,70 @@ namespace Lexer {
             }},
             /*解析字符串*/
             {State::START_STRING, { //201
-                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
-                {CharType::DOUBLE_QOUTE, State::END_STRING},
-                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_STRING_CHAR},
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},//203
+                {CharType::DOUBLE_QOUTE, State::END_STRING},//209
+                {CharType::NORMAL_STRING_CHAR, State::IN_NORMAL_STRING_CHAR},//202
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//210
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//210
                 {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_NORMAL_STRING_CHAR, { //202
-                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
-                {CharType::DOUBLE_QOUTE, State::END_STRING},
-                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_STRING_CHAR},
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},//203
+                {CharType::DOUBLE_QOUTE, State::END_STRING},//209
+                {CharType::NORMAL_STRING_CHAR, State::IN_NORMAL_STRING_CHAR},//202
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//210
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//210
                 {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_ESCAPE_STATE, {//203
-                {CharType::ESCAPABLE_CHAR, State::START_STRING},
-                {CharType::OCT_DIGIT, State::IN_PARSE_OCT_1},
-                {CharType::HEX_SIGN, State::IN_PARSE_HEX_1},
+                {CharType::ESCAPABLE_CHAR, State::IN_NORMAL_STRING_CHAR},//202
+                {CharType::OCT_DIGIT, State::IN_PARSE_OCT_1},//204
+                {CharType::HEX_SIGN, State::IN_PARSE_HEX_1},//207
+                {CharType::NOT_ESCAPABLE_CHAR, State::START_STRING}, //201
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//210
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//210
                 {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_PARSE_OCT_1, {//204
-                {CharType::OCT_DIGIT, State::IN_PARSE_OCT_2},
-                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
-                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_STRING_CHAR},
-                {CharType::DOUBLE_QOUTE, State::END_STRING},
+                {CharType::OCT_DIGIT, State::IN_PARSE_OCT_2},//205
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},//203
+                {CharType::NORMAL_STRING_CHAR, State::IN_NORMAL_STRING_CHAR},//202
+                {CharType::DOUBLE_QOUTE, State::END_STRING},//209
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//212
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//212
                 {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_PARSE_OCT_2, {//205
-                {CharType::OCT_DIGIT, State::IN_PARSE_OCT_3},
-                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
-                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_STRING_CHAR},
-                {CharType::DOUBLE_QOUTE, State::END_STRING},
+                {CharType::OCT_DIGIT, State::IN_PARSE_OCT_3}, //206
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},//203
+                {CharType::NORMAL_STRING_CHAR, State::IN_NORMAL_STRING_CHAR},//202
+                {CharType::DOUBLE_QOUTE, State::END_STRING},//209
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//212
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//212
                 {CharType::OTHER_CHAR, State::END},
 
             }},
             {State::IN_PARSE_OCT_3, {//206
-                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},
-                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_STRING_CHAR},
-                {CharType::DOUBLE_QOUTE, State::END_STRING},
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},//203
+                {CharType::NORMAL_STRING_CHAR, State::IN_NORMAL_STRING_CHAR},//202
+                {CharType::DOUBLE_QOUTE, State::END_STRING},//209
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//212
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//212
                 {CharType::OTHER_CHAR, State::END},
 
             }},
             {State::IN_PARSE_HEX_1, {//207
-                {CharType::HEX_DIGIT, State::IN_PARSE_HEX_n},
+                {CharType::HEX_DIGIT, State::IN_PARSE_HEX_n},//208
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//212
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//212
                 {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_PARSE_HEX_n, {//208
-                {CharType::HEX_DIGIT, State::IN_PARSE_HEX_n},
-                {CharType::NOT_BACKWARD_SLASH_OR_DOUBLE_QOUTE, State::IN_NORMAL_STRING_CHAR},
-                {CharType::DOUBLE_QOUTE, State::END_STRING},
+                {CharType::HEX_DIGIT, State::IN_PARSE_HEX_n}, // 208
+                {CharType::NORMAL_STRING_CHAR, State::IN_NORMAL_STRING_CHAR}, //202
+                {CharType::DOUBLE_QOUTE, State::END_STRING}, //209
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//212
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//212
                 {CharType::OTHER_CHAR, State::END},
 
             }},
@@ -200,53 +221,85 @@ namespace Lexer {
                 {CharType::EOF_CHAR, State::END},
                 {CharType::OTHER_CHAR, State::END},
             }},
+            {State::ERROR_UNCLOSED_STRING, {//210
+                {CharType::EOF_CHAR, State::END},
+                {CharType::OTHER_CHAR, State::END},
+            }},
             /*解析字符*/
-            {State::IN_CHAR, { // 401
-                {CharType::BACWARD_SLASH, State::IN_ESCAPE_CHAR},
-                {CharType::NOT_BACKWARD_SLASH_OR_SINGLE_QOUTE, State::IN_NORMAL_CHAR},
+            {State::START_CHAR, { // 401
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_CHAR}, //403
+                {CharType::NORMAL_CHAR, State::IN_NORMAL_CHAR}, //402
+                {CharType::SINGLE_QOUTE, State::ERROR_EMPTY_CHAR},//411
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_CHAR},//410
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_CHAR},//410
                 {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_NORMAL_CHAR, { // 402
-                {CharType::SINGLE_QOUTE, State::END_CHAR},
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_CHAR},//403
+                {CharType::NORMAL_CHAR, State::IN_NORMAL_CHAR},//402
+                {CharType::SINGLE_QOUTE, State::END_CHAR},//409
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_CHAR},//410
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_CHAR},//410
                 {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_ESCAPE_CHAR, { // 403
-                {CharType::ESCAPABLE_CHAR, State::IN_PARSE_ESCAPABLE_CHAR},
+                {CharType::ESCAPABLE_CHAR, State::IN_NORMAL_CHAR},//402
+                {CharType::NOT_ESCAPABLE_CHAR, State::IN_NORMAL_CHAR},//402
                 {CharType::HEX_SIGN, State::IN_PARSE_HEX_CHAR_1},
                 {CharType::OCT_DIGIT, State::IN_PARSE_OCT_CHAR_1},
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_CHAR},//410
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_CHAR},//410
                 {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_PARSE_OCT_CHAR_1, { // 404
-                {CharType::OCT_DIGIT, State::IN_PARSE_OCT_CHAR_2},
-                {CharType::SINGLE_QOUTE, State::END},
+                {CharType::OCT_DIGIT, State::IN_PARSE_OCT_CHAR_2},//405
+                {CharType::SINGLE_QOUTE, State::END_CHAR}, //409
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_CHAR},//410
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_CHAR},//410
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_CHAR},//403
                 {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_PARSE_OCT_CHAR_2, { // 405
                 {CharType::OCT_DIGIT, State::IN_PARSE_OCT_CHAR_3},
-                {CharType::SINGLE_QOUTE, State::END},
+                {CharType::SINGLE_QOUTE, State::END_CHAR}, //409
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_CHAR},//410
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_CHAR},//410
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_CHAR},//403
                 {CharType::OTHER_CHAR, State::END},
             }},
             { State::IN_PARSE_OCT_CHAR_3, { // 406
-                {CharType::SINGLE_QOUTE, State::END_CHAR},
+                {CharType::SINGLE_QOUTE, State::END_CHAR}, //409
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_CHAR},//410
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_CHAR},//410
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_CHAR},//403
                 {CharType::OTHER_CHAR, State::END},
             } },
             { State::IN_PARSE_HEX_CHAR_1, { // 407
-                {CharType::HEX_DIGIT, State::IN_PARSE_HEX_CHAR_n},
+                {CharType::HEX_DIGIT, State::IN_PARSE_HEX_CHAR_n},//408
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_CHAR},//410
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_CHAR},//410
                 {CharType::OTHER_CHAR, State::END},
             } },
             { State::IN_PARSE_HEX_CHAR_n, { // 408
                 {CharType::SINGLE_QOUTE, State::END_CHAR},
                 {CharType::HEX_DIGIT, State::IN_PARSE_HEX_CHAR_n},
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_CHAR},//410
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_CHAR},//410
+                {CharType::NORMAL_CHAR, State::IN_NORMAL_CHAR}, //402
                 {CharType::OTHER_CHAR, State::END},
             } },
-            { State::IN_PARSE_ESCAPABLE_CHAR, { // 409
-                {CharType::SINGLE_QOUTE, State::END_CHAR},
+            { State::ERROR_UNCLOSED_CHAR, { // 410
+                {CharType::EOF_CHAR, State::END},
                 {CharType::OTHER_CHAR, State::END},
             } },
-            {State::END_CHAR, { // 410
+            {State::END_CHAR, { // 409
                 {CharType::EOF_CHAR, State::END},
                 {CharType::OTHER_CHAR, State::END},
             }},
+            { State::ERROR_EMPTY_CHAR, { // 411
+                {CharType::EOF_CHAR, State::END},
+                {CharType::OTHER_CHAR, State::END},
+            } },
             /*解析注释*/
             {State::START_COMMENT, {
                 {CharType::FORWARD_SLASH, State::IN_SINGLE_COMMENT},
