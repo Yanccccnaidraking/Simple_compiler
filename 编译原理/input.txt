@@ -70,3 +70,8 @@ string s = "\a\v\x12abcGHIJKsss\002\0001";
 b716705c50abcf0d53af70d07a0160cedfd8daad
 '1v * d;
 1213214546545
+"sasdfl;ofanlw;'"
+"\facx\xxxxx"
+"fafwfawfw\"
+"\\\\xaxx"
+'\x41afdfaf5165'

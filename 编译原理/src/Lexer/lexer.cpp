@@ -284,21 +284,21 @@ namespace Lexer {
 				case State::START_COMMENT:
 					return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
 					break;
-				case State::IN_SINGLE_COMMENT:
+				case State::IN_SINGLE_COMMENT://502
 					currentState = State::START;
 					continue;
 					break;
-				case State::IN_MUTI_COMMENT:
+				case State::IN_MUTI_COMMENT://503
 					break;
-				case State::END_MUTI_COMMENT1:
+				case State::END_MUTI_COMMENT1://504
 					currentState = State::START;
 					buffer.next();
 					buffer.getToken();
 					continue;
 					break;
-				case State::END_MUTI_COMMENT2:
+				case State::END_MUTI_COMMENT2://505
 					break;
-				case State::END_SINGLE_COMMENT:
+				case State::END_SINGLE_COMMENT://506
 					break;
 				case State::IN_OP: // µ¥¸öÔËËã·û
 					return make_shared<Token>(Token(static_cast<int>(lexeme[0])));
@@ -426,7 +426,15 @@ namespace Lexer {
 					return make_shared<String>(String(lexeme));
 					break;
 				case State::ERROR_UNCLOSED_STRING://210
-					throw std::runtime_error("line " + to_string(line) + ": missing terminating \" character."+"Primitive string:"+ lexeme);
+					try {
+						currentState = State::START;
+						throw std::runtime_error("line " + to_string(line) + ": missing terminating \" character." + "Primitive string:" + lexeme);
+					}
+					catch (const std::runtime_error& e) {
+						std::cerr << "Exception caught: " << e.what() << std::endl;
+						continue;
+					}
+
 					return make_shared<String>(String(lexeme));
 					break;
 				case State::IN_NORMAL_CHAR://402
@@ -444,13 +452,27 @@ namespace Lexer {
 				case State::IN_PARSE_HEX_CHAR_n://408
 					break;
 				case State::END_CHAR: //409
-					//return make_shared<String>(String(lexeme));
-					//std::cout << lexeme << std::endl;
 					return make_shared<Char>(Char(lexeme));
+					//return make_shared<String>(String(lexeme));
 					break;
 				case State::ERROR_UNCLOSED_CHAR://410
+					//currentState = State::START;
+					//std::cout << "error" << std::endl;
+					//continue;
+					try {
+						currentState = State::START;
+						throw std::runtime_error("line " + to_string(line) + ": missing terminating \' character." + "Primitive string:" + lexeme);
+					}
+					catch (const std::runtime_error& e) {
+						std::cerr << "Exception caught: " << e.what() << std::endl;
+						continue;
+					}
+					
+					return make_shared<Char>(Char(lexeme));
 					break;
 				case State::ERROR_EMPTY_CHAR://411
+					throw std::runtime_error("line " + std::to_string(line) + ": empty character constant." + "Primitive character:" + lexeme);
+					//return make_shared<Char>(Char(lexeme));
 					break;
 				case State::END:
 					break;

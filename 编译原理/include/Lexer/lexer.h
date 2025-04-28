@@ -113,6 +113,7 @@ namespace Lexer {
             SCI_SIGN_PULS_MINUS,//科学技术法的 +、- 符号 [+-]
             ESCAPABLE_CHAR, // 可转义字符 ["ntrvfab\']
             HEX_DIGIT,// 16进制数字 [0-9a-fA-F]
+            NOT_HEX_DIGIT,// 非16进制数字 [^0-9a-fA-F]
             OCT_DIGIT,// 8进制数字 [0-7]
             NORMAL_STRING_CHAR, // 正常字符 [^\"EOF\r]
             NORMAL_CHAR, // 非反斜杠和单引号 [^\']
@@ -179,8 +180,8 @@ namespace Lexer {
                 {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},//203
                 {CharType::NORMAL_STRING_CHAR, State::IN_NORMAL_STRING_CHAR},//202
                 {CharType::DOUBLE_QOUTE, State::END_STRING},//209
-                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//212
-                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//212
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//210
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//210
                 {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_PARSE_OCT_2, {//205
@@ -188,8 +189,8 @@ namespace Lexer {
                 {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},//203
                 {CharType::NORMAL_STRING_CHAR, State::IN_NORMAL_STRING_CHAR},//202
                 {CharType::DOUBLE_QOUTE, State::END_STRING},//209
-                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//212
-                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//212
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//210
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//210
                 {CharType::OTHER_CHAR, State::END},
 
             }},
@@ -197,23 +198,24 @@ namespace Lexer {
                 {CharType::BACWARD_SLASH, State::IN_ESCAPE_STATE},//203
                 {CharType::NORMAL_STRING_CHAR, State::IN_NORMAL_STRING_CHAR},//202
                 {CharType::DOUBLE_QOUTE, State::END_STRING},//209
-                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//212
-                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//212
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//210
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//210
                 {CharType::OTHER_CHAR, State::END},
 
             }},
             {State::IN_PARSE_HEX_1, {//207
+                {CharType::NORMAL_STRING_CHAR, State::IN_NORMAL_STRING_CHAR},//202
                 {CharType::HEX_DIGIT, State::IN_PARSE_HEX_n},//208
-                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//212
-                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//212
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//210
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//210
                 {CharType::OTHER_CHAR, State::END},
             }},
             {State::IN_PARSE_HEX_n, {//208
                 {CharType::HEX_DIGIT, State::IN_PARSE_HEX_n}, // 208
                 {CharType::NORMAL_STRING_CHAR, State::IN_NORMAL_STRING_CHAR}, //202
                 {CharType::DOUBLE_QOUTE, State::END_STRING}, //209
-                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//212
-                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//212
+                {CharType::NEW_LINE, State::ERROR_UNCLOSED_STRING},//210
+                {CharType::EOF_CHAR, State::ERROR_UNCLOSED_STRING},//210
                 {CharType::OTHER_CHAR, State::END},
 
             }},
@@ -275,12 +277,15 @@ namespace Lexer {
                 {CharType::OTHER_CHAR, State::END},
             } },
             { State::IN_PARSE_HEX_CHAR_1, { // 407
+                {CharType::NOT_HEX_DIGIT, State::IN_NORMAL_CHAR},//402
+                {CharType::BACWARD_SLASH, State::IN_ESCAPE_CHAR},//403
                 {CharType::HEX_DIGIT, State::IN_PARSE_HEX_CHAR_n},//408
                 {CharType::NEW_LINE, State::ERROR_UNCLOSED_CHAR},//410
                 {CharType::EOF_CHAR, State::ERROR_UNCLOSED_CHAR},//410
                 {CharType::OTHER_CHAR, State::END},
             } },
             { State::IN_PARSE_HEX_CHAR_n, { // 408
+                {CharType::NOT_HEX_DIGIT, State::IN_NORMAL_CHAR},//402
                 {CharType::SINGLE_QOUTE, State::END_CHAR},
                 {CharType::HEX_DIGIT, State::IN_PARSE_HEX_CHAR_n},
                 {CharType::NEW_LINE, State::ERROR_UNCLOSED_CHAR},//410
@@ -288,14 +293,14 @@ namespace Lexer {
                 {CharType::NORMAL_CHAR, State::IN_NORMAL_CHAR}, //402
                 {CharType::OTHER_CHAR, State::END},
             } },
+            { State::END_CHAR, { // 409
+                {CharType::EOF_CHAR, State::END},
+                {CharType::OTHER_CHAR, State::END},
+            } },
             { State::ERROR_UNCLOSED_CHAR, { // 410
                 {CharType::EOF_CHAR, State::END},
                 {CharType::OTHER_CHAR, State::END},
             } },
-            {State::END_CHAR, { // 409
-                {CharType::EOF_CHAR, State::END},
-                {CharType::OTHER_CHAR, State::END},
-            }},
             { State::ERROR_EMPTY_CHAR, { // 411
                 {CharType::EOF_CHAR, State::END},
                 {CharType::OTHER_CHAR, State::END},

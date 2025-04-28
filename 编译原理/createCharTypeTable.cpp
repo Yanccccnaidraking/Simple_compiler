@@ -96,6 +96,7 @@ namespace Lexer {
         transform(206, '\r', Type::NEW_LINE);
         transform(206, EOF, Type::EOF_CHAR);
         //207
+        transform(207, -128, 126, Type::NORMAL_STRING_CHAR);
         transform(207, '0', '9', Type::HEX_DIGIT);
         transform(207, 'a', 'f', Type::HEX_DIGIT);
         transform(207, 'A', 'F', Type::HEX_DIGIT);
@@ -173,9 +174,11 @@ namespace Lexer {
         transform(313, 'A', 'F', Type::DIGIT);
         //401
         transform(401, '\\', Type::BACWARD_SLASH);
+        transform(401, '\'', Type::SINGLE_QOUTE);
         transform(401, 0, '\''-1, Type::NORMAL_CHAR);
         transform(401, '\''+1,'\\'-1, Type::NORMAL_CHAR);
         transform(401, '\\'+1, 126, Type::NORMAL_CHAR);
+
         transform(401, '\n', Type::NEW_LINE);
         transform(401, '\r', Type::NEW_LINE);
         transform(401, EOF, Type::EOF_CHAR);
@@ -184,9 +187,10 @@ namespace Lexer {
         transform(402, 0, '\'' - 1, Type::NORMAL_CHAR);
         transform(402, '\'' + 1, '\\' - 1, Type::NORMAL_CHAR);
         transform(402, '\\' + 1, 126, Type::NORMAL_CHAR);
+        transform(402, '\'', Type::SINGLE_QOUTE);
+
         transform(402, '\n', Type::NEW_LINE);
         transform(402, '\r', Type::NEW_LINE);
-        transform(402, '\'', Type::SINGLE_QOUTE);
         transform(402, EOF, Type::EOF_CHAR);
         //403
         transform(403, 0, 126, Type::NOT_ESCAPABLE_CHAR);
@@ -202,6 +206,7 @@ namespace Lexer {
         transform(403, '\'', Type::ESCAPABLE_CHAR);
         transform(403, '0', '7', Type::OCT_DIGIT);
         transform(403, 'x', Type::HEX_SIGN);
+
         transform(403, '\n', Type::NEW_LINE);
         transform(403, '\r', Type::NEW_LINE);
         transform(403, EOF, Type::EOF_CHAR);
@@ -209,6 +214,7 @@ namespace Lexer {
         transform(404, '\'', Type::SINGLE_QOUTE);
         transform(404, '\\', Type::BACWARD_SLASH);
         transform(404, '0','7', Type::OCT_DIGIT);
+
         transform(404, '\n', Type::NEW_LINE);
         transform(404, '\r', Type::NEW_LINE);
         transform(404, EOF, Type::EOF_CHAR);
@@ -216,36 +222,38 @@ namespace Lexer {
         transform(405, '\'', Type::SINGLE_QOUTE);
         transform(405, '\\', Type::BACWARD_SLASH);
         transform(405, '0', '7', Type::OCT_DIGIT);
+
         transform(405, '\n', Type::NEW_LINE);
         transform(405, '\r', Type::NEW_LINE);
         transform(405, EOF, Type::EOF_CHAR);
         //406
         transform(406, '\'', Type::SINGLE_QOUTE);
         transform(406, '\\', Type::BACWARD_SLASH);
+
         transform(406, '\n', Type::NEW_LINE);
         transform(406, '\r', Type::NEW_LINE);
         transform(406, EOF, Type::EOF_CHAR);
         //407
+        transform(407, 0, 126, Type::NOT_HEX_DIGIT);
+        transform(407, '\\', Type::BACWARD_SLASH);
         transform(407, '0', '9', Type::HEX_DIGIT);
         transform(407, 'a', 'f', Type::HEX_DIGIT);
         transform(407, 'A', 'F', Type::HEX_DIGIT);
+
         transform(407, '\n', Type::NEW_LINE);
         transform(407, '\r', Type::NEW_LINE);
         transform(407, EOF, Type::EOF_CHAR);
 
         //408
+        transform(407, 0, 126, Type::NOT_HEX_DIGIT);
         transform(408, '\'', Type::SINGLE_QOUTE);
         transform(408, '0', '9', Type::HEX_DIGIT);
         transform(408, 'a', 'f', Type::HEX_DIGIT);
         transform(408, 'A', 'F', Type::HEX_DIGIT);
+
         transform(408, '\n', Type::NEW_LINE);
         transform(408, '\r', Type::NEW_LINE);
         transform(408, EOF, Type::EOF_CHAR);
-        //409
-        transform(409, EOF, Type::EOF_CHAR);
-        //410
-        transform(410, EOF, Type::EOF_CHAR);
-        //411
         //501
         transform(501, '*', Type::STAR);
         transform(501, '/', Type::FORWARD_SLASH);
