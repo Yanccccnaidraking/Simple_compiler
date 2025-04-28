@@ -33,6 +33,7 @@ dwaqw//d
 	a = .2f;
 	a = .f;
 	a = 16.e2f;
+	a = 1e;
 string s = "\a\v\x12abcGHIJKsss\002\0001"
 Ò»¶þ
 	b = c;
