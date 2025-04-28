@@ -15,10 +15,7 @@ namespace Lexer {
         transform(0, 'a', 'z', Type::LETTER);
         transform(0, 'A', 'Z', Type::LETTER);
         transform(0, '_', Type::LETTER);
-
         transform(0, "(){}[],;:.?", Type::DELIMITER);
-        
-
         transform(0, "++--~!*/%+−<<>><><=>===!=&&||&|^=+=−=*=/=%=&=|=^=<<=>>=->->*.*:", Type::OPERATOR);
         transform(0, '/', Type::FORWARD_SLASH);
         transform(0, '\'', Type::SINGLE_QOUTE);
@@ -28,7 +25,6 @@ namespace Lexer {
         transform(0, '0', Type::ZERO);
         transform(0, " \t\r\v\f", Type::WHITESPACE);
         transform(0, '\n', Type::NEW_LINE);
-
 
         //101
         transform(101, 'a', 'z', Type::LETTER);

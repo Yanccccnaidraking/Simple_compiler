@@ -256,7 +256,7 @@ namespace Lexer {
             }},
             {State::IN_SINGLE_COMMENT, {
                 {CharType::CHAR, State::IN_SINGLE_COMMENT},
-                {CharType::EOF_CHAR, State::END},
+                {CharType::EOF_CHAR ,State::END},
                 {CharType::NEW_LINE, State::END},
             }},
             {State::IN_MUTI_COMMENT, {
