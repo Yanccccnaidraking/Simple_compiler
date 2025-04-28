@@ -145,6 +145,7 @@
     <ClInclude Include="include\Inter\node.h" />
     <ClInclude Include="include\Inter\op.h" />
     <ClInclude Include="include\Inter\stmt.h" />
+    <ClInclude Include="include\Inter\temp.h" />
     <ClInclude Include="include\Lexer\Bool.h" />
     <ClInclude Include="include\Lexer\Char.h" />
     <ClInclude Include="include\Lexer\doublebuffer.h" />

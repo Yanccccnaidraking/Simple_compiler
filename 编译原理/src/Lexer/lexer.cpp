@@ -404,6 +404,10 @@ namespace Lexer {
 					}
 					break;
 				}
+				case State::IN_SCI_NUM:
+				{
+					throw std::runtime_error("line " + to_string(line) + ": Invalid floating-point number(不合法的浮点数)");
+				}
 				case State::IN_NORMAL_STRING_CHAR: //202
 					break;
 				case State::IN_ESCAPE_STATE: //203

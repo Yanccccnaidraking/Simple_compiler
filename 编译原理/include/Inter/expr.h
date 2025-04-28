@@ -11,10 +11,10 @@ namespace Inter {
 		Lexer::Token op;
 		Symbols::Type type;
 
-		Expr(const Lexer::Token& tok, const Symbols::Type& p) : op(tok), type(p) {}
+		Expr(Lexer::Token tok, Symbols::Type p) : op(tok), type(p) {}
 
-		Expr gen() const { return *this; }
-		Expr reduce() const { return *this; }
+		Expr& gen() { return *this; }
+		Expr& reduce() { return *this; }
 
 		void jumping(int t, int f) {
 			emitjumps(toString(), t, f);
