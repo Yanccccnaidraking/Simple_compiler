@@ -11,7 +11,8 @@ namespace Lexer {
 		const std::string string_value;
 		Char(std::string v) :  string_value(v), value(transformToChar(v)), Token(Tag::CHAR) {}
 
-		std::string toString() const { return string_value; }
+		//std::string toString() const { return string_value; }
+		std::string toString() const { return ""+value; }
 
         inline char transformToChar(std::string s) {
             char c;
@@ -57,19 +58,19 @@ namespace Lexer {
                         else if (s == "\\\'") c = '\'';
                         else if (s == "\\\"") c = '\"';
                         else {
-                            throw std::invalid_argument("Unsupported escape sequence.");
+                            throw std::runtime_error("Unsupported escape sequence.");
                         }
                     }
                 }
                 else {
-                    throw std::invalid_argument("Invalid escape sequence.");
+                    throw std::runtime_error("Invalid escape sequence.");
                 }
             }
             else if (s.length() == 1) { // Single character
                 c = s[0];
             }
             else {
-                throw std::invalid_argument("Input string does not represent a single character.");
+                throw std::runtime_error("empty character constant. Primitive character : " + s);
             }
 
             return c;
