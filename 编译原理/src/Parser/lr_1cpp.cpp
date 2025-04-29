@@ -227,8 +227,11 @@ namespace Parser {
 
 int main()
 {
-    Parser::computeFirstSets();
-    Parser::genItems();
+    //Parser::computeFirstSets(); 
+    //Parser::genItems();
+    //Parser::printItemSets();
+    //Parser::serializeItemSets("ItemSets.dat");
+    Parser::deserializeItemSets("ItemSets.dat");
     Parser::printItemSets();
     return 0;
 }

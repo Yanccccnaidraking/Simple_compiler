@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <fstream>
 #include <unordered_map>
 #include <set>
 #include <string>
@@ -24,6 +25,39 @@ namespace Parser {
         bool operator<(const Production& other) const {
             if (left != other.left) return left < other.left;
             return right < other.right;
+        }
+
+        // 序列化Production
+        void serialize(std::ofstream& out) const {
+            size_t leftSize = left.size();
+            out.write(reinterpret_cast<const char*>(&leftSize), sizeof(leftSize));
+            out.write(left.c_str(), leftSize);
+
+            size_t rightSize = right.size();
+            out.write(reinterpret_cast<const char*>(&rightSize), sizeof(rightSize));
+            for (const auto& symbol : right) {
+                size_t symbolSize = symbol.size();
+                out.write(reinterpret_cast<const char*>(&symbolSize), sizeof(symbolSize));
+                out.write(symbol.c_str(), symbolSize);
+            }
+        }
+
+        // 反序列化Production
+        void deserialize(std::ifstream& in) {
+            size_t leftSize;
+            in.read(reinterpret_cast<char*>(&leftSize), sizeof(leftSize));
+            left.resize(leftSize);
+            in.read(&left[0], leftSize);
+
+            size_t rightSize;
+            in.read(reinterpret_cast<char*>(&rightSize), sizeof(rightSize));
+            right.resize(rightSize);
+            for (auto& symbol : right) {
+                size_t symbolSize;
+                in.read(reinterpret_cast<char*>(&symbolSize), sizeof(symbolSize));
+                symbol.resize(symbolSize);
+                in.read(&symbol[0], symbolSize);
+            }
         }
     };
 
@@ -127,6 +161,25 @@ namespace Parser {
             return lookahead < other.lookahead;
         }
 
+        // 序列化Item
+        void serialize(std::ofstream& out) const {
+            production.serialize(out);
+            out.write(reinterpret_cast<const char*>(&dotPosition), sizeof(dotPosition));
+            size_t lookaheadSize = lookahead.size();
+            out.write(reinterpret_cast<const char*>(&lookaheadSize), sizeof(lookaheadSize));
+            out.write(lookahead.c_str(), lookaheadSize);
+        }
+
+        // 反序列化Item
+        void deserialize(std::ifstream& in) {
+            production.deserialize(in);
+            in.read(reinterpret_cast<char*>(&dotPosition), sizeof(dotPosition));
+            size_t lookaheadSize;
+            in.read(reinterpret_cast<char*>(&lookaheadSize), sizeof(lookaheadSize));
+            lookahead.resize(lookaheadSize);
+            in.read(&lookahead[0], lookaheadSize);
+        }
+
     };
 
     std::string toStringItem(Item item)
@@ -140,12 +193,72 @@ namespace Parser {
             }
             result += item.production.right[i]+" ";
         }
+        if (item.dotPosition == item.production.right.size())
+        {
+            result += ".";
+        }
         return item.production.left + " -> " + result + " , " + item.lookahead;
     }
 
     std::unordered_map<int, std::unordered_map<std::string, std::string>> actionTable; // Action Table
     std::unordered_map<int, std::unordered_map<std::string, int>> gotoTable; // Goto Table
     std::unordered_map<int, std::set<Item>> itemSets; // 项集族
+
+    // 序列化 itemSets 到文件
+    void serializeItemSets(const std::string& filename) {
+        std::ofstream out(filename, std::ios::binary);
+        if (!out) {
+            std::cerr << "Failed to open file for writing\n";
+            return;
+        }
+
+        size_t mapSize = itemSets.size();
+        out.write(reinterpret_cast<const char*>(&mapSize), sizeof(mapSize));
+
+        for (const auto& [state, items] : itemSets) {
+            out.write(reinterpret_cast<const char*>(&state), sizeof(state));
+
+            size_t setSize = items.size();
+            out.write(reinterpret_cast<const char*>(&setSize), sizeof(setSize));
+
+            for (const auto& item : items) {
+                item.serialize(out);
+            }
+        }
+
+        out.close();
+    }
+
+    // 反序列化 itemSets 从文件
+    void deserializeItemSets(const std::string& filename) {
+        std::ifstream in(filename, std::ios::binary);
+        if (!in) {
+            std::cerr << "Failed to open file for reading\n";
+            return;
+        }
+
+        size_t mapSize;
+        in.read(reinterpret_cast<char*>(&mapSize), sizeof(mapSize));
+
+        for (size_t i = 0; i < mapSize; ++i) {
+            int state;
+            in.read(reinterpret_cast<char*>(&state), sizeof(state));
+
+            size_t setSize;
+            in.read(reinterpret_cast<char*>(&setSize), sizeof(setSize));
+
+            std::set<Item> items;
+            for (size_t j = 0; j < setSize; ++j) {
+                Item item;
+                item.deserialize(in);
+                items.insert(item);
+            }
+
+            itemSets[state] = std::move(items);
+        }
+
+        in.close();
+    }
 
 }
 // 为了能够在unordered_map中使用Item作为key，需要定义哈希函数
