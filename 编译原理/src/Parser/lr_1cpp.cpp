@@ -79,6 +79,11 @@ namespace Parser {
         } while (added);
     }
 
+    /// <summary>
+    /// 给定某一串产生式的体，计算出对应的First集合
+    /// </summary>
+    /// <param name="lists"></param>
+    /// <returns></returns>
     std::set<std::string> getFirstSetByVector(std::vector<std::string> lists)
     {
         std::set<std::string> results;
@@ -203,7 +208,6 @@ namespace Parser {
         {
             std::set<Item> itemSet = lists.front();
             itemSets[i++] = itemSet;
-            std::cout << "当前的i的值：" << i << std::endl;
             for (const auto& token : tokens)
             {
                 std::set<Item> newItemSet = goTo(itemSet, token);
