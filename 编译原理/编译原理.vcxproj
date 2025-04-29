@@ -134,6 +134,7 @@
     <ClCompile Include="src\Lexer\doublebuffer.cpp" />
     <ClCompile Include="src\Lexer\lexer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\Parser\lr_1cpp.cpp" />
     <ClCompile Include="src\Parser\parser.cpp" />
     <ClCompile Include="src\Symbols\symbols.cpp" />
     <ClCompile Include="src\Lexer\Word.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="include\Lexer\Num.h" />
     <ClInclude Include="include\Lexer\Real.h" />
     <ClInclude Include="include\Lexer\String.h" />
+    <ClInclude Include="include\Parser\lr_1.h" />
     <ClInclude Include="include\Parser\parser.h" />
     <ClInclude Include="include\Symbols\symbols.h" />
     <ClInclude Include="include\Lexer\Tag.h" />
