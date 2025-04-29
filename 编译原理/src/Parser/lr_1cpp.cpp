@@ -23,6 +23,7 @@ namespace Parser {
             }
             std::cout << "\n" << std::endl;
         }
+        std::cout << itemSets.size() << std::endl;
     }
 
     /// <summary>
@@ -57,6 +58,7 @@ namespace Parser {
                         {
                             added = true;
                         }
+                        nullable = false;
                         break;//读取到终结符，直接退出
                     }
                     for (auto& f : firstSets[token]) {
@@ -97,6 +99,7 @@ namespace Parser {
             if (isTerminal(item))//若为终结符，则不再向后遍历
             {
                 results.insert(item);
+                nullable = false;
                 break;
             }
             for (const auto& b : firstSets[item])
@@ -191,47 +194,139 @@ namespace Parser {
     /// 生成LR(1)项集族
     /// </summary>
     void genItems() {
-        bool added = false;
         itemSets[0] = { Item({ Production{"program", {"block"}}, 0, "$" }) };//初始化program->.block , $
         closure(itemSets[0]);//求闭包
 
-        std::queue<std::set<Item>> lists;
+        std::vector<std::set<Item>> arr;
+        //std::queue<std::set<Item>> lists;
         std::set<std::set<Item>> tempSets;
+        
+        arr.push_back(itemSets[0]);
 
-        lists.push(itemSets[0]);
+        //lists.push(itemSets[0]);
         tempSets.insert(itemSets[0]);
         int i = 0;
-        std::set<std::string> tokens;
-        tokens.insert(terminals.begin(), terminals.end());
-        tokens.insert(nonTerminals.begin(), nonTerminals.end());//合并终结符和非终结符
-        while (!lists.empty())
+        //std::set<std::string> tokens;
+        //tokens.insert(terminals.begin(), terminals.end());
+        //tokens.insert(nonTerminals.begin(), nonTerminals.end());//合并终结符和非终结符
+        //while (!lists.empty())
+        //{
+        //    std::set<Item> itemSet = lists.front();
+        //    //分成终结和非终结两个部分的原因是需要分别求Action表和GOTO表，不适合合并处理
+        //    for (const auto& token : terminals)//终结符号部分
+        //    {
+        //        std::set<Item> newItemSet = goTo(itemSet, token);
+        //        if (!newItemSet.empty())
+        //        {
+        //            if (tempSets.find(newItemSet) == tempSets.end())
+        //            {
+        //                lists.push(newItemSet);
+        //                itemSets[i++] = newItemSet;
+        //                tempSets.insert(newItemSet);
+        //            }
+        //        }
+        //    }
+        //    for (const auto& token : nonTerminals)//非终结符号部分
+        //    {
+        //        std::set<Item> newItemSet = goTo(itemSet, token);
+        //        if (!newItemSet.empty())
+        //        {
+        //            if (tempSets.find(newItemSet) == tempSets.end())
+        //            {
+        //                lists.push(newItemSet);
+        //                itemSets[i++] = newItemSet;
+        //                tempSets.insert(newItemSet);
+        //            }
+        //        }
+        //    }
+        //    lists.pop();
+        //}
+        for (int j = 0; j < arr.size(); j++)
         {
-            std::set<Item> itemSet = lists.front();
-            itemSets[i++] = itemSet;
-            for (const auto& token : tokens)
+            std::set<Item> itemSet = arr[j];
+            //分成终结和非终结两个部分的原因是需要分别求Action表和GOTO表，不适合合并处理
+
+            //编写Action表
+            // 由于改文法不是LR(1)文法所以需要进行一定的约束，使其不会产生冲突。
+            // 文法存在悬空else的问题，为了解决这一问题，需要在输入为else的时候，选择移入，而不是规约。
+            // 由于本文法不存在其他的冲突，所以采取先规约，再移入的填表策略，让移入覆盖规约，以解决冲突
+
+            //规约操作
+            for (const auto& item : itemSet)
+            {
+                if (item.dotPosition == item.production.right.size())//点在最右侧，说明应该规约
+                {
+                    int proNo = getGrammarNo(item.production);
+                    if (proNo > 0)
+                    {
+                        actionTable[j][item.lookahead] = "r" + std::to_string(proNo);
+                    }
+                    else if (!proNo)
+                    {
+                        actionTable[j][item.lookahead] = "acc";
+                    }
+                }
+            }
+
+            for (const auto& token : terminals)//终结符号部分
+            {
+                if (token == "")
+                    continue;
+                std::set<Item> newItemSet = goTo(itemSet, token);
+                if (!newItemSet.empty())
+                {
+                    if (tempSets.find(newItemSet) == tempSets.end())
+                    {
+                        arr.push_back(newItemSet);
+                        itemSets[++i] = newItemSet;
+                        actionTable[j][token] = "s"+std::to_string(i);
+                        tempSets.insert(newItemSet);
+                    }
+                    else
+                    {
+                        int c = findItemSetKey(newItemSet);
+                        if (c >= 0)
+                            actionTable[j][token] = "s" + std::to_string(c);
+                    }
+                }
+            }
+            for (const auto& token : nonTerminals)//非终结符号部分
             {
                 std::set<Item> newItemSet = goTo(itemSet, token);
                 if (!newItemSet.empty())
                 {
                     if (tempSets.find(newItemSet) == tempSets.end())
                     {
-                        lists.push(newItemSet);
+                        arr.push_back(newItemSet);
+                        itemSets[++i] = newItemSet;
+                        gotoTable[j][token] = i;
                         tempSets.insert(newItemSet);
+                    }
+                    else
+                    {
+                        int c = findItemSetKey(newItemSet);
+                        if (c>=0)
+                            gotoTable[j][token] = c;
                     }
                 }
             }
-            lists.pop();
         }
     }
 }
 
 int main()
 {
-    //Parser::computeFirstSets(); 
-    //Parser::genItems();
-    //Parser::printItemSets();
-    //Parser::serializeItemSets("ItemSets.dat");
-    Parser::deserializeItemSets("ItemSets.dat");
+    /*Parser::computeFirstSets();
+    Parser::genItems();
     Parser::printItemSets();
+    Parser::serializeItemSets("ItemSets.dat");
+    Parser::saveGotoTable("GOTOTable.dat");
+    Parser::saveActionTable("ActionTable.dat");*/
+    /*Parser::deserializeItemSets("ItemSets.dat");
+    Parser::printItemSets();*/
+    /*Parser::loadGotoTable("GOTOTable.dat");
+    Parser::printGotoTable();*/
+    Parser::loadActionTable("ActionTable.dat");
+    Parser::printActionTable();
     return 0;
 }

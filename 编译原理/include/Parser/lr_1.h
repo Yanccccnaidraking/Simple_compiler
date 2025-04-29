@@ -143,6 +143,19 @@ namespace Parser {
         {"factor", {"false"}}  // 布尔常量 false
     };
 
+    int getGrammarNo(Production pro)
+    {
+        int size = grammar.size();
+        for (int i = 0; i < size; i++)
+        {
+            if (pro == grammar[i])
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     struct Item {
         Production production;
         int dotPosition; // 圆点位置，表示目前分析到产生式的哪一部分
@@ -204,6 +217,15 @@ namespace Parser {
     std::unordered_map<int, std::unordered_map<std::string, int>> gotoTable; // Goto Table
     std::unordered_map<int, std::set<Item>> itemSets; // 项集族
 
+    int findItemSetKey(const std::set<Item>& targetSet) {
+        for (const auto& [key, valueSet] : itemSets) {
+            if (valueSet == targetSet) {
+                return key; // 找到了对应键
+            }
+        }
+        return -1; // 未找到
+    }
+
     // 序列化 itemSets 到文件
     void serializeItemSets(const std::string& filename) {
         std::ofstream out(filename, std::ios::binary);
@@ -259,6 +281,156 @@ namespace Parser {
 
         in.close();
     }
+
+    void saveActionTable(const std::string& filename) {
+        std::ofstream out(filename, std::ios::binary);
+        if (!out) return;
+
+        size_t outerSize = actionTable.size();
+        out.write(reinterpret_cast<char*>(&outerSize), sizeof(outerSize));
+
+        for (const auto& [state, transitions] : actionTable) {
+            out.write(reinterpret_cast<const char*>(&state), sizeof(state));
+
+            size_t innerSize = transitions.size();
+            out.write(reinterpret_cast<const char*>(&innerSize), sizeof(innerSize));
+
+            for (const auto& [symbol, action] : transitions) {
+                size_t keyLen = symbol.size();
+                size_t valLen = action.size();
+
+                out.write(reinterpret_cast<const char*>(&keyLen), sizeof(keyLen));
+                out.write(symbol.data(), keyLen);
+
+                out.write(reinterpret_cast<const char*>(&valLen), sizeof(valLen));
+                out.write(action.data(), valLen);
+            }
+        }
+
+        out.close();
+    }
+
+    void loadActionTable(const std::string& filename) {
+        std::ifstream in(filename, std::ios::binary);
+        if (!in) return;
+
+        actionTable.clear();
+
+        size_t outerSize;
+        in.read(reinterpret_cast<char*>(&outerSize), sizeof(outerSize));
+
+        for (size_t i = 0; i < outerSize; ++i) {
+            int state;
+            in.read(reinterpret_cast<char*>(&state), sizeof(state));
+
+            size_t innerSize;
+            in.read(reinterpret_cast<char*>(&innerSize), sizeof(innerSize));
+
+            std::unordered_map<std::string, std::string> transitions;
+
+            for (size_t j = 0; j < innerSize; ++j) {
+                size_t keyLen, valLen;
+
+                in.read(reinterpret_cast<char*>(&keyLen), sizeof(keyLen));
+                std::string symbol(keyLen, '\0');
+                in.read(&symbol[0], keyLen);
+
+                in.read(reinterpret_cast<char*>(&valLen), sizeof(valLen));
+                std::string action(valLen, '\0');
+                in.read(&action[0], valLen);
+
+                transitions[symbol] = action;
+            }
+
+            actionTable[state] = std::move(transitions);
+        }
+
+        in.close();
+    }
+
+    void saveGotoTable(const std::string& filename) {
+        std::ofstream out(filename, std::ios::binary);
+        if (!out) return;
+
+        size_t outerSize = gotoTable.size();
+        out.write(reinterpret_cast<char*>(&outerSize), sizeof(outerSize));
+
+        for (const auto& [state, transitions] : gotoTable) {
+            out.write(reinterpret_cast<const char*>(&state), sizeof(state));
+
+            size_t innerSize = transitions.size();
+            out.write(reinterpret_cast<const char*>(&innerSize), sizeof(innerSize));
+
+            for (const auto& [symbol, nextState] : transitions) {
+                size_t keyLen = symbol.size();
+                out.write(reinterpret_cast<const char*>(&keyLen), sizeof(keyLen));
+                out.write(symbol.data(), keyLen);
+                out.write(reinterpret_cast<const char*>(&nextState), sizeof(nextState));
+            }
+        }
+
+        out.close();
+    }
+
+    void loadGotoTable(const std::string& filename) {
+        std::ifstream in(filename, std::ios::binary);
+        if (!in) return;
+
+        gotoTable.clear();
+
+        size_t outerSize;
+        in.read(reinterpret_cast<char*>(&outerSize), sizeof(outerSize));
+
+        for (size_t i = 0; i < outerSize; ++i) {
+            int state;
+            in.read(reinterpret_cast<char*>(&state), sizeof(state));
+
+            size_t innerSize;
+            in.read(reinterpret_cast<char*>(&innerSize), sizeof(innerSize));
+
+            std::unordered_map<std::string, int> transitions;
+
+            for (size_t j = 0; j < innerSize; ++j) {
+                size_t keyLen;
+                in.read(reinterpret_cast<char*>(&keyLen), sizeof(keyLen));
+
+                std::string symbol(keyLen, '\0');
+                in.read(&symbol[0], keyLen);
+
+                int nextState;
+                in.read(reinterpret_cast<char*>(&nextState), sizeof(nextState));
+
+                transitions[symbol] = nextState;
+            }
+
+            gotoTable[state] = std::move(transitions);
+        }
+
+        in.close();
+    }
+
+    void printActionTable() {
+        std::cout << "=== ACTION TABLE ===" << std::endl;
+        for (const auto& [state, transitions] : actionTable) {
+            std::cout << "State " << state << ":" << std::endl;
+            for (const auto& [symbol, action] : transitions) {
+                std::cout << "  On '" << symbol << "' -> " << action << std::endl;
+            }
+        }
+        std::cout << std::endl;
+    }
+
+    void printGotoTable() {
+        std::cout << "=== GOTO TABLE ===" << std::endl;
+        for (const auto& [state, transitions] : gotoTable) {
+            std::cout << "State " << state << ":" << std::endl;
+            for (const auto& [symbol, nextState] : transitions) {
+                std::cout << "  On '" << symbol << "' -> " << nextState << std::endl;
+            }
+        }
+        std::cout << std::endl;
+    }
+
 
 }
 // 为了能够在unordered_map中使用Item作为key，需要定义哈希函数
