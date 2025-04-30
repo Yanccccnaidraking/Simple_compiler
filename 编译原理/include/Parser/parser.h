@@ -2,6 +2,7 @@
 #include "Lexer/lexer.h"
 #include "Symbols/symbols.h"
 #include "Inter/stmt.h"
+#include<stack>
 
 namespace Lexer {
 	class Lexer;
@@ -25,6 +26,7 @@ namespace Parser {
 	private:
 		Lexer::Lexer& lexer;
 		shared_ptr<Lexer::Token> look;
+		std::stack<int> stateStack;
 		Symbols::Env top; // 当前或顶部的符号表
 		int used = 0; // storage used for declarations
 

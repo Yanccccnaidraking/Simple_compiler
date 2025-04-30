@@ -2,6 +2,111 @@
 #include<queue>
 namespace Parser {
 
+    std::vector<Production> grammar = {
+       {"program", {"block"}},
+
+       {"block", {"{", "decls", "stmts", "}"}},
+
+       {"decls", {"decls", "decl"}},  // 递归的声明
+       {"decls", {""}},  // ε 代表空的产生式
+
+       {"decl", {"type", "id", ";"}},
+
+       {"type", {"type", "[","num","]"}},  // 数组类型
+       {"type", {"basic"}},  // 基本类型
+
+       {"stmts", {"stmts", "stmt"}},  // 递归的语句
+       {"stmts", {""}},  // ε 代表空的产生式
+
+       {"stmt", {"loc", "=", "bool", ";"}},
+
+       {"stmt", {"if", "(", "bool", ")", "stmt"}},  // if 语句
+       {"stmt", {"if", "(", "bool", ")", "stmt", "else", "stmt"}},  // if-else 语句
+       {"stmt", {"while", "(", "bool", ")", "stmt"}},  // while 语句
+       {"stmt", {"do", "stmt", "while", "(", "bool", ")", ";"}},  // do-while 语句
+       {"stmt", {"break", ";"}},  // break 语句
+       {"stmt", {"block"}},  // 块语句
+
+       {"loc", {"loc", "[","num","]"}},  // 数组访问
+       {"loc", {"id"}},  // 标识符
+
+       {"bool", {"bool", "||", "join"}},  // 逻辑或
+       {"bool", {"join"}},  // 连接条件
+
+       {"join", {"join", "&&", "equality"}},  // 逻辑与
+       {"join", {"equality"}},  // 相等条件
+
+       {"equality", {"equality", "==", "rel"}},  // 等于
+       {"equality", {"equality", "!=", "rel"}},  // 不等于
+       {"equality", {"rel"}},  // 关系表达式
+
+       {"rel", {"expr", "<", "expr"}},  // 小于
+       {"rel", {"expr", "<=", "expr"}},  // 小于等于
+       {"rel", {"expr", ">=", "expr"}},  // 大于等于
+       {"rel", {"expr", ">", "expr"}},  // 大于
+       {"rel", {"expr"}},  // 单一表达式
+
+       {"expr", {"expr", "+", "term"}},  // 加法
+       {"expr", {"expr", "-", "term"}},  // 减法
+       {"expr", {"term"}},  // 单一项
+
+       {"term", {"term", "*", "unary"}},  // 乘法
+       {"term", {"term", "/", "unary"}},  // 除法
+       {"term", {"unary"}},  // 单一运算
+
+       {"unary", {"!", "unary"}},  // 逻辑非
+       {"unary", {"-", "unary"}},  // 负号
+       {"unary", {"factor"}},  // 基本因子
+
+       {"factor", {"(", "bool", ")"}},  // 括号内的布尔表达式
+       {"factor", {"loc"}},  // 位置（变量）
+       {"factor", {"num"}},  // 数字常量
+       {"factor", {"real"}},  // 浮点数常量
+       {"factor", {"true"}},  // 布尔常量 true
+       {"factor", {"false"}}  // 布尔常量 false
+    };
+    std::set<std::string> terminals = { "[","]","{", "}", ";", "(", ")", "+", "-", "*", "/", "!","=","==", "!=", "<", "<=", ">", ">=", "||", "&&", "$","num", "real", "true", "false","if","while","else","do","break","id","basic","" };
+    std::set<std::string> nonTerminals = { "program", "block", "decls", "decl", "type", "stmts", "stmt", "loc", "bool", "join", "equality", "rel", "expr", "term", "unary", "factor" };
+    std::map<std::string, std::set<std::string>> firstSets;
+    std::unordered_map<int, std::unordered_map<std::string, int>> actionTable; // Action Table
+    std::unordered_map<int, std::unordered_map<std::string, int>> gotoTable; // Goto Table
+    std::unordered_map<int, std::set<Item>> itemSets; // 项集族
+
+    /// <summary>
+    /// 查询LR(1)分析表的Action
+    /// </summary>
+    /// <param name="state"></param>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    Action searchFromAction(int state, std::string token)
+    {
+        auto rowIt = actionTable.find(state);
+        if (rowIt != actionTable.end()) {
+            auto colIt = rowIt->second.find(token);
+            if (colIt != rowIt->second.end()) {
+                return decodeAction(colIt->second);
+            }
+        }
+        return Action{ActionType::Error,0};
+    }
+
+    /// <summary>
+    /// 查询LR(1)分析表的GOTO
+    /// </summary>
+    /// <param name="state"></param>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    int searchFromGoto(int state, std::string token)
+    {
+        auto rowIt = gotoTable.find(state);
+        if (rowIt != gotoTable.end()) {
+            auto colIt = rowIt->second.find(token);
+            if (colIt != rowIt->second.end()) {
+                return colIt->second;
+            }
+        }
+        return -1;
+    }
 
     void printFirstSets() {
         for (const auto& [nonTerminal, firstSet] : firstSets) {
@@ -259,11 +364,11 @@ namespace Parser {
                     int proNo = getGrammarNo(item.production);
                     if (proNo > 0)
                     {
-                        actionTable[j][item.lookahead] = "r" + std::to_string(proNo);
+                        actionTable[j][item.lookahead] = encodeAction(ActionType::Reduce, proNo);
                     }
                     else if (!proNo)
                     {
-                        actionTable[j][item.lookahead] = "acc";
+                        actionTable[j][item.lookahead] = encodeAction(ActionType::Accept,0);
                     }
                 }
             }
@@ -279,14 +384,14 @@ namespace Parser {
                     {
                         arr.push_back(newItemSet);
                         itemSets[++i] = newItemSet;
-                        actionTable[j][token] = "s"+std::to_string(i);
+                        actionTable[j][token] = encodeAction(ActionType::Shift,i);
                         tempSets.insert(newItemSet);
                     }
                     else
                     {
                         int c = findItemSetKey(newItemSet);
                         if (c >= 0)
-                            actionTable[j][token] = "s" + std::to_string(c);
+                            actionTable[j][token] = encodeAction(ActionType::Shift,c);
                     }
                 }
             }
@@ -312,6 +417,206 @@ namespace Parser {
             }
         }
     }
+
+    /// <summary>
+    /// 解码分析表的符号
+    /// </summary>
+    /// <param name="type"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    int encodeAction(ActionType type, int value) {
+        return (static_cast<int>(type) << 28) | (value & 0x0FFFFFFF);
+    }
+
+    /// <summary>
+    /// 编码分析表的action
+    /// </summary>
+    /// <param name="encoded"></param>
+    /// <returns></returns>
+    Action decodeAction(int encoded) {
+        ActionType type = static_cast<ActionType>((encoded >> 28) & 0xF);
+        int value = encoded & 0x0FFFFFFF;
+        return { type, value };
+    }
+
+    void saveActionTable(const std::string& filename) {
+        std::ofstream out(filename, std::ios::binary);
+        if (!out) return;
+
+        size_t outerSize = actionTable.size();
+        out.write(reinterpret_cast<const char*>(&outerSize), sizeof(outerSize));
+
+        for (const auto& [state, transitions] : actionTable) {
+            out.write(reinterpret_cast<const char*>(&state), sizeof(state));
+
+            size_t innerSize = transitions.size();
+            out.write(reinterpret_cast<const char*>(&innerSize), sizeof(innerSize));
+
+            for (const auto& [symbol, action] : transitions) {
+                size_t keyLen = symbol.size();
+                out.write(reinterpret_cast<const char*>(&keyLen), sizeof(keyLen));
+                out.write(symbol.data(), keyLen);
+
+                out.write(reinterpret_cast<const char*>(&action), sizeof(action));
+            }
+        }
+
+        out.close();
+    }
+
+    void loadActionTable(const std::string& filename) {
+        std::ifstream in(filename, std::ios::binary);
+        if (!in) return;
+
+        actionTable.clear();
+
+        size_t outerSize;
+        in.read(reinterpret_cast<char*>(&outerSize), sizeof(outerSize));
+
+        for (size_t i = 0; i < outerSize; ++i) {
+            int state;
+            in.read(reinterpret_cast<char*>(&state), sizeof(state));
+
+            size_t innerSize;
+            in.read(reinterpret_cast<char*>(&innerSize), sizeof(innerSize));
+
+            std::unordered_map<std::string, int> transitions;
+
+            for (size_t j = 0; j < innerSize; ++j) {
+                size_t keyLen;
+                in.read(reinterpret_cast<char*>(&keyLen), sizeof(keyLen));
+
+                std::string symbol(keyLen, '\0');
+                in.read(&symbol[0], keyLen);
+
+                int action;
+                in.read(reinterpret_cast<char*>(&action), sizeof(action));
+
+                transitions[symbol] = action;
+            }
+
+            actionTable[state] = std::move(transitions);
+        }
+
+        in.close();
+    }
+
+    // 序列化 itemSets 到文件
+    void serializeItemSets(const std::string& filename) {
+        std::ofstream out(filename, std::ios::binary);
+        if (!out) {
+            std::cerr << "Failed to open file for writing\n";
+            return;
+        }
+
+        size_t mapSize = itemSets.size();
+        out.write(reinterpret_cast<const char*>(&mapSize), sizeof(mapSize));
+
+        for (const auto& [state, items] : itemSets) {
+            out.write(reinterpret_cast<const char*>(&state), sizeof(state));
+
+            size_t setSize = items.size();
+            out.write(reinterpret_cast<const char*>(&setSize), sizeof(setSize));
+
+            for (const auto& item : items) {
+                item.serialize(out);
+            }
+        }
+
+        out.close();
+    }
+
+    // 反序列化 itemSets 从文件
+    void deserializeItemSets(const std::string& filename) {
+        std::ifstream in(filename, std::ios::binary);
+        if (!in) {
+            std::cerr << "Failed to open file for reading\n";
+            return;
+        }
+
+        size_t mapSize;
+        in.read(reinterpret_cast<char*>(&mapSize), sizeof(mapSize));
+
+        for (size_t i = 0; i < mapSize; ++i) {
+            int state;
+            in.read(reinterpret_cast<char*>(&state), sizeof(state));
+
+            size_t setSize;
+            in.read(reinterpret_cast<char*>(&setSize), sizeof(setSize));
+
+            std::set<Item> items;
+            for (size_t j = 0; j < setSize; ++j) {
+                Item item;
+                item.deserialize(in);
+                items.insert(item);
+            }
+
+            itemSets[state] = std::move(items);
+        }
+
+        in.close();
+    }
+
+    void saveGotoTable(const std::string& filename) {
+        std::ofstream out(filename, std::ios::binary);
+        if (!out) return;
+
+        size_t outerSize = gotoTable.size();
+        out.write(reinterpret_cast<char*>(&outerSize), sizeof(outerSize));
+
+        for (const auto& [state, transitions] : gotoTable) {
+            out.write(reinterpret_cast<const char*>(&state), sizeof(state));
+
+            size_t innerSize = transitions.size();
+            out.write(reinterpret_cast<const char*>(&innerSize), sizeof(innerSize));
+
+            for (const auto& [symbol, nextState] : transitions) {
+                size_t keyLen = symbol.size();
+                out.write(reinterpret_cast<const char*>(&keyLen), sizeof(keyLen));
+                out.write(symbol.data(), keyLen);
+                out.write(reinterpret_cast<const char*>(&nextState), sizeof(nextState));
+            }
+        }
+
+        out.close();
+    }
+
+    void loadGotoTable(const std::string& filename) {
+        std::ifstream in(filename, std::ios::binary);
+        if (!in) return;
+
+        gotoTable.clear();
+
+        size_t outerSize;
+        in.read(reinterpret_cast<char*>(&outerSize), sizeof(outerSize));
+
+        for (size_t i = 0; i < outerSize; ++i) {
+            int state;
+            in.read(reinterpret_cast<char*>(&state), sizeof(state));
+
+            size_t innerSize;
+            in.read(reinterpret_cast<char*>(&innerSize), sizeof(innerSize));
+
+            std::unordered_map<std::string, int> transitions;
+
+            for (size_t j = 0; j < innerSize; ++j) {
+                size_t keyLen;
+                in.read(reinterpret_cast<char*>(&keyLen), sizeof(keyLen));
+
+                std::string symbol(keyLen, '\0');
+                in.read(&symbol[0], keyLen);
+
+                int nextState;
+                in.read(reinterpret_cast<char*>(&nextState), sizeof(nextState));
+
+                transitions[symbol] = nextState;
+            }
+
+            gotoTable[state] = std::move(transitions);
+        }
+
+        in.close();
+    }
 }
 
 int main()
@@ -324,8 +629,8 @@ int main()
     Parser::saveActionTable("ActionTable.dat");*/
     /*Parser::deserializeItemSets("ItemSets.dat");
     Parser::printItemSets();*/
-    /*Parser::loadGotoTable("GOTOTable.dat");
-    Parser::printGotoTable();*/
+    Parser::loadGotoTable("GOTOTable.dat");
+    Parser::printGotoTable();
     Parser::loadActionTable("ActionTable.dat");
     Parser::printActionTable();
     return 0;

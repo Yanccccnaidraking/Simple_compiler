@@ -1,14 +1,58 @@
 #include "Parser/parser.h"
 #include "Lexer/lexer.h"
 #include "Inter/stmt.h"
+#include "Parser/lr_1.h"
 namespace Parser {
 	Parser::Parser(Lexer::Lexer& l) : lexer(l), top(nullptr)
 	{
+		deserializeItemSets("ItemSets.dat");
+		loadGotoTable("GOTOTable.dat");
+		loadActionTable("ActionTable.dat");
+		stateStack.push(-1);
 		move();
 	}
 	void Parser::move()
 	{
 		look = lexer.scan();
+		bool finished = false;
+		while (!finished)
+		{
+			int cur = stateStack.top();
+			if (cur > 0)
+			{
+				Action act = searchFromAction(cur, look->toString());
+				switch (act.type)
+				{
+				case ActionType::Shift:
+					stateStack.push(act.value);
+					break;
+				case ActionType::Reduce:
+				{
+					int beta = grammar[act.value].right.size();
+					while (beta--)
+					{
+						stateStack.pop();
+					}
+					int newState = searchFromGoto(stateStack.top(), grammar[act.value].left);
+					stateStack.pop();
+					if (newState == -1)
+					{
+						//错误处理
+						break;
+					}
+					stateStack.push(newState);
+					//输出产生式（待做...）
+					break;
+				}
+				case ActionType::Accept:
+					finished = true;//语法分析结束
+					break;
+				case ActionType::Error:
+					//调用错误恢复例程
+					break;
+				}
+			}
+		}
 	}
 	void Parser::error(std::string s)
 	{

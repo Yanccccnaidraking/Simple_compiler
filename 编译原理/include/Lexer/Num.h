@@ -9,6 +9,6 @@ namespace Lexer {
 
 		Num(int v) : value(v), Token(Tag::NUM) {}
 
-		std::string toString() const { return std::to_string(value); }
+		std::string toString() const { return "num"; }
 	};
 }
