@@ -120,6 +120,8 @@ namespace Parser {
 
     void printItemSets() {
         for (const auto& pair : itemSets) {
+            if (pair.first != 6)
+                continue;
             std::cout << "Key: " << pair.first << "\n";
             std::cout << "Items: ";
             // 遍历每个 set<Item> 并打印其元素
@@ -359,7 +361,7 @@ namespace Parser {
             //规约操作
             for (const auto& item : itemSet)
             {
-                if (item.dotPosition == item.production.right.size())//点在最右侧，说明应该规约
+                if (item.dotPosition == item.production.right.size()||item.production.right[0]=="")//点在最右侧，说明应该规约
                 {
                     int proNo = getGrammarNo(item.production);
                     if (proNo > 0)
@@ -619,19 +621,19 @@ namespace Parser {
     }
 }
 
-int main()
-{
-    /*Parser::computeFirstSets();
-    Parser::genItems();
-    Parser::printItemSets();
-    Parser::serializeItemSets("ItemSets.dat");
-    Parser::saveGotoTable("GOTOTable.dat");
-    Parser::saveActionTable("ActionTable.dat");*/
-    /*Parser::deserializeItemSets("ItemSets.dat");
-    Parser::printItemSets();*/
-    Parser::loadGotoTable("GOTOTable.dat");
-    Parser::printGotoTable();
-    Parser::loadActionTable("ActionTable.dat");
-    Parser::printActionTable();
-    return 0;
-}
+//int main()
+//{
+//    /*Parser::computeFirstSets();
+//    Parser::genItems();
+//    Parser::printItemSets();
+//    Parser::serializeItemSets("ItemSets.dat");
+//    Parser::saveGotoTable("GOTOTable.dat");
+//    Parser::saveActionTable("ActionTable.dat");*/
+//    /*Parser::deserializeItemSets("ItemSets.dat");
+//    Parser::printItemSets();*/
+//    /*Parser::loadGotoTable("GOTOTable.dat");
+//    Parser::printGotoTable();
+//    Parser::loadActionTable("ActionTable.dat");
+//    Parser::printActionTable();*/
+//    return 0;
+//}

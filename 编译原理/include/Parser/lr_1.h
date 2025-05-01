@@ -35,7 +35,7 @@ namespace Parser {
         switch (type)
         {
         case ActionType::Error:
-            return "error";
+            return "Error";
         case ActionType::Shift:
             return "Shift";
         case ActionType::Reduce:
@@ -110,6 +110,12 @@ namespace Parser {
     inline bool isNonTerminal(const std::string& symbol) {
         return nonTerminals.find(symbol) != nonTerminals.end();
     }
+
+    void computeFirstSets();
+
+    void printFirstSets();
+
+    void printItemSets();
 
     // 存储每个非终结符的 First 集合
     extern std::map<std::string, std::set<std::string>> firstSets;

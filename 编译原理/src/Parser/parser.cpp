@@ -1,40 +1,58 @@
 #include "Parser/parser.h"
 #include "Lexer/lexer.h"
 #include "Inter/stmt.h"
+#include "Lexer/Tag.h"
 #include "Parser/lr_1.h"
 namespace Parser {
 	Parser::Parser(Lexer::Lexer& l) : lexer(l), top(nullptr)
 	{
 		deserializeItemSets("ItemSets.dat");
+		printItemSets();
 		loadGotoTable("GOTOTable.dat");
 		loadActionTable("ActionTable.dat");
 		stateStack.push(-1);
+		stateStack.push(0);
 		move();
 	}
 	void Parser::move()
 	{
 		look = lexer.scan();
+	}
+	void Parser::error(std::string s)
+	{
+		throw runtime_error("line " + std::to_string(lexer.line) + ": " + s);
+	}
+	void Parser::match(int t)
+	{
+		if (look->tag == t) move();
+		else error("语法错误");
+	}
+	void Parser::program()
+	{
 		bool finished = false;
 		while (!finished)
 		{
 			int cur = stateStack.top();
-			if (cur > 0)
+			//cout << "栈顶的数值是：" << cur << endl;
+			if (cur >= 0)
 			{
-				Action act = searchFromAction(cur, look->toString());
+				Action act = searchFromAction(cur, Lexer::tagToString(Lexer::Tag(look->tag)));
+				cout << "===================================" << endl;
+				cout << "当前的状态是："<<cur << "  当前读入的字符是：" << Lexer::tagToString(Lexer::Tag(look->tag)) << endl << getActionStr(act.type) << act.value << endl;
 				switch (act.type)
 				{
 				case ActionType::Shift:
 					stateStack.push(act.value);
+					move();
 					break;
 				case ActionType::Reduce:
 				{
-					int beta = grammar[act.value].right.size();
+					int beta = grammar[act.value].right[0]==""? 0 :grammar[act.value].right.size();//空串这一特殊情况设置成0
 					while (beta--)
 					{
 						stateStack.pop();
 					}
 					int newState = searchFromGoto(stateStack.top(), grammar[act.value].left);
-					stateStack.pop();
 					if (newState == -1)
 					{
 						//错误处理
@@ -49,26 +67,15 @@ namespace Parser {
 					break;
 				case ActionType::Error:
 					//调用错误恢复例程
+					error("语法分析错误");
 					break;
 				}
 			}
+			else
+			{
+				break;
+			}
 		}
-	}
-	void Parser::error(std::string s)
-	{
-		throw runtime_error("line " + std::to_string(lexer.line) + ": " + s);
-	}
-	void Parser::match(int t)
-	{
-		if (look->tag == t) move();
-		else error("语法错误");
-	}
-	void Parser::program()
-	{
-		//shared_ptr<Inter::Stmt> s = block();
-		//int begin = s->newlabel();
-		//int after = s->newlabel();
-		//s->emitlabel(begin);
 		
 	}
 	shared_ptr<Inter::Stmt> Parser::block()
