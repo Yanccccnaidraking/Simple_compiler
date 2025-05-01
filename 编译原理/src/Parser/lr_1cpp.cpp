@@ -71,6 +71,7 @@ namespace Parser {
     std::unordered_map<int, std::unordered_map<std::string, int>> actionTable; // Action Table
     std::unordered_map<int, std::unordered_map<std::string, int>> gotoTable; // Goto Table
     std::unordered_map<int, std::set<Item>> itemSets; // 项集族
+    std::vector<ParserItem> parserTable;
 
     /// <summary>
     /// 查询LR(1)分析表的Action

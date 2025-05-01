@@ -9,6 +9,7 @@
 #include "Lexer/Char.h"
 #include "Lexer/Tag.h"
 #include "Parser/parser.h"
+#include "Parser/lr_1.h"
 
 
 // ∂®“Â”≥…‰
@@ -99,5 +100,6 @@ int main() {
     Lexer::Lexer lexer = Lexer::Lexer("input.txt");
     Parser::Parser parser = Parser::Parser(lexer);
     parser.program();
+    Parser::writeParserCSV("parsertable.csv");
     return 0;
 }

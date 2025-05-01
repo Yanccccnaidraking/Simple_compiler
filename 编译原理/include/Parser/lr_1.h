@@ -2,11 +2,13 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <sstream>
 #include <unordered_map>
 #include <set>
 #include <string>
 #include <stack>
 #include <algorithm>
+#include <iomanip>
 #include<map>
 
 
@@ -34,6 +36,102 @@ namespace Parser {
         std::string action;
     };
 
+    extern std::vector<ParserItem> parserTable;
+
+    /// <summary>
+    /// 构造语法分析的输出表
+    /// </summary>
+    /// <param name="s"></param>
+    /// <param name="symbol"></param>
+    /// <param name="input"></param>
+    /// <param name="pro"></param>
+    inline void insertParserTable(std::stack<int> s, std::deque<std::string> symbols, std::string input, std::string action)
+    {
+        std::string symbol;
+        for (const auto& s : symbols)
+        {
+            symbol += s;
+        }
+        parserTable.push_back(ParserItem{ s,symbol,input,action});
+    }
+
+    // 辅助函数：将栈内容转换为字符串（从 bottom 到 top）
+    inline std::string stackToString(std::stack<int> s) {
+        std::vector<int> temp;
+        while (!s.empty()) {
+            temp.push_back(s.top());
+            s.pop();
+        }
+        std::reverse(temp.begin(), temp.end());
+
+        std::ostringstream oss;
+        for (int i = 0; i < temp.size(); ++i) {
+            oss << temp[i];
+            if (i != temp.size() - 1) oss << " ";
+        }
+        return oss.str();
+    }
+
+    // 打印函数
+    inline void writeParserTableToFile(const std::string& filename) {
+        std::ofstream outFile(filename);
+        if (!outFile) {
+            std::cerr << "无法打开文件：" << filename << std::endl;
+            return;
+        }
+
+        const int width_stack = 80;
+        const int width_symbol = 80;
+        const int width_input = 10;
+        const int width_action = 20;
+
+        // 表头
+        outFile << std::left
+            << std::setw(width_stack) << "栈"
+            << std::setw(width_symbol) << "符号"
+            << std::setw(width_input) << "输入"
+            << std::setw(width_action) << "动作"
+            << "\n";
+
+        outFile << std::string(width_stack + width_symbol + width_input + width_action, '-') << "\n";
+
+        // 表格数据
+        for (const auto& item : parserTable) {
+            outFile << std::left
+                << std::setw(width_stack) << stackToString(item.stack)
+                << std::setw(width_symbol) << item.symbol
+                << std::setw(width_input) << item.input
+                << std::setw(width_action) << item.action
+                << "\n";
+        }
+
+        outFile.close();
+        std::cout << "表格已成功写入到文件：" << filename << std::endl;
+    }
+
+    // 写入 CSV 文件
+    inline void writeParserCSV( const std::string& filename) {
+        std::ofstream outFile(filename);
+        if (!outFile) {
+            std::cerr << "无法打开文件：" << filename << std::endl;
+            return;
+        }
+
+        // 表头
+        outFile << "Stack,Symbol,Input,Action\n";
+
+        for (const auto& item : parserTable) {
+            // 如果字段中有逗号或空格，可以加引号（可选增强）
+            outFile << "\"" << stackToString(item.stack) << "\","
+                << "\"" << item.symbol << "\","
+                << "\"" << item.input << "\","
+                << "\"" << item.action << "\""
+                << "\n";
+        }
+
+        outFile.close();
+        std::cout << "CSV 文件写入成功：" << filename << std::endl;
+    }
 
     int encodeAction(ActionType type, int value);
 
@@ -184,6 +282,16 @@ namespace Parser {
         }
 
     };
+
+    inline std::string toStringProduction(Production production)
+    {
+        std::string result = "";
+        for (int i = 0; i < production.right.size(); i++)
+        {
+            result += production.right[i] + " ";
+        }
+        return production.left + " -> " + result;
+    }
 
     inline std::string toStringItem(Item item)
     {

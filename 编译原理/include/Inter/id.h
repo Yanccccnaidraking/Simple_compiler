@@ -18,6 +18,6 @@ namespace Inter {
 	public:
 		int offset;
 
-		Id(Lexer::Word id, Symbols::Type p, int b) : Expr(id, p), offset(b) {}
+		Id(Lexer::Word id, Symbols::Type p, int b) : Expr(id, &p), offset(b) {}
 	};
 }
