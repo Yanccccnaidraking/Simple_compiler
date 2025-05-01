@@ -89,6 +89,9 @@ namespace Lexer {
 		//std::cout << "耗时：" << duration.count() << " 毫秒" << std::endl;
 	}
 
+
+	Word indexWord("[]", Tag::INDEX);//创建预定义对象避免销毁
+
 	std::shared_ptr<Word> Lexer::getOperationToken(const std::string& op)
 	{
 		static std::map<std::string, Tag> opToTag = {

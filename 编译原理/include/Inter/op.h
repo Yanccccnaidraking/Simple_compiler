@@ -4,7 +4,7 @@
 namespace Inter {
 	class Op : public Expr {
 	public:
-		Op(Lexer::Token tok, Symbols::Type p) : Expr(tok, p) {}
+		Op(Lexer::Token tok, Symbols::Type* p) : Expr(tok, p) {}
 
 		shared_ptr<Expr> reduce() {
 			Expr& x = gen();
