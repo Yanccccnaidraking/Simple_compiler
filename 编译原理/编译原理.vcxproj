@@ -141,8 +141,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Inter\access.h" />
+    <ClInclude Include="include\Inter\and.h" />
+    <ClInclude Include="include\Inter\arith.h" />
+    <ClInclude Include="include\Inter\break.h" />
+    <ClInclude Include="include\Inter\constant.h" />
+    <ClInclude Include="include\Inter\do.h" />
+    <ClInclude Include="include\Inter\else.h" />
     <ClInclude Include="include\Inter\expr.h" />
     <ClInclude Include="include\Inter\id.h" />
+    <ClInclude Include="include\Inter\logical.h" />
     <ClInclude Include="include\Inter\node.h" />
     <ClInclude Include="include\Inter\op.h" />
     <ClInclude Include="include\Inter\stmt.h" />
