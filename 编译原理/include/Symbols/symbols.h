@@ -33,7 +33,17 @@ namespace Symbols
 		const static Type* Int, * Short, * Float, * Char, * Bool, * Double, * Long;
 		static const Type* max(const Type* p1, const Type* p2);
 		static int typePriority(const Type* type);
-		Type& operator= (const Type& t) { this->width = t.width;  return *this; }
+		Type& operator= (Type& t) { this->width = t.width;  return *this; }
+
+		bool operator==(Type& other) const {
+			return this->tag == other.tag &&
+				this->lexeme == other.lexeme &&
+				this->width == other.width;
+		}
+
+		bool operator!=(Type& other) const {
+			return !(*this == other);
+		}
 	};
 
 	class Array : public Type {

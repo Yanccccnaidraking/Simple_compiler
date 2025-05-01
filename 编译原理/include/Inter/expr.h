@@ -9,9 +9,9 @@ namespace Inter {
 	{
 	public:
 		Lexer::Token op;
-		Symbols::Type type;
+		Symbols::Type* type;
 
-		Expr(Lexer::Token tok, Symbols::Type p) : op(tok), type(p) {}
+		Expr(Lexer::Token tok, Symbols::Type* p) : op(tok), type(p) {}
 
 		Expr& gen() { return *this; }
 		Expr& reduce() { return *this; }
