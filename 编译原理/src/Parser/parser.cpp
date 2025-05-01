@@ -37,8 +37,6 @@ namespace Parser {
 			if (cur >= 0)
 			{
 				Action act = searchFromAction(cur, Lexer::tagToString(Lexer::Tag(look->tag)));
-				cout << "===================================" << endl;
-				cout << "当前的状态是："<<cur << "  当前读入的字符是：" << Lexer::tagToString(Lexer::Tag(look->tag)) << endl << getActionStr(act.type) << act.value << endl;
 				switch (act.type)
 				{
 				case ActionType::Shift:

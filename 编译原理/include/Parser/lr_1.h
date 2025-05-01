@@ -24,6 +24,16 @@ namespace Parser {
         int value; // 移入目标状态或规约产生式编号
     };
 
+    /// <summary>
+    /// 语法分析输出的表格项
+    /// </summary>
+    struct ParserItem {
+        std::stack<int> stack;
+        std::string symbol;
+        std::string input;
+        std::string action;
+    };
+
 
     int encodeAction(ActionType type, int value);
 
