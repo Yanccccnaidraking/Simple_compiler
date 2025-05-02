@@ -3,15 +3,16 @@
 #include "Symbols/symbols.h"
 #include "Lexer/Token.h" 
 #include "Lexer/Word.h"  
+#include <memory>
 
 namespace Inter {
 	class Expr :public Node
 	{
 	public:
-		Lexer::Token op;
+		Lexer::Token* op;
 		Symbols::Type* type;
 
-		Expr(Lexer::Token tok, Symbols::Type* p) : op(tok), type(p) {}
+		Expr(Lexer::Token* tok, Symbols::Type* p) : op(tok), type(p) {}
 
 		Expr& gen() { return *this; }
 		Expr& reduce() { return *this; }
@@ -33,6 +34,6 @@ namespace Inter {
 			}
 		} 
 
-		std::string toString() const { return op.toString(); }
+		std::string toString() const { return op->toString(); }
 	};
 }

@@ -9,7 +9,7 @@ namespace Inter {
         static int count;
         int number;
     public:
-        Temp(Symbols::Type p) : Expr(Lexer::Word::temp, p), number(++count) {}
+        Temp(Symbols::Type* p) : Expr(Lexer::Word::temp.get(), p), number(++count) {}
         std::string toString() const {
             return "t" + std::to_string(number);
         }

@@ -33,6 +33,6 @@ namespace Lexer {
         static const Word minus;
         static const Word true_;
         static const Word false_;
-        static const Word temp;
+        static const shared_ptr<Word> temp;
     };
 }
