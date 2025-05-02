@@ -1,0 +1,206 @@
+栈                                                                              符号                                                                            输入      动作                
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+0                                                                                                                                                               {         移入                
+0 1                                                                             {                                                                               basic     根据decls ->  规约  
+0 1 3                                                                           {decls                                                                          basic     移入                
+0 1 3 4                                                                         {declsbasic                                                                     id        根据type -> basic 规约
+0 1 3 7                                                                         {declstype                                                                      id        移入                
+0 1 3 7 19                                                                      {declstypeid                                                                    ;         移入                
+0 1 3 7 19 35                                                                   {declstypeid;                                                                   basic     根据decl -> type id ; 规约
+0 1 3 5                                                                         {declsdecl                                                                      basic     根据decls -> decls decl 规约
+0 1 3                                                                           {decls                                                                          basic     移入                
+0 1 3 4                                                                         {declsbasic                                                                     [         根据type -> basic 规约
+0 1 3 7                                                                         {declstype                                                                      [         移入                
+0 1 3 7 18                                                                      {declstype[                                                                     num       移入                
+0 1 3 7 18 34                                                                   {declstype[num                                                                  ]         移入                
+0 1 3 7 18 34 80                                                                {declstype[num]                                                                 id        根据type -> type [ num ] 规约
+0 1 3 7                                                                         {declstype                                                                      id        移入                
+0 1 3 7 19                                                                      {declstypeid                                                                    ;         移入                
+0 1 3 7 19 35                                                                   {declstypeid;                                                                   {         根据decl -> type id ; 规约
+0 1 3 5                                                                         {declsdecl                                                                      {         根据decls -> decls decl 规约
+0 1 3                                                                           {decls                                                                          {         根据stmts ->  规约  
+0 1 3 6                                                                         {declsstmts                                                                     {         移入                
+0 1 3 6 13                                                                      {declsstmts{                                                                    basic     根据decls ->  规约  
+0 1 3 6 13 31                                                                   {declsstmts{decls                                                               basic     移入                
+0 1 3 6 13 31 4                                                                 {declsstmts{declsbasic                                                          id        根据type -> basic 规约
+0 1 3 6 13 31 7                                                                 {declsstmts{declstype                                                           id        移入                
+0 1 3 6 13 31 7 19                                                              {declsstmts{declstypeid                                                         ;         移入                
+0 1 3 6 13 31 7 19 35                                                           {declsstmts{declstypeid;                                                        id        根据decl -> type id ; 规约
+0 1 3 6 13 31 5                                                                 {declsstmts{declsdecl                                                           id        根据decls -> decls decl 规约
+0 1 3 6 13 31                                                                   {declsstmts{decls                                                               id        根据stmts ->  规约  
+0 1 3 6 13 31 61                                                                {declsstmts{declsstmts                                                          id        移入                
+0 1 3 6 13 31 61 10                                                             {declsstmts{declsstmtsid                                                        =         根据loc -> id 规约  
+0 1 3 6 13 31 61 16                                                             {declsstmts{declsstmtsloc                                                       =         移入                
+0 1 3 6 13 31 61 16 32                                                          {declsstmts{declsstmtsloc=                                                      num       移入                
+0 1 3 6 13 31 61 16 32 67                                                       {declsstmts{declsstmtsloc=num                                                   +         根据factor -> num 规约
+0 1 3 6 13 31 61 16 32 73                                                       {declsstmts{declsstmtsloc=factor                                                +         根据unary -> factor 规约
+0 1 3 6 13 31 61 16 32 78                                                       {declsstmts{declsstmtsloc=unary                                                 +         根据term -> unary 规约
+0 1 3 6 13 31 61 16 32 77                                                       {declsstmts{declsstmtsloc=term                                                  +         根据expr -> term 规约
+0 1 3 6 13 31 61 16 32 72                                                       {declsstmts{declsstmtsloc=expr                                                  +         移入                
+0 1 3 6 13 31 61 16 32 72 113                                                   {declsstmts{declsstmtsloc=expr+                                                 num       移入                
+0 1 3 6 13 31 61 16 32 72 113 67                                                {declsstmts{declsstmtsloc=expr+num                                              *         根据factor -> num 规约
+0 1 3 6 13 31 61 16 32 72 113 73                                                {declsstmts{declsstmtsloc=expr+factor                                           *         根据unary -> factor 规约
+0 1 3 6 13 31 61 16 32 72 113 78                                                {declsstmts{declsstmtsloc=expr+unary                                            *         根据term -> unary 规约
+0 1 3 6 13 31 61 16 32 72 113 169                                               {declsstmts{declsstmtsloc=expr+term                                             *         移入                
+0 1 3 6 13 31 61 16 32 72 113 169 121                                           {declsstmts{declsstmtsloc=expr+term*                                            (         移入                
+0 1 3 6 13 31 61 16 32 72 113 169 121 63                                        {declsstmts{declsstmtsloc=expr+term*(                                           num       移入                
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 48                                     {declsstmts{declsstmtsloc=expr+term*(num                                        -         根据factor -> num 规约
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 54                                     {declsstmts{declsstmtsloc=expr+term*(factor                                     -         根据unary -> factor 规约
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 59                                     {declsstmts{declsstmtsloc=expr+term*(unary                                      -         根据term -> unary 规约
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 58                                     {declsstmts{declsstmtsloc=expr+term*(term                                       -         根据expr -> term 规约
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 53                                     {declsstmts{declsstmtsloc=expr+term*(expr                                       -         移入                
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 53 95                                  {declsstmts{declsstmtsloc=expr+term*(expr-                                      num       移入                
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 53 95 48                               {declsstmts{declsstmtsloc=expr+term*(expr-num                                   )         根据factor -> num 规约
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 53 95 54                               {declsstmts{declsstmtsloc=expr+term*(expr-factor                                )         根据unary -> factor 规约
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 53 95 59                               {declsstmts{declsstmtsloc=expr+term*(expr-unary                                 )         根据term -> unary 规约
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 53 95 143                              {declsstmts{declsstmtsloc=expr+term*(expr-term                                  )         根据expr -> expr - term 规约
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 53                                     {declsstmts{declsstmtsloc=expr+term*(expr                                       )         根据rel -> expr 规约
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 57                                     {declsstmts{declsstmtsloc=expr+term*(rel                                        )         根据equality -> rel 规约
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 52                                     {declsstmts{declsstmtsloc=expr+term*(equality                                   )         根据join -> equality 规约
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 55                                     {declsstmts{declsstmtsloc=expr+term*(join                                       )         根据bool -> join 规约
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 107                                    {declsstmts{declsstmtsloc=expr+term*(bool                                       )         移入                
+0 1 3 6 13 31 61 16 32 72 113 169 121 63 107 165                                {declsstmts{declsstmtsloc=expr+term*(bool)                                      ;         根据factor -> ( bool ) 规约
+0 1 3 6 13 31 61 16 32 72 113 169 121 73                                        {declsstmts{declsstmtsloc=expr+term*factor                                      ;         根据unary -> factor 规约
+0 1 3 6 13 31 61 16 32 72 113 169 121 189                                       {declsstmts{declsstmtsloc=expr+term*unary                                       ;         根据term -> term * unary 规约
+0 1 3 6 13 31 61 16 32 72 113 169                                               {declsstmts{declsstmtsloc=expr+term                                             ;         根据expr -> expr + term 规约
+0 1 3 6 13 31 61 16 32 72                                                       {declsstmts{declsstmtsloc=expr                                                  ;         根据rel -> expr 规约
+0 1 3 6 13 31 61 16 32 76                                                       {declsstmts{declsstmtsloc=rel                                                   ;         根据equality -> rel 规约
+0 1 3 6 13 31 61 16 32 71                                                       {declsstmts{declsstmtsloc=equality                                              ;         根据join -> equality 规约
+0 1 3 6 13 31 61 16 32 74                                                       {declsstmts{declsstmtsloc=join                                                  ;         根据bool -> join 规约
+0 1 3 6 13 31 61 16 32 70                                                       {declsstmts{declsstmtsloc=bool                                                  ;         移入                
+0 1 3 6 13 31 61 16 32 70 109                                                   {declsstmts{declsstmtsloc=bool;                                                 if        根据stmt -> loc = bool ; 规约
+0 1 3 6 13 31 61 17                                                             {declsstmts{declsstmtsstmt                                                      if        根据stmts -> stmts stmt 规约
+0 1 3 6 13 31 61                                                                {declsstmts{declsstmts                                                          if        移入                
+0 1 3 6 13 31 61 11                                                             {declsstmts{declsstmtsif                                                        (         移入                
+0 1 3 6 13 31 61 11 29                                                          {declsstmts{declsstmtsif(                                                       id        移入                
+0 1 3 6 13 31 61 11 29 47                                                       {declsstmts{declsstmtsif(id                                                     >         根据loc -> id 规约  
+0 1 3 6 13 31 61 11 29 56                                                       {declsstmts{declsstmtsif(loc                                                    >         根据factor -> loc 规约
+0 1 3 6 13 31 61 11 29 54                                                       {declsstmts{declsstmtsif(factor                                                 >         根据unary -> factor 规约
+0 1 3 6 13 31 61 11 29 59                                                       {declsstmts{declsstmtsif(unary                                                  >         根据term -> unary 规约
+0 1 3 6 13 31 61 11 29 58                                                       {declsstmts{declsstmtsif(term                                                   >         根据expr -> term 规约
+0 1 3 6 13 31 61 11 29 53                                                       {declsstmts{declsstmtsif(expr                                                   >         移入                
+0 1 3 6 13 31 61 11 29 53 98                                                    {declsstmts{declsstmtsif(expr>                                                  num       移入                
+0 1 3 6 13 31 61 11 29 53 98 149                                                {declsstmts{declsstmtsif(expr>num                                               &&        根据factor -> num 规约
+0 1 3 6 13 31 61 11 29 53 98 153                                                {declsstmts{declsstmtsif(expr>factor                                            &&        根据unary -> factor 规约
+0 1 3 6 13 31 61 11 29 53 98 156                                                {declsstmts{declsstmtsif(expr>unary                                             &&        根据term -> unary 规约
+0 1 3 6 13 31 61 11 29 53 98 155                                                {declsstmts{declsstmtsif(expr>term                                              &&        根据expr -> term 规约
+0 1 3 6 13 31 61 11 29 53 98 158                                                {declsstmts{declsstmtsif(expr>expr                                              &&        根据rel -> expr > expr 规约
+0 1 3 6 13 31 61 11 29 57                                                       {declsstmts{declsstmtsif(rel                                                    &&        根据equality -> rel 规约
+0 1 3 6 13 31 61 11 29 52                                                       {declsstmts{declsstmtsif(equality                                               &&        根据join -> equality 规约
+0 1 3 6 13 31 61 11 29 55                                                       {declsstmts{declsstmtsif(join                                                   &&        移入                
+0 1 3 6 13 31 61 11 29 55 100                                                   {declsstmts{declsstmtsif(join&&                                                 id        移入                
+0 1 3 6 13 31 61 11 29 55 100 47                                                {declsstmts{declsstmtsif(join&&id                                               <         根据loc -> id 规约  
+0 1 3 6 13 31 61 11 29 55 100 56                                                {declsstmts{declsstmtsif(join&&loc                                              <         根据factor -> loc 规约
+0 1 3 6 13 31 61 11 29 55 100 54                                                {declsstmts{declsstmtsif(join&&factor                                           <         根据unary -> factor 规约
+0 1 3 6 13 31 61 11 29 55 100 59                                                {declsstmts{declsstmtsif(join&&unary                                            <         根据term -> unary 规约
+0 1 3 6 13 31 61 11 29 55 100 58                                                {declsstmts{declsstmtsif(join&&term                                             <         根据expr -> term 规约
+0 1 3 6 13 31 61 11 29 55 100 53                                                {declsstmts{declsstmtsif(join&&expr                                             <         移入                
+0 1 3 6 13 31 61 11 29 55 100 53 96                                             {declsstmts{declsstmtsif(join&&expr<                                            real      移入                
+0 1 3 6 13 31 61 11 29 55 100 53 96 150                                         {declsstmts{declsstmtsif(join&&expr<real                                        )         根据factor -> real 规约
+0 1 3 6 13 31 61 11 29 55 100 53 96 153                                         {declsstmts{declsstmtsif(join&&expr<factor                                      )         根据unary -> factor 规约
+0 1 3 6 13 31 61 11 29 55 100 53 96 156                                         {declsstmts{declsstmtsif(join&&expr<unary                                       )         根据term -> unary 规约
+0 1 3 6 13 31 61 11 29 55 100 53 96 155                                         {declsstmts{declsstmtsif(join&&expr<term                                        )         根据expr -> term 规约
+0 1 3 6 13 31 61 11 29 55 100 53 96 152                                         {declsstmts{declsstmtsif(join&&expr<expr                                        )         根据rel -> expr < expr 规约
+0 1 3 6 13 31 61 11 29 55 100 57                                                {declsstmts{declsstmtsif(join&&rel                                              )         根据equality -> rel 规约
+0 1 3 6 13 31 61 11 29 55 100 160                                               {declsstmts{declsstmtsif(join&&equality                                         )         根据join -> join && equality 规约
+0 1 3 6 13 31 61 11 29 55                                                       {declsstmts{declsstmtsif(join                                                   )         根据bool -> join 规约
+0 1 3 6 13 31 61 11 29 51                                                       {declsstmts{declsstmtsif(bool                                                   )         移入                
+0 1 3 6 13 31 61 11 29 51 90                                                    {declsstmts{declsstmtsif(bool)                                                  {         移入                
+0 1 3 6 13 31 61 11 29 51 90 135                                                {declsstmts{declsstmtsif(bool){                                                 id        根据decls ->  规约  
+0 1 3 6 13 31 61 11 29 51 90 135 206                                            {declsstmts{declsstmtsif(bool){decls                                            id        根据stmts ->  规约  
+0 1 3 6 13 31 61 11 29 51 90 135 206 239                                        {declsstmts{declsstmtsif(bool){declsstmts                                       id        移入                
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 10                                     {declsstmts{declsstmtsif(bool){declsstmtsid                                     =         根据loc -> id 规约  
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16                                     {declsstmts{declsstmtsif(bool){declsstmtsloc                                    =         移入                
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32                                  {declsstmts{declsstmtsif(bool){declsstmtsloc=                                   id        移入                
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 66                               {declsstmts{declsstmtsif(bool){declsstmtsloc=id                                 +         根据loc -> id 规约  
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 75                               {declsstmts{declsstmtsif(bool){declsstmtsloc=loc                                +         根据factor -> loc 规约
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 73                               {declsstmts{declsstmtsif(bool){declsstmtsloc=factor                             +         根据unary -> factor 规约
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 78                               {declsstmts{declsstmtsif(bool){declsstmtsloc=unary                              +         根据term -> unary 规约
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 77                               {declsstmts{declsstmtsif(bool){declsstmtsloc=term                               +         根据expr -> term 规约
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 72                               {declsstmts{declsstmtsif(bool){declsstmtsloc=expr                               +         移入                
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 72 113                           {declsstmts{declsstmtsif(bool){declsstmtsloc=expr+                              num       移入                
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 72 113 67                        {declsstmts{declsstmtsif(bool){declsstmtsloc=expr+num                           ;         根据factor -> num 规约
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 72 113 73                        {declsstmts{declsstmtsif(bool){declsstmtsloc=expr+factor                        ;         根据unary -> factor 规约
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 72 113 78                        {declsstmts{declsstmtsif(bool){declsstmtsloc=expr+unary                         ;         根据term -> unary 规约
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 72 113 169                       {declsstmts{declsstmtsif(bool){declsstmtsloc=expr+term                          ;         根据expr -> expr + term 规约
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 72                               {declsstmts{declsstmtsif(bool){declsstmtsloc=expr                               ;         根据rel -> expr 规约
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 76                               {declsstmts{declsstmtsif(bool){declsstmtsloc=rel                                ;         根据equality -> rel 规约
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 71                               {declsstmts{declsstmtsif(bool){declsstmtsloc=equality                           ;         根据join -> equality 规约
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 74                               {declsstmts{declsstmtsif(bool){declsstmtsloc=join                               ;         根据bool -> join 规约
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 70                               {declsstmts{declsstmtsif(bool){declsstmtsloc=bool                               ;         移入                
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 16 32 70 109                           {declsstmts{declsstmtsif(bool){declsstmtsloc=bool;                              }         根据stmt -> loc = bool ; 规约
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 17                                     {declsstmts{declsstmtsif(bool){declsstmtsstmt                                   }         根据stmts -> stmts stmt 规约
+0 1 3 6 13 31 61 11 29 51 90 135 206 239                                        {declsstmts{declsstmtsif(bool){declsstmts                                       }         移入                
+0 1 3 6 13 31 61 11 29 51 90 135 206 239 264                                    {declsstmts{declsstmtsif(bool){declsstmts}                                      else      根据block -> { decls stmts } 规约
+0 1 3 6 13 31 61 11 29 51 90 136                                                {declsstmts{declsstmtsif(bool)block                                             else      根据stmt -> block 规约
+0 1 3 6 13 31 61 11 29 51 90 138                                                {declsstmts{declsstmtsif(bool)stmt                                              else      移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208                                            {declsstmts{declsstmtsif(bool)stmtelse                                          {         移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13                                         {declsstmts{declsstmtsif(bool)stmtelse{                                         do        根据decls ->  规约  
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31                                      {declsstmts{declsstmtsif(bool)stmtelse{decls                                    do        根据stmts ->  规约  
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61                                   {declsstmts{declsstmtsif(bool)stmtelse{declsstmts                               do        移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9                                 {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo                             {         移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25                              {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{                            id        根据decls ->  规约  
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40                           {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{decls                       id        根据stmts ->  规约  
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84                        {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmts                  id        移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 10                     {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsid                =         根据loc -> id 规约  
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16                     {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc               =         移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32                  {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=              id        移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 66               {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=id            -         根据loc -> id 规约  
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 75               {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=loc           -         根据factor -> loc 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 73               {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=factor        -         根据unary -> factor 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 78               {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=unary         -         根据term -> unary 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 77               {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=term          -         根据expr -> term 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 72               {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=expr          -         移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 72 114           {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=expr-         num       移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 72 114 67        {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=expr-num      ;         根据factor -> num 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 72 114 73        {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=expr-factor   ;         根据unary -> factor 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 72 114 78        {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=expr-unary    ;         根据term -> unary 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 72 114 170       {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=expr-term     ;         根据expr -> expr - term 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 72               {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=expr          ;         根据rel -> expr 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 76               {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=rel           ;         根据equality -> rel 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 71               {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=equality      ;         根据join -> equality 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 74               {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=join          ;         根据bool -> join 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 70               {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=bool          ;         移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 16 32 70 109           {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsloc=bool;         }         根据stmt -> loc = bool ; 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 17                     {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmtsstmt              }         根据stmts -> stmts stmt 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84                        {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmts                  }         移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 25 40 84 127                    {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdo{declsstmts}                 while     根据block -> { decls stmts } 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 26                              {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdoblock                        while     根据stmt -> block 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28                              {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmt                         while     移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42                           {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile                    (         移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86                        {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(                   id        移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 47                     {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(id                 >         根据loc -> id 规约  
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 56                     {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(loc                >         根据factor -> loc 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 54                     {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(factor             >         根据unary -> factor 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 59                     {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(unary              >         根据term -> unary 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 58                     {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(term               >         根据expr -> term 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 53                     {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(expr               >         移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 53 98                  {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(expr>              num       移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 53 98 149              {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(expr>num           )         根据factor -> num 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 53 98 153              {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(expr>factor        )         根据unary -> factor 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 53 98 156              {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(expr>unary         )         根据term -> unary 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 53 98 155              {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(expr>term          )         根据expr -> term 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 53 98 158              {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(expr>expr          )         根据rel -> expr > expr 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 57                     {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(rel                )         根据equality -> rel 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 52                     {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(equality           )         根据join -> equality 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 55                     {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(join               )         根据bool -> join 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 129                    {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(bool               )         移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 129 201                {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(bool)              ;         移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 9 28 42 86 129 201 235            {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsdostmtwhile(bool);             }         根据stmt -> do stmt while ( bool ) ; 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 17                                {declsstmts{declsstmtsif(bool)stmtelse{declsstmtsstmt                           }         根据stmts -> stmts stmt 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61                                   {declsstmts{declsstmtsif(bool)stmtelse{declsstmts                               }         移入                
+0 1 3 6 13 31 61 11 29 51 90 138 208 13 31 61 105                               {declsstmts{declsstmtsif(bool)stmtelse{declsstmts}                              break     根据block -> { decls stmts } 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 15                                         {declsstmts{declsstmtsif(bool)stmtelseblock                                     break     根据stmt -> block 规约
+0 1 3 6 13 31 61 11 29 51 90 138 208 241                                        {declsstmts{declsstmtsif(bool)stmtelsestmt                                      break     根据stmt -> if ( bool ) stmt else stmt 规约
+0 1 3 6 13 31 61 17                                                             {declsstmts{declsstmtsstmt                                                      break     根据stmts -> stmts stmt 规约
+0 1 3 6 13 31 61                                                                {declsstmts{declsstmts                                                          break     移入                
+0 1 3 6 13 31 61 8                                                              {declsstmts{declsstmtsbreak                                                     ;         移入                
+0 1 3 6 13 31 61 8 20                                                           {declsstmts{declsstmtsbreak;                                                    }         根据stmt -> break ; 规约
+0 1 3 6 13 31 61 17                                                             {declsstmts{declsstmtsstmt                                                      }         根据stmts -> stmts stmt 规约
+0 1 3 6 13 31 61                                                                {declsstmts{declsstmts                                                          }         移入                
+0 1 3 6 13 31 61 105                                                            {declsstmts{declsstmts}                                                         }         根据block -> { decls stmts } 规约
+0 1 3 6 15                                                                      {declsstmtsblock                                                                }         根据stmt -> block 规约
+0 1 3 6 17                                                                      {declsstmtsstmt                                                                 }         根据stmts -> stmts stmt 规约
+0 1 3 6                                                                         {declsstmts                                                                     }         移入                
+0 1 3 6 14                                                                      {declsstmts}                                                                    $         根据block -> { decls stmts } 规约
+0 2                                                                             block                                                                           $         接收                

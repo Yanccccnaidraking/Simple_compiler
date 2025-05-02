@@ -11,6 +11,11 @@ namespace Lexer {
 		LEFT_SHIFT, RIGHT_SHIFT, ARROW, STRING, CHAR, BOOL, END
 	};
 
+	/// <summary>
+	/// Tag转成用于语法分析的字符串
+	/// </summary>
+	/// <param name="tag"></param>
+	/// <returns></returns>
 	inline std::string tagToString(Tag tag) {
 		static const std::unordered_map<Tag, std::string> tagNameMap = {
 			{Tag::AND, "&&"}, {Tag::BASIC, "basic"}, {Tag::BREAK, "break"},

@@ -7,10 +7,9 @@ namespace Parser {
 	Parser::Parser(Lexer::Lexer& l) : lexer(l), top(nullptr)
 	{
 		deserializeItemSets("ItemSets.dat");
-		printItemSets();
+		//printItemSets();
 		loadGotoTable("GOTOTable.dat");
 		loadActionTable("ActionTable.dat");
-		stateStack.push(-1);
 		stateStack.push(0);
 		move();
 	}
@@ -30,27 +29,32 @@ namespace Parser {
 	void Parser::program()
 	{
 		bool finished = false;
+		std::deque<std::string> symbols;
+		std::string token = Lexer::tagToString(Lexer::Tag(look->tag));
 		while (!finished)
 		{
 			int cur = stateStack.top();
 			//cout << "栈顶的数值是：" << cur << endl;
 			if (cur >= 0)
 			{
-				Action act = searchFromAction(cur, Lexer::tagToString(Lexer::Tag(look->tag)));
-				cout << "===================================" << endl;
-				cout << "当前的状态是："<<cur << "  当前读入的字符是：" << Lexer::tagToString(Lexer::Tag(look->tag)) << endl << getActionStr(act.type) << act.value << endl;
+				Action act = searchFromAction(cur, token);
 				switch (act.type)
 				{
 				case ActionType::Shift:
+					insertParserTable(stateStack, symbols, token, "移入");
 					stateStack.push(act.value);
 					move();
+					symbols.push_back(token);
+					token = Lexer::tagToString(Lexer::Tag(look->tag));
 					break;
 				case ActionType::Reduce:
 				{
+					insertParserTable(stateStack, symbols, token, "根据"+toStringProduction(grammar[act.value]) + "规约");
 					int beta = grammar[act.value].right[0]==""? 0 :grammar[act.value].right.size();//空串这一特殊情况设置成0
 					while (beta--)
 					{
 						stateStack.pop();
+						symbols.pop_back();
 					}
 					int newState = searchFromGoto(stateStack.top(), grammar[act.value].left);
 					if (newState == -1)
@@ -59,10 +63,12 @@ namespace Parser {
 						break;
 					}
 					stateStack.push(newState);
+					symbols.push_back(grammar[act.value].left);
 					//输出产生式（待做...）
 					break;
 				}
 				case ActionType::Accept:
+					insertParserTable(stateStack, symbols, token, "接收");
 					finished = true;//语法分析结束
 					break;
 				case ActionType::Error:
