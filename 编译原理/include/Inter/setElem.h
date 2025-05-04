@@ -13,11 +13,39 @@ namespace Inter
         Expr* index;
         Expr* expr;
 
-        SetElem(Access* x, Expr* y);
-        Symbols::Type* check(Symbols::Type * p1, Symbols::Type* p2);
-        void gen(int b, int a);
+        SetElem(Access* x, Expr* y)
+            : array(x->array), index(x->index), expr(y) {
+            if (check(x->type, expr->type) == nullptr) {
+                error("type error");
+            }
+        }
+
+        Symbols::Type* check(Symbols::Type* p1, Symbols::Type* p2)
+        {
+            // 检查数组类型
+            if (dynamic_cast<Symbols::Array*>(p1) || dynamic_cast<Symbols::Array*>(p2)) {
+                return nullptr;
+            }
+            // 检查类型完全匹配
+            else if (p1 == p2) {
+                return p2;
+            }
+            // 检查数值类型兼容
+            else if (Symbols::Type::typePriority(p1) && Symbols::Type::typePriority(p2)) {
+                return p2;
+            }
+            return nullptr;
+        }
+        void gen(int b, int a) {
+            std::string s1 = index->reduce().toString();
+            std::string s2 = expr->reduce().toString();
+            std::string code = array->toString() + " [ " + s1 + " ] = " + s2;
+            emit(code);
+        }
 
     private:
-        void error(const std::string& msg);
+        void error(const std::string& msg) {
+            throw std::runtime_error("SetElem: " + msg);
+        }
     };
 }
