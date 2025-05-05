@@ -1,19 +1,16 @@
 #pragma once
 
-
 #include "expr.h"
 #include "Lexer/Token.h" 
+#include "Lexer/Num.h"
 #include "Symbols/symbols.h"
 #include<string.h>
 namespace Inter
 {
     class Constant : public Expr 
     {
-        static Constant* True;
-        static Constant* False;
-
-        Constant* True = nullptr;
-        Constant* False = nullptr;
+        static shared_ptr<Constant> True;
+        static shared_ptr<Constant> False;
 
         public:
 
@@ -21,7 +18,7 @@ namespace Inter
 
         void initConstants() {
             if (!Constant::True) {
-                Constant::True = new Constant(Lexer::Word::true_, Symbols::Type::Bool);
+                Constant::True = make_shared<Constant(Lexer::Word::true_, Symbols::Type::Bool)>;
                 Constant::False = new Constant(Lexer::Word::false_, Symbols::Type::Bool);
             }
         }
@@ -29,7 +26,7 @@ namespace Inter
         // 构造函数实现
         Constant(Lexer::Token* tok, Symbols::Type* p) : Expr(tok, p) {}
 
-        Constant(int i) : Expr(new Num(i), Symbols::Type::Int) {}
+        Constant(int i) : Expr(Lexer::Num(i), Symbols::Type::Int) {}
 
         // jumping方法实现
         void jumping(int t, int f) {

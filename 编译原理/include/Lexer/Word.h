@@ -24,15 +24,15 @@ namespace Lexer {
 
         std::string toString() const { return lexeme; }
 
-        static const Word and_;
-        static const Word or_;
-        static const Word eq;
-        static const Word ne;
-        static const Word le;
-        static const Word ge;
-        static const Word minus;
-        static const Word true_;
-        static const Word false_;
-        static const shared_ptr<Word> temp;
+        static const std::shared_ptr<Word> and_;
+        static const std::shared_ptr<Word> or_;
+        static const std::shared_ptr<Word> eq;
+        static const std::shared_ptr<Word> ne;
+        static const std::shared_ptr<Word> le;
+        static const std::shared_ptr<Word> ge;
+        static const std::shared_ptr<Word> minus;
+        static const std::shared_ptr<Word> true_;
+        static const std::shared_ptr<Word> false_;
+        static const std::shared_ptr<Word> temp;
     };
 }

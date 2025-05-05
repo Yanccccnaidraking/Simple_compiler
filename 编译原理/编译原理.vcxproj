@@ -184,6 +184,7 @@
     <None Include="ActionTable.dat" />
     <None Include="GOTOTable.dat" />
     <None Include="ItemSets.dat" />
+    <None Include="parsertable.csv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

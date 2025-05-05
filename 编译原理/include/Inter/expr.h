@@ -9,10 +9,10 @@ namespace Inter {
 	class Expr :public Node
 	{
 	public:
-		Lexer::Token* op;
-		Symbols::Type* type;
+		std::shared_ptr<Lexer::Token> op;
+		std::shared_ptr<Symbols::Type> type;
 
-		Expr(Lexer::Token* tok, Symbols::Type* p) : op(tok), type(p) {}
+		Expr(std::shared_ptr<Lexer::Token> tok, std::shared_ptr<Symbols::Type>  p) : op(tok), type(p) {}
 
 		Expr& gen() { return *this; }
 		Expr& reduce() { return *this; }
