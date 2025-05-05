@@ -10,6 +10,5 @@
 
 namespace Inter
 {
-
-	
+	int Inter::Node::labels = 1;
 }

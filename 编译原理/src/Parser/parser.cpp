@@ -3,6 +3,8 @@
 #include "Inter/stmt.h"
 #include "Lexer/Tag.h"
 #include "Parser/lr_1.h"
+#include "Inter/terminalnode.h"
+#include "Symbols/symbols.h"
 namespace Parser {
 	Parser::Parser(Lexer::Lexer& l) : lexer(l), top(nullptr)
 	{
@@ -10,9 +12,33 @@ namespace Parser {
 		//printItemSets();
 		loadGotoTable("GOTOTable.dat");
 		loadActionTable("ActionTable.dat");
-		stateStack.push(0);
+		initActions();
+		stateStack[++stackTop] = 0;
+		nodeStack[stackTop] = nullptr;
 		move();
 	}
+
+	void Parser::initActions()
+	{
+		semanticActions = {
+		   [this]() { 
+			std::shared_ptr<Inter::Stmt> s = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop]);
+			if (s){
+				int begin = s->newlabel(); int after = s->newlabel();
+				s->emitlabel(begin); s->gen(begin, after); s->emitlabel(after);
+			}
+			else{
+				throw std::runtime_error("语句块解析异常");
+			}
+			},
+		   [this]() { 
+			std::shared_ptr<Inter::Stmt> s = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop]);
+			top = top->exit(top);
+
+			},
+		};
+	}
+
 	void Parser::move()
 	{
 		look = lexer.scan();
@@ -33,7 +59,7 @@ namespace Parser {
 		std::string token = Lexer::tagToString(Lexer::Tag(look->tag));
 		while (!finished)
 		{
-			int cur = stateStack.top();
+			int cur = stateStack[stackTop];
 			//cout << "栈顶的数值是：" << cur << endl;
 			if (cur >= 0)
 			{
@@ -42,7 +68,10 @@ namespace Parser {
 				{
 				case ActionType::Shift:
 					insertParserTable(stateStack, symbols, token, "移入");
-					stateStack.push(act.value);
+					if (token=="{")
+						std::shared_ptr<Symbols::Env> savedEnv = top; top = std::shared_ptr<Symbols::Env>(top);//进入新的语句块，作用域发生切换
+					stateStack[++stackTop] = act.value;
+					nodeStack[stackTop] = std::make_shared<Inter::TerminalNode>(look);
 					move();
 					symbols.push_back(token);
 					token = Lexer::tagToString(Lexer::Tag(look->tag));
@@ -50,25 +79,27 @@ namespace Parser {
 				case ActionType::Reduce:
 				{
 					insertParserTable(stateStack, symbols, token, "根据"+toStringProduction(grammar[act.value]) + "规约");
-					int beta = grammar[act.value].right[0]==""? 0 :grammar[act.value].right.size();//空串这一特殊情况设置成0
-					while (beta--)
-					{
-						stateStack.pop();
-						symbols.pop_back();
-					}
-					int newState = searchFromGoto(stateStack.top(), grammar[act.value].left);
-					if (newState == -1)
-					{
-						//错误处理
-						break;
-					}
-					stateStack.push(newState);
-					symbols.push_back(grammar[act.value].left);
+					applyAction(act.value);
+					//int beta = grammar[act.value].right[0]==""? 0 :grammar[act.value].right.size();//空串这一特殊情况设置成0
+					//while (beta--)
+					//{
+					//	symbols.pop_back();
+					//}
+					//stackTop -= beta;
+					//int newState = searchFromGoto(stateStack[stackTop], grammar[act.value].left);
+					//if (newState == -1)
+					//{
+					//	//错误处理
+					//	break;
+					//}
+					//stateStack[++stackTop]=newState;
+					//symbols.push_back(grammar[act.value].left);
 					//输出产生式（待做...）
 					break;
 				}
 				case ActionType::Accept:
 					insertParserTable(stateStack, symbols, token, "接收");
+					applyAction(0);
 					finished = true;//语法分析结束
 					break;
 				case ActionType::Error:

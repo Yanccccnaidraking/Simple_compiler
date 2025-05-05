@@ -30,7 +30,7 @@ namespace Parser {
     /// 语法分析输出的表格项
     /// </summary>
     struct ParserItem {
-        std::stack<int> stack;
+        SmartArray<int> stack;
         std::string symbol;
         std::string input;
         std::string action;
@@ -45,7 +45,7 @@ namespace Parser {
     /// <param name="symbol"></param>
     /// <param name="input"></param>
     /// <param name="pro"></param>
-    inline void insertParserTable(std::stack<int> s, std::deque<std::string> symbols, std::string input, std::string action)
+    inline void insertParserTable(SmartArray<int> s, std::deque<std::string> symbols, std::string input, std::string action)
     {
         std::string symbol;
         for (const auto& s : symbols)
@@ -56,14 +56,9 @@ namespace Parser {
     }
 
     // 辅助函数：将栈内容转换为字符串（从 bottom 到 top）
-    inline std::string stackToString(std::stack<int> s) {
+    inline std::string stackToString(SmartArray<int> s) {
         std::vector<int> temp;
-        while (!s.empty()) {
-            temp.push_back(s.top());
-            s.pop();
-        }
-        std::reverse(temp.begin(), temp.end());
-
+        temp = s.getVector();
         std::ostringstream oss;
         for (int i = 0; i < temp.size(); ++i) {
             oss << temp[i];
