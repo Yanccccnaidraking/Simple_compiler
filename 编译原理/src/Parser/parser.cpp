@@ -32,9 +32,9 @@ namespace Parser {
 			}
 			},
 		   [this]() { 
-			std::shared_ptr<Inter::Stmt> s = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop]);
+			std::shared_ptr<Inter::Stmt> s = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop-1]);
+			
 			top = top->exit(top);
-
 			},
 		};
 	}

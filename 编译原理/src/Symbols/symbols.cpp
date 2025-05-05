@@ -5,7 +5,7 @@
 
 namespace Symbols
 {
-	Env::Env(Env* e)
+	Env::Env(std::shared_ptr<Env> e)
 	{
 		prev = e;
 	}
@@ -26,7 +26,7 @@ namespace Symbols
 	/// <returns>Id¿‡</returns>
 	shared_ptr<Inter::Id> Env::get(Lexer::Token w)
 	{
-		for (Env* e = this; e != nullptr; e = e->prev)
+		for (Env* e = this; e != nullptr; e = e->prev.get())
 		{
 			auto found = e->table.find(w);
 			if (found != table.end())

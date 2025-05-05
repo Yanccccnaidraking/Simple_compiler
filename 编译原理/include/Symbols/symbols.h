@@ -18,7 +18,7 @@ namespace Symbols
 	protected:
 		std::shared_ptr<Env> prev;
 	public:
-		Env(Env* n);
+		Env(std::shared_ptr<Env> n);
 		void put(Lexer::Token w, shared_ptr<Inter::Id> i);
 		shared_ptr<Inter::Id> get(Lexer::Token w);
 		/// 退出作用域：返回上层作用域
