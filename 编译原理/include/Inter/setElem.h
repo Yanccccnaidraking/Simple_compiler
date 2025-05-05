@@ -9,11 +9,15 @@ namespace Inter
 {
     class SetElem : public Stmt {
     public:
-        Id* array;
-        Expr* index;
-        Expr* expr;
 
-        SetElem(Access* x, Expr* y)
+        std::shared_ptr<Id> array;
+
+        std::shared_ptr<Expr> index;
+
+        std::shared_ptr<Expr> expr;
+
+
+        SetElem(std::shared_ptr<Access> x, std::shared_ptr<Expr> y)
             : array(x->array), index(x->index), expr(y) {
             if (check(x->type, expr->type) == nullptr) {
                 error("type error");
@@ -37,8 +41,8 @@ namespace Inter
             return nullptr;
         }
         void gen(int b, int a) {
-            std::string s1 = index->reduce().toString();
-            std::string s2 = expr->reduce().toString();
+            std::string s1 = (*index->reduce()).toString();
+            std::string s2 = (*expr->reduce()).toString();
             std::string code = array->toString() + " [ " + s1 + " ] = " + s2;
             emit(code);
         }

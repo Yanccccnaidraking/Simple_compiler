@@ -16,14 +16,18 @@ namespace Inter
         std::shared_ptr<Expr> expr2;
 
     public:
-        Arith(Lexer::Token* tok, std::shared_ptr<Expr> x1, std::shared_ptr<Expr> x2) : Op(tok, nullptr), expr1(x1), expr2(x2)
+        
+        Arith(std::shared_ptr<Lexer::Token> tok, std::shared_ptr<Expr> x1, std::shared_ptr<Expr> x2) : Op(tok, nullptr), expr1(x1), expr2(x2)
         {
             type = Symbols::Type::max(expr1->type, expr2->type);
             if (!type) {
                 error("type error");
             }
         }
-        Expr* gen() { return new Arith(op, expr1->reduce(), expr2->reduce()); }
+
+        std::shared_ptr<Expr> gen() {
+            return std::make_shared<Arith>(op, expr1->reduce(), expr2->reduce());
+        }
 
         std::string toString() const {
             std::ostringstream oss;

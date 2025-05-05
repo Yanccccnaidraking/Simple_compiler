@@ -113,5 +113,7 @@ namespace Symbols
 	const Type* Type::Long = new Type("long", Lexer::Tag::BASIC, 4);
 	const Type* Type::Float = new Type("float", Lexer::Tag::BASIC, 4);
 	const Type* Type::Double = new Type("double", Lexer::Tag::BASIC, 8);
+
+
 }
 

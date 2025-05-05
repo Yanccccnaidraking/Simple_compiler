@@ -7,12 +7,13 @@ namespace Inter
 {
     class While : public Stmt {
     public:
-        Expr* expr;
-        Stmt* stmt;
+        shared_ptr<Expr> expr;
+        shared_ptr<Stmt> stmt;
         int after;
 
-        While();
-        void init(Expr* x, Stmt* s) {
+        While() {};
+
+        void init(shared_ptr<Expr> x, shared_ptr<Stmt> s) {
             expr = x;
             stmt = s;
             if (expr->type != Symbols::Type::Bool) {

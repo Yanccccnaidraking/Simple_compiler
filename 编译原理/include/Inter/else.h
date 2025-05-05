@@ -7,14 +7,15 @@ namespace Inter
 {
     class Else : public Stmt 
     {
-        Expr* expr;
-        Stmt* stmt1;
-        Stmt* stmt2;
+        std::shared_ptr<Expr> expr;
+        std::shared_ptr<Stmt> stmt1;
+        std::shared_ptr<Stmt> stmt2;
 
     public:
-        Else(Expr* x, Stmt* s1, Stmt* s2) : expr(x), stmt1(s1), stmt2(s2)
+
+        Else(std::shared_ptr<Expr> x, std::shared_ptr<Stmt> s1, std::shared_ptr<Stmt> s2) : expr(x), stmt1(s1), stmt2(s2)
         {
-            if (expr->type != Symbols::Type::Bool) 
+            if (expr->type != Symbols::Type::Bool)
                 expr->error("boolean required in if");
         }
 

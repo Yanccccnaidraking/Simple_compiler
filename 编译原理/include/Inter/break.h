@@ -4,15 +4,12 @@
 
 namespace Inter
 {
-	class Break
+	class Break: public Stmt
 	{
-		Stmt* stmt;
+		std::shared_ptr<Stmt> stmt;
 
 	public:
 		
-		void error(const std::string& msg);
-		void emit(const std::string& code);
-
 		Break() 
 		{
 			if (Stmt::Enclosing == Stmt::Null) { error("unenclosed break"); }

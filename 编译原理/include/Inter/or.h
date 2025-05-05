@@ -7,7 +7,7 @@ namespace Inter
 {
     class Or : public Logical {
     public:
-        Or(Lexer::Token* tok, Expr* x1, Expr* x2) : Logical(tok, x1, x2) {}
+        Or(std::shared_ptr<Lexer::Token> tok, std::shared_ptr<Expr> x1, std::shared_ptr<Expr> x2) : Logical(tok, x1, x2) {}
         void jumping(int t, int f) {
             int label = t != 0 ? t : newlabel();
             expr1->jumping(label, 0);

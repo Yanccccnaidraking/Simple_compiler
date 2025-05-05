@@ -7,12 +7,12 @@ namespace Inter
 {
     class Do : public Stmt 
     {
-        Expr* expr;
-        Stmt* stmt;
+        std::shared_ptr<Expr> expr;
+        std::shared_ptr<Stmt> stmt;
      public:
         Do() : expr(nullptr), stmt(nullptr) {}
 
-        void init(Stmt* s, Expr* x) {
+        void init(std::shared_ptr<Stmt> s, std::shared_ptr<Expr> x) {
             expr = x;
             stmt = s;
             if (expr->type != Symbols::Type::Bool) {
