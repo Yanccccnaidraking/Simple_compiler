@@ -10,7 +10,7 @@ namespace Inter {
 	{
 	public:
 		std::shared_ptr<Lexer::Token> op;
-		Symbols::Type* type;
+		const Symbols::Type* type;
 
 		Expr(std::shared_ptr<Lexer::Token> tok, Symbols::Type*  p) : op(tok), type(p) {}
 

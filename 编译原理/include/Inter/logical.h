@@ -24,7 +24,7 @@ namespace Inter
             if (!type) error("Type error");
         }
 
-        static Symbols::Type* check(Symbols::Type* p1, Symbols::Type* p2)
+        static const Symbols::Type* check(const Symbols::Type* p1,const Symbols::Type* p2)
         {
             if (p1 == Symbols::Type::Bool && p2 == Symbols::Type::Bool) {
                 return Symbols::Type::Bool;
