@@ -14,7 +14,7 @@ namespace Inter {
 
 		static int labels;
 
-		Node() : lexline(Lexer::Lexer::line) { labels = 0; }
+		Node() : lexline(Lexer::Lexer::line) {}
 
 		void error(std::string s) {
 			throw std::runtime_error("line + " + std::to_string(lexline) + ": " + s);

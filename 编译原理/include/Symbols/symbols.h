@@ -16,11 +16,15 @@ namespace Symbols
 	private:
 		unordered_map<Lexer::Token,  shared_ptr<Inter::Id>> table;
 	protected:
-		Env* prev;
+		std::shared_ptr<Env> prev;
 	public:
 		Env(Env* n);
 		void put(Lexer::Token w, shared_ptr<Inter::Id> i);
 		shared_ptr<Inter::Id> get(Lexer::Token w);
+		/// 退出作用域：返回上层作用域
+		static std::shared_ptr<Env> exit(std::shared_ptr<Env> current) {
+			return current ? current->prev : nullptr;
+		}
 	};
 
 	class Type :public Lexer::Word
