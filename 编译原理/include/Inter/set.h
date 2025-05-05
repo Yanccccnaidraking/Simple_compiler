@@ -7,10 +7,13 @@ namespace Inter
 {
     class Set : public Stmt {
     public:
-        Id* id;
-        Expr* expr;
 
-        Set(Id* i, Expr* x) : id(i), expr(x) {
+        std::shared_ptr<Id> id;
+
+        std::shared_ptr<Expr> expr;
+
+
+        Set(std::shared_ptr<Id> i, std::shared_ptr<Expr> x) : id(i), expr(x) {
             if (check(id->type, expr->type) == nullptr) {
                 error("type error");
             }
@@ -26,7 +29,7 @@ namespace Inter
             return nullptr;
         }
         void gen(int b, int a) {
-            std::string code = id->toString() + " = " + expr->gen().toString();
+            std::string code = id->toString() + " = " + (*expr->gen()).toString();
             emit(code);
         }
 

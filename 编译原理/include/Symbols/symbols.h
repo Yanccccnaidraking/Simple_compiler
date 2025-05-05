@@ -30,8 +30,8 @@ namespace Symbols
 		Type();
 		Type(const string& s, int tag, int w);
 		Type(const string& s, Lexer::Tag tag, int w);
-		static Type* Int, * Short, * Float, * Char, * Bool, * Double, * Long;
-		static Type* max(const Type* p1, const Type* p2);
+		static const Type* Int, * Short, * Float, * Char, * Bool, * Double, * Long;
+		static const Type* max(const Type* p1, const Type* p2);
 		static int typePriority(const Type* type);
 		Type& operator= (Type& t) { this->width = t.width;  return *this; }
 

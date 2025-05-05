@@ -14,26 +14,28 @@ namespace Inter
 
         public:
 
-        void emit(const std::string& code);
 
         void initConstants() {
             if (!Constant::True) {
-                Constant::True = make_shared<Constant(Lexer::Word::true_, Symbols::Type::Bool)>;
-                Constant::False = new Constant(Lexer::Word::false_, Symbols::Type::Bool);
+                Constant::True = make_shared<Constant>(Lexer::Word::true_, Symbols::Type::Bool);
+                
+            }
+            if (!Constant::False) {
+                Constant::False = make_shared<Constant>(Lexer::Word::false_, Symbols::Type::Bool);
             }
         }
 
         // 构造函数实现
-        Constant(Lexer::Token* tok, Symbols::Type* p) : Expr(tok, p) {}
+        Constant(std::shared_ptr<Lexer::Token> tok, Symbols::Type* p) : Expr(tok, p) {}
 
-        Constant(int i) : Expr(Lexer::Num(i), Symbols::Type::Int) {}
+        Constant(int i) : Expr(std::make_shared<Lexer::Num>(i), Symbols::Type::Int) {}
 
         // jumping方法实现
         void jumping(int t, int f) {
-            if (this == True && t != 0) {
+            if (this == True.get() && t != 0) {
                 emit("goto L" + std::to_string(t));
             }
-            else if (this == False && f != 0) {
+            else if (this == False.get() && f != 0) {
                 emit("goto L" + std::to_string(f));
             }
         }

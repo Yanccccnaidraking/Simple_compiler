@@ -5,11 +5,15 @@ namespace Inter
 {
     class Seq : public Stmt {
     private:
-        Stmt* stmt1;
-        Stmt* stmt2;
+        //Stmt* stmt1;
+        std::shared_ptr<Stmt> stmt1;
+        //Stmt* stmt2;
+        std::shared_ptr<Stmt> stmt2;
+
 
     public:
-        Seq(Stmt* s1, Stmt* s2) : stmt1(s1), stmt2(s2) {}
+        //Seq(Stmt* s1, Stmt* s2) : stmt1(s1), stmt2(s2) {}
+        Seq(std::shared_ptr<Stmt> s1, std::shared_ptr<Stmt> s2) : stmt1(s1), stmt2(s2) {}
         void gen(int b, int a) {
             if (stmt1 == Stmt::Null) {
                 stmt2->gen(b, a);

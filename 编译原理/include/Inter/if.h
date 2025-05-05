@@ -7,10 +7,13 @@ namespace Inter
 {
     class If : public Stmt 
     {
-        Expr* expr;
-        Stmt* stmt;
+
+        std::shared_ptr<Expr> expr;
+
+        std::shared_ptr<Stmt> stmt;
     public:
-        If(Expr* x, Stmt* s) : expr(x), stmt(s) {
+
+        If(std::shared_ptr<Expr> x, std::shared_ptr<Stmt> s) : expr(x), stmt(s) {
             if (expr->type != Symbols::Type::Bool) {
                 expr->error("boolean required in if");
             }

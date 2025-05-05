@@ -10,7 +10,7 @@ namespace Inter
 {
     class Rel : public Logical {
     public:
-        Rel(Lexer::Token* tok, Expr* x1, Expr* x2) : Logical(tok, x1, x2) {}
+        Rel(std::shared_ptr<Lexer::Token> tok, std::shared_ptr<Expr> x1, std::shared_ptr<Expr> x2) : Logical(tok, x1, x2) {}
 
         Symbols::Type* check(Symbols::Type* p1, Symbols::Type* p2) {
             // 类型系统检查
@@ -26,8 +26,8 @@ namespace Inter
 
         void jumping(int t, int f) {
             // 生成中间代码
-            Expr* a = expr1->reduce();  // 规约左表达式
-            Expr* b = expr2->reduce();  // 规约右表达式
+            std::shared_ptr<Expr> a = expr1->reduce();  // 规约左表达式
+            std::shared_ptr<Expr> b = expr2->reduce();  // 规约右表达式
 
             // 生成比较表达式字符串
             std::string test = a->toString() + " "

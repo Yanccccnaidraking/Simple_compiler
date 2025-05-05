@@ -11,17 +11,13 @@ namespace Inter
 {
     class Logical : public Expr {
     protected:
-        //Expr* expr1;
+
         std::shared_ptr<Expr> expr1;
-        //Expr* expr2;
+
         std::shared_ptr<Expr> expr2;
 
     public:
-        /*Logical(Lexer::Token* tok, Expr* x1, Expr* x2) : Expr(tok, nullptr), expr1(x1), expr2(x2)
-        {
-            type = check(expr1->type, expr2->type);
-            if (!type) error("Type error");
-        }*/
+
         Logical(std::shared_ptr<Lexer::Token> tok, std::shared_ptr<Expr> x1, std::shared_ptr<Expr> x2) : Expr(tok, nullptr), expr1(x1), expr2(x2)
         {
             type = check(expr1->type, expr2->type);
@@ -36,22 +32,6 @@ namespace Inter
             return nullptr;
         }
 
-        /*Expr* gen() 
-        {
-            int f = newlabel();
-            int a = newlabel();
-            Temp* temp = new Temp(type);
-
-            this->jumping(0, f);
-            emit(temp->toString() + " = true");
-            emit("goto L" + std::to_string(a));
-
-            emitlabel(f);
-            emit(temp->toString() + " = false");
-
-            emitlabel(a);
-            return temp;
-        }*/
         shared_ptr<Expr> gen()
         {
             int f = newlabel();

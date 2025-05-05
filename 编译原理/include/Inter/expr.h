@@ -14,9 +14,7 @@ namespace Inter {
 
 		Expr(std::shared_ptr<Lexer::Token> tok, Symbols::Type*  p) : op(tok), type(p) {}
 
-		//Expr& gen() { return *this; }
 		std::shared_ptr<Expr> gen() { return make_shared<Expr>(); }
-		//Expr& reduce() { return *this; }
 		std::shared_ptr<Expr> reduce() { return make_shared<Expr>(); }
 
 		void jumping(int t, int f) {
