@@ -16,20 +16,35 @@ namespace Inter
 
         std::shared_ptr<Expr> expr2;
 
+        bool isRel;
+
     public:
 
-        Logical(std::shared_ptr<Lexer::Token> tok, std::shared_ptr<Expr> x1, std::shared_ptr<Expr> x2) : Expr(tok, nullptr), expr1(x1), expr2(x2)
+        Logical(std::shared_ptr<Lexer::Token> tok, std::shared_ptr<Expr> x1, std::shared_ptr<Expr> x2,bool isRel=false) : Expr(tok, nullptr), expr1(x1), expr2(x2),isRel(isRel)
         {
             type = check(expr1->type, expr2->type);
             if (!type) error("Type error");
         }
 
-        static const Symbols::Type* check(const Symbols::Type* p1,const Symbols::Type* p2)
+        std::shared_ptr<Symbols::Type> check(std::shared_ptr<Symbols::Type> p1,std::shared_ptr<Symbols::Type> p2)
         {
-            if (p1 == Symbols::Type::Bool && p2 == Symbols::Type::Bool) {
-                return Symbols::Type::Bool;
+            if (isRel) {
+                // 类型系统检查
+                if (std::dynamic_pointer_cast<Symbols::Array>(p1) || std::dynamic_pointer_cast<Symbols::Array>(p2)) {
+                    return nullptr;  // 数组类型不支持比较
+                }
+
+                if (typeid(*p1) == typeid(*p2)) {  // 类型严格匹配
+                    return Symbols::Type::Bool;             // 返回布尔类型
+                }
+                return nullptr;  // 类型不兼容
             }
-            return nullptr;
+            else {
+                if (p1 == Symbols::Type::Bool && p2 == Symbols::Type::Bool) {
+                    return Symbols::Type::Bool;
+                }
+                return nullptr;
+            }
         }
 
         shared_ptr<Expr> gen()

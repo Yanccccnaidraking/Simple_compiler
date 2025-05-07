@@ -13,9 +13,9 @@
 namespace Lexer {
 	int Lexer::line = 1;
 
-	void Lexer::reserve(const Word& w)
+	void Lexer::reserve(std::shared_ptr<Word> w)
 	{
-		words.emplace(w.lexeme, w);
+		words.emplace(w->lexeme, w);
 	}
 
 	void Lexer::transform(int state, char start, char end, CharType type)
@@ -41,25 +41,31 @@ namespace Lexer {
 
 	Lexer::Lexer(std::string filepath) : buffer(DoubleBuffer(filepath))
 	{
-		reserve(Word("if", Tag::IF));
-		reserve(Word("else", Tag::ELSE));
-		reserve(Word("while", Tag::WHILE));
-		reserve(Word("do", Tag::DO));
-		reserve(Word("break", Tag::BREAK));
-		reserve(Word("switch", Tag::SWITCH));
-		reserve(Word("case", Tag::CASE));
-		reserve(Word("default", Tag::DEFAULT));
-		reserve(Word("return", Tag::RETURN));
-		reserve(Word("continue", Tag::CONTINUE));
-		reserve(*Word::true_);
-		reserve(*Word::false_);
+		reserve(std::make_shared<Word>("if", Tag::IF));
+		reserve(std::make_shared<Word>("else", Tag::ELSE));
+		reserve(std::make_shared<Word>("while", Tag::WHILE));
+		reserve(std::make_shared<Word>("do", Tag::DO));
+		reserve(std::make_shared<Word>("break", Tag::BREAK));
+		reserve(std::make_shared<Word>("switch", Tag::SWITCH));
+		reserve(std::make_shared<Word>("case", Tag::CASE));
+		reserve(std::make_shared<Word>("default", Tag::DEFAULT));
+		reserve(std::make_shared<Word>("return", Tag::RETURN));
+		reserve(std::make_shared<Word>("continue", Tag::CONTINUE));
+		reserve(Word::true_);
+		reserve(Word::false_);
 		// 初始化存储Type 类，由于Type类中的存储采用指针（方便后续的操作），所以此处需要*取值
-		reserve(*Symbols::Type::Int);
-		reserve(*Symbols::Type::Long);
-		reserve(*Symbols::Type::Bool);
-		reserve(*Symbols::Type::Char);
-		reserve(*Symbols::Type::Float);
-		reserve(*Symbols::Type::Double);
+		std::shared_ptr<Symbols::Type> int_(Symbols::Type::Int);
+		std::shared_ptr<Symbols::Type> long_(Symbols::Type::Long);
+		std::shared_ptr<Symbols::Type> bool_(Symbols::Type::Bool);
+		std::shared_ptr<Symbols::Type> char_(Symbols::Type::Char);
+		std::shared_ptr<Symbols::Type> float_(Symbols::Type::Float);
+		std::shared_ptr<Symbols::Type> double_(Symbols::Type::Double);
+		reserve(int_);
+		reserve(long_);
+		reserve(bool_);
+		reserve(char_);
+		reserve(float_);
+		reserve(double_);
 		//loadTableFromFile("CharTypeTable.txt");
 		generateAndSaveMap();
 	}
@@ -243,7 +249,7 @@ namespace Lexer {
 				else if (charType == CharType::OTHER_CHAR) {
 					buffer.next();
 					buffer.getToken();
-					return std::make_shared<Word>(Word::ne);
+					return Word::ne;
 				}
 				else if (charType == CharType::EOF_CHAR) {
 					return make_shared<Token>(Token(Tag::END));//返回结束符
@@ -276,7 +282,7 @@ namespace Lexer {
 				case State::IN_ID:
 					// 如果在 words 表中，则为关键字
 					if (words.find(lexeme) != words.end())
-						return make_shared<Word>(words.at(lexeme));
+						return words.at(lexeme);
 					else
 						return make_shared<Word>(Word(lexeme, Tag::ID));
 					break;
@@ -482,7 +488,7 @@ namespace Lexer {
 				default:
 					break;
 				}
-				return std::make_shared<Word>(Word::ne);
+				return Word::ne;
 			}
 			else {
 				buffer.next();

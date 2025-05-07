@@ -27,6 +27,42 @@ namespace Parser {
     };
 
     /// <summary>
+    /// 智能数组，能够实现自动扩容
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    template<typename T>
+    class SmartArray {
+    private:
+        std::vector<T> data;
+    public:
+        T& operator[](size_t index) {
+            if (index >= data.size()) {
+                data.resize(index + 50);  // 自动扩容
+            }
+            return data[index];
+        }
+
+        const T& operator[](size_t index) const {
+            return data[index];
+        }
+
+        size_t size() const {
+            return data.size();
+        }
+
+        void print() const {
+            for (const auto& val : data) {
+                std::cout << val << " ";
+            }
+            std::cout << "\n";
+        }
+
+        std::vector<T> getVector() {
+            return data;
+        }
+    };
+
+    /// <summary>
     /// 语法分析输出的表格项
     /// </summary>
     struct ParserItem {
@@ -125,7 +161,7 @@ namespace Parser {
         }
 
         outFile.close();
-        std::cout << "CSV 文件写入成功：" << filename << std::endl;
+        std::cout << "\nCSV 文件写入成功：" << filename << std::endl;
     }
 
     int encodeAction(ActionType type, int value);

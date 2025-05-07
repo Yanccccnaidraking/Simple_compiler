@@ -18,10 +18,14 @@ namespace Inter
             if (expr->type != Symbols::Type::Bool) {
                 expr->error("boolean required in do");
             }
+            for (auto& s : stmt->Enclosing)
+            {
+                *s = *this;
+            }
         }
 
         void gen(int b, int a) {
-            after = a;
+            *after = a;
             int label = newlabel();
             stmt->gen(b, label);
             emitlabel(label);

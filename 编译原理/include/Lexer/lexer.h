@@ -18,9 +18,9 @@ namespace Lexer {
 
         char peek = ' ';
 
-        std::unordered_map<std::string, Word> words;
+        std::unordered_map<std::string, std::shared_ptr<Word>> words;
 
-        void reserve(const Word& w);
+        void reserve(std::shared_ptr<Word> w);
 
         Lexer(std::string filepath);
 

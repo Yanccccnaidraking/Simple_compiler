@@ -7,9 +7,9 @@ namespace Inter
 {
     class While : public Stmt {
     public:
-        shared_ptr<Expr> expr;
-        shared_ptr<Stmt> stmt;
-        int after;
+        std::shared_ptr<Expr> expr;
+        std::shared_ptr<Stmt> stmt;
+        std::shared_ptr<int> after;
 
         While() {};
 
@@ -19,10 +19,14 @@ namespace Inter
             if (expr->type != Symbols::Type::Bool) {
                 error("boolean required in while");
             }
+            for (auto& s: stmt->Enclosing)
+            {
+                *s = *this;
+            }
         }
 
         void gen(int b, int a){
-            after = a;
+            *after = a;
             expr->jumping(0, a);
 
             int label = newlabel();

@@ -9,13 +9,11 @@ namespace Inter
 {
     class Constant : public Expr 
     {
+    public:
         static shared_ptr<Constant> True;
         static shared_ptr<Constant> False;
 
-        public:
-
-
-        void initConstants() {
+        /*void initConstants() {
             if (!Constant::True) {
                 Constant::True = make_shared<Constant>(Lexer::Word::true_, Symbols::Type::Bool);
                 
@@ -23,10 +21,10 @@ namespace Inter
             if (!Constant::False) {
                 Constant::False = make_shared<Constant>(Lexer::Word::false_, Symbols::Type::Bool);
             }
-        }
+        }*/
 
         // 构造函数实现
-        Constant(std::shared_ptr<Lexer::Token> tok, Symbols::Type* p) : Expr(tok, p) {}
+        Constant(std::shared_ptr<Lexer::Token> tok, std::shared_ptr<Symbols::Type> p) : Expr(tok, p) {}
 
         Constant(int i) : Expr(std::make_shared<Lexer::Num>(i), Symbols::Type::Int) {}
 

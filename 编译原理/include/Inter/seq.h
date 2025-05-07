@@ -13,7 +13,10 @@ namespace Inter
 
     public:
         //Seq(Stmt* s1, Stmt* s2) : stmt1(s1), stmt2(s2) {}
-        Seq(std::shared_ptr<Stmt> s1, std::shared_ptr<Stmt> s2) : stmt1(s1), stmt2(s2) {}
+        Seq(std::shared_ptr<Stmt> s1, std::shared_ptr<Stmt> s2) : stmt1(s1), stmt2(s2) {
+            Enclosing = s1->Enclosing;
+            Enclosing.insert(s2->Enclosing.begin(), s2->Enclosing.end());
+        }
         void gen(int b, int a) {
             if (stmt1 == Stmt::Null) {
                 stmt2->gen(b, a);

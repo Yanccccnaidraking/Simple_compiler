@@ -3,6 +3,7 @@
 #include "Symbols/symbols.h"
 #include "Inter/stmt.h"
 #include "Inter/node.h"
+#include "Parser/lr_1.h"
 #include<stack>
 #include <functional> 
 
@@ -28,42 +29,6 @@ namespace Parser {
 	// 语义动作对应的函数：
 	using SemanticAction = std::function<void()>;
 
-	/// <summary>
-	/// 智能数组，能够实现自动扩容
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	template<typename T>
-	class SmartArray {
-	private:
-		std::vector<T> data;
-	public:
-		T& operator[](size_t index) {
-			if (index >= data.size()) {
-				data.resize(index + 50);  // 自动扩容
-			}
-			return data[index];
-		}
-
-		const T& operator[](size_t index) const {
-			return data[index];
-		}
-
-		size_t size() const {
-			return data.size();
-		}
-
-		void print() const {
-			for (const auto& val : data) {
-				std::cout << val << " ";
-			}
-			std::cout << "\n";
-		}
-
-		std::vector<T> getVector() {
-			return data;
-		}
-	};
-
 	class Parser {
 	private:
 		Lexer::Lexer& lexer;
@@ -71,7 +36,7 @@ namespace Parser {
 		int stackTop = -1;//栈顶下标
 		SmartArray<int> stateStack;
 		SmartArray<std::shared_ptr<Inter::Node>> nodeStack;//与stateStack同步，共进共出，为了构造过程表时能方便的显示状态栈，因此采用两个栈分别存储
-		std::shared_ptr<Symbols::Env> top=nullptr; // 当前或顶部的符号表
+		std::shared_ptr<Symbols::Env> top; // 当前或顶部的符号表
 		int used = 0; // storage used for declarations
 		std::vector<SemanticAction> semanticActions;
 	public:

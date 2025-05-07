@@ -10,18 +10,18 @@ namespace Inter {
 	{
 	public:
 		std::shared_ptr<Lexer::Token> op;
-		const Symbols::Type* type;
+		std::shared_ptr<Symbols::Type> type;
 
-		Expr(std::shared_ptr<Lexer::Token> tok, Symbols::Type*  p) : op(tok), type(p) {}
+		Expr(std::shared_ptr<Lexer::Token> tok, std::shared_ptr<Symbols::Type>  p) : op(tok), type(p) {}
 
-		std::shared_ptr<Expr> gen() { return make_shared<Expr>(); }
-		std::shared_ptr<Expr> reduce() { return make_shared<Expr>(); }
+		virtual std::shared_ptr<Expr> gen() { return make_shared<Expr>(op,type); }
+		virtual std::shared_ptr<Expr> reduce() { return make_shared<Expr>(op,type); }
 
-		void jumping(int t, int f) {
+		virtual void jumping(int t, int f) {
 			emitjumps(toString(), t, f);
 		}
 
-		void emitjumps(std::string test, int t, int f) {
+		virtual void emitjumps(std::string test, int t, int f) {
 			if (t != 0 && f != 0) {
 				emit("if " + test + " goto L" + std::to_string(t));
 				emit("goto L" + std::to_string(f));
@@ -34,6 +34,6 @@ namespace Inter {
 			}
 		} 
 
-		std::string toString() const { return op->toString(); }
+		virtual std::string toString() const { return op->toString(); }
 	};
 }

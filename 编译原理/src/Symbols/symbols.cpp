@@ -7,7 +7,7 @@ namespace Symbols
 {
 	Env::Env(std::shared_ptr<Env> e)
 	{
-		prev = e;
+		this->prev = e;
 	}
 
 	/// <summary>
@@ -15,7 +15,7 @@ namespace Symbols
 	/// </summary>
 	/// <param name="w">词法单元</param>
 	/// <param name="i">对应的Id</param>
-	void Env::put(Lexer::Token w, shared_ptr<Inter::Id> i)
+	void Env::put(std::string w, shared_ptr<Inter::Id> i)
 	{
 		this->table[w] = i;
 	}
@@ -24,12 +24,12 @@ namespace Symbols
 	/// </summary>
 	/// <param name="w">词法单元</param>
 	/// <returns>Id类</returns>
-	shared_ptr<Inter::Id> Env::get(Lexer::Token w)
+	shared_ptr<Inter::Id> Env::get(std::string w)
 	{
-		for (Env* e = this; e != nullptr; e = e->prev.get())
+		for (auto e=this; e != nullptr; e = e->prev.get())
 		{
 			auto found = e->table.find(w);
-			if (found != table.end())
+			if (found != e->table.end())
 			{
 				return make_shared<Inter::Id>(*(found->second));
 			}
@@ -58,7 +58,7 @@ namespace Symbols
 	/// </summary>
 	/// <param name="type">变量类型</param>
 	/// <returns>变量的优先级</returns>
-	int Type::typePriority(const Type* type) {
+	int Type::typePriority(const std::shared_ptr<Type> type) {
 		if (type == Type::Bool)        return 0;
 		else if (type == Type::Char)   return 1;
 		else if (type == Type::Short)  return 2;
@@ -69,13 +69,20 @@ namespace Symbols
 		else return -1;
 	}
 
+	bool Type::numeric(const std::shared_ptr<Type> type) {
+		if (type == Type::Bool || type == Type::Char || type == Type::Short || type == Type::Int || type == Type::Long || type == Type::Float || type == Type::Double)
+			return true;
+		else
+			return false;
+	}
+
 	/// <summary>
 	/// 两数运算时的类型转换
 	/// </summary>
 	/// <param name="p1">类型1</param>
 	/// <param name="p2">类型2</param>
 	/// <returns></returns>
-	const Type* Type::max(const Type* p1, const Type* p2)
+	std::shared_ptr<Type> Type::max(const std::shared_ptr<Type> p1, const std::shared_ptr<Type> p2)
 	{
 		int pr1 = typePriority(p1);
 		int pr2 = typePriority(p2);
@@ -106,13 +113,13 @@ namespace Symbols
 	}
 
 	//定义每一个类型的字节数，Tag类型以及对应代码中的写法
-	const Type* Type::Bool = new Type("bool", Lexer::Tag::BASIC, 1);
-	const Type* Type::Char = new Type("char", Lexer::Tag::BASIC, 1);
-	const Type* Type::Short = new Type("short", Lexer::Tag::BASIC, 2);
-	const Type* Type::Int = new Type("int", Lexer::Tag::BASIC, 4);
-	const Type* Type::Long = new Type("long", Lexer::Tag::BASIC, 4);
-	const Type* Type::Float = new Type("float", Lexer::Tag::BASIC, 4);
-	const Type* Type::Double = new Type("double", Lexer::Tag::BASIC, 8);
+	std::shared_ptr<Type> Type::Bool = std::make_shared<Type>("bool", Lexer::Tag::BASIC, 1);
+	std::shared_ptr<Type> Type::Char = std::make_shared<Type>("char", Lexer::Tag::BASIC, 1);
+	std::shared_ptr<Type> Type::Short = std::make_shared<Type>("short", Lexer::Tag::BASIC, 2);
+	std::shared_ptr<Type> Type::Int = std::make_shared<Type>("int", Lexer::Tag::BASIC, 4);
+	std::shared_ptr<Type> Type::Long = std::make_shared<Type>("long", Lexer::Tag::BASIC, 4);
+	std::shared_ptr<Type> Type::Float = std::make_shared<Type>("float", Lexer::Tag::BASIC, 4);
+	std::shared_ptr<Type> Type::Double = std::make_shared<Type>("double", Lexer::Tag::BASIC, 8);
 
 
 }

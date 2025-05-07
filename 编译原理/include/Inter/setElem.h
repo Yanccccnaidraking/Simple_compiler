@@ -24,10 +24,10 @@ namespace Inter
             }
         }
 
-        Symbols::Type* check(Symbols::Type* p1, Symbols::Type* p2)
+        std::shared_ptr<Symbols::Type> check(std::shared_ptr<Symbols::Type> p1, std::shared_ptr<Symbols::Type> p2)
         {
             // 检查数组类型
-            if (dynamic_cast<Symbols::Array*>(p1) || dynamic_cast<Symbols::Array*>(p2)) {
+            if (dynamic_pointer_cast<Symbols::Array>(p1) || dynamic_pointer_cast<Symbols::Array>(p2)) {
                 return nullptr;
             }
             // 检查类型完全匹配

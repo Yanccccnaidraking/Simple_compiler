@@ -5,11 +5,10 @@
 
 namespace Inter {
     class Temp : public Expr {
-    private:
+    public:
         static int count;
         int number;
-    public:
-        Temp(Symbols::Type* p) : Expr(Lexer::Word::temp, p), number(++count) {}
+        Temp(std::shared_ptr<Symbols::Type> p) : Expr(Lexer::Word::temp, p), number(++count) {}
         std::string toString() const {
             return "t" + std::to_string(number);
         }

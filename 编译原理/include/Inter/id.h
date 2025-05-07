@@ -18,6 +18,6 @@ namespace Inter {
 	public:
 		int offset;
 
-		Id(std::shared_ptr<Lexer::Word> id, Symbols::Type p, int b) : Expr(id, &p), offset(b) {}
+		Id(std::shared_ptr<Lexer::Word> id, std::shared_ptr<Symbols::Type> p, int b) : Expr(id, p), offset(b) {}
 	};
 }

@@ -17,6 +17,8 @@ namespace Inter
         {
             if (expr->type != Symbols::Type::Bool)
                 expr->error("boolean required in if");
+            Enclosing = stmt1->Enclosing;
+            Enclosing.insert(stmt2->Enclosing.begin(), stmt2->Enclosing.end());
         }
 
         void gen(int b, int a){

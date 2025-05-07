@@ -1,5 +1,8 @@
 #include "Parser/lr_1.h"
 #include<queue>
+
+
+
 namespace Parser {
 
     std::vector<Production> grammar = {
@@ -27,7 +30,7 @@ namespace Parser {
        {"stmt", {"break", ";"}},  // break 语句
        {"stmt", {"block"}},  // 块语句
 
-       {"loc", {"loc", "[","num","]"}},  // 数组访问
+       {"loc", {"loc", "[","bool","]"}},  // 数组访问
        {"loc", {"id"}},  // 标识符
 
        {"bool", {"bool", "||", "join"}},  // 逻辑或
@@ -66,7 +69,7 @@ namespace Parser {
        {"factor", {"false"}}  // 布尔常量 false
     };
     std::set<std::string> terminals = { "[","]","{", "}", ";", "(", ")", "+", "-", "*", "/", "!","=","==", "!=", "<", "<=", ">", ">=", "||", "&&", "$","num", "real", "true", "false","if","while","else","do","break","id","basic","" };
-    std::set<std::string> nonTerminals = { "program", "block", "decls", "decl", "type", "stmts", "stmt", "loc", "bool", "join", "equality", "rel", "expr", "term", "unary", "factor" };
+    std::set<std::string> nonTerminals = { "program", "block", "decls", "decl", "type", "stmts", "stmt", "loc", "bool", "join", "equality", "rel", "expr", "term", "unary", "factor","M","N"};
     std::map<std::string, std::set<std::string>> firstSets;
     std::unordered_map<int, std::unordered_map<std::string, int>> actionTable; // Action Table
     std::unordered_map<int, std::unordered_map<std::string, int>> gotoTable; // Goto Table
@@ -622,14 +625,15 @@ namespace Parser {
     }
 }
 
+
 //int main()
 //{
-//    /*Parser::computeFirstSets();
+//    Parser::computeFirstSets();
 //    Parser::genItems();
 //    Parser::printItemSets();
 //    Parser::serializeItemSets("ItemSets.dat");
 //    Parser::saveGotoTable("GOTOTable.dat");
-//    Parser::saveActionTable("ActionTable.dat");*/
+//    Parser::saveActionTable("ActionTable.dat");
 //    /*Parser::deserializeItemSets("ItemSets.dat");
 //    Parser::printItemSets();*/
 //    /*Parser::loadGotoTable("GOTOTable.dat");

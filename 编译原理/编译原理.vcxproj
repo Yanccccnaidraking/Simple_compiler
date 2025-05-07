@@ -162,6 +162,7 @@
     <ClInclude Include="include\Inter\stmt.h" />
     <ClInclude Include="include\Inter\temp.h" />
     <ClInclude Include="include\Inter\terminalnode.h" />
+    <ClInclude Include="include\Inter\typenode.h" />
     <ClInclude Include="include\Inter\unary.h" />
     <ClInclude Include="include\Inter\while.h" />
     <ClInclude Include="include\Lexer\Bool.h" />

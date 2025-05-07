@@ -16,6 +16,8 @@ namespace Inter {
 
 		Node() : lexline(Lexer::Lexer::line) {}
 
+		virtual ~Node() = default;
+
 		void error(std::string s) {
 			throw std::runtime_error("line + " + std::to_string(lexline) + ": " + s);
 		}
@@ -24,6 +26,6 @@ namespace Inter {
 
 		void emitlabel(int i) { std::cout << "L" + std::to_string(i) + ":"; }
 
-		void emit(std::string s) { std::cout << "\t" + s << std::endl; }
+		virtual void emit(std::string s) { std::cout << "\t" + s << std::endl; }
 	};
 }

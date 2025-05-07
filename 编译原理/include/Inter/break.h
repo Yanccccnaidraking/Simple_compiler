@@ -12,10 +12,9 @@ namespace Inter
 		
 		Break() 
 		{
-			if (Stmt::Enclosing == Stmt::Null) { error("unenclosed break"); }
-			stmt = Stmt::Enclosing;
+			stmt = Stmt::Null;
 		}
 
-		void gen(int b, int a) { emit("goto L" + std::to_string(stmt->after)); };
+		void gen(int b, int a) { emit("goto L" + std::to_string(*(stmt->after))); };
 	};
 }

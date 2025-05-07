@@ -11,6 +11,7 @@ namespace Lexer {
 		Token() :tag(-1) {}
 		Token(int t) : tag(t) {}
 		Token(Tag t) : tag(int(t)) {}
+		virtual ~Token() = default;
 		// Token(const Token& other): tag(other.tag) {}
 
 		bool operator==(const Token& other) const {
