@@ -69,7 +69,7 @@ namespace Parser {
        {"factor", {"false"}}  // ²¼¶û³£Á¿ false
     };
     std::set<std::string> terminals = { "[","]","{", "}", ";", "(", ")", "+", "-", "*", "/", "!","=","==", "!=", "<", "<=", ">", ">=", "||", "&&", "$","num", "real", "true", "false","if","while","else","do","break","id","basic","" };
-    std::set<std::string> nonTerminals = { "program", "block", "decls", "decl", "type", "stmts", "stmt", "loc", "bool", "join", "equality", "rel", "expr", "term", "unary", "factor","M","N"};
+    std::set<std::string> nonTerminals = { "program", "block", "decls", "decl", "type", "stmts", "stmt", "loc", "bool", "join", "equality", "rel", "expr", "term", "unary", "factor"};
     std::map<std::string, std::set<std::string>> firstSets;
     std::unordered_map<int, std::unordered_map<std::string, int>> actionTable; // Action Table
     std::unordered_map<int, std::unordered_map<std::string, int>> gotoTable; // Goto Table

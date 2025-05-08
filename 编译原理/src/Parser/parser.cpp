@@ -86,7 +86,7 @@ namespace Parser {
 				stackTop--;
 			},
 		    [this]() {//decls->ε
-				nodeStack[++stackTop] = nullptr;
+				nodeStack[++stackTop] = nullptr;//不参与中间代码生成，仅用于与状态栈对齐
 			},
 			[this]() {//decl->type id;
 				std::shared_ptr<Inter::TerminalNode> idNode = std::dynamic_pointer_cast<Inter::TerminalNode>(nodeStack[stackTop-1]);
