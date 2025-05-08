@@ -45,8 +45,8 @@ namespace Parser {
 	{
 		std::cout << "\n符号表：\n";
 		// 表头
-		std::cout << "| 作用域 ID |     变量名     | 类型   | 地址偏移量 |   大小(Byte)   |\n";
-		std::cout << "|-----------|----------------|--------|------------|----------------|\n";
+		std::cout << "| 作用域 ID |     变量名     | 类型       | 地址偏移量 |   大小(Byte)   |\n";
+		std::cout << "|-----------|----------------|------------|------------|----------------|\n";
 		int size = scopes.size();
 		for (int i = 0; i < size; i++)
 		{
@@ -56,7 +56,7 @@ namespace Parser {
 				std::cout << "| "
 					<< std::setw(9) << i << " | "
 					<< std::setw(14) << tt.first << " | "
-					<< std::setw(6) << tt.second->type->toString() << " | "
+					<< std::setw(10) << tt.second->type->toString() << " | "
 					<< std::setw(10) << tt.second->offset << " | "
 					<< std::setw(14) <<  tt.second->type->width << " |\n";
 			}

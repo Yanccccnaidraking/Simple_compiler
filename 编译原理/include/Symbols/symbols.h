@@ -58,7 +58,7 @@ namespace Symbols
 	public:
 		std::shared_ptr<Type> of;
 		int size = 1;
-		Array(int sz, std::shared_ptr<Type> p):Type("[]", Lexer::Tag::INDEX, sz* (p->width)) {
+		Array(int sz, std::shared_ptr<Type> p):Type(p->toString() + "[" + std::to_string(sz) + "]", Lexer::Tag::INDEX, sz* (p->width)) {
 			size = sz;
 			of = p;
 		}
