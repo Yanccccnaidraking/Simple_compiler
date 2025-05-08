@@ -12,7 +12,7 @@ namespace Inter {
 			std::shared_ptr<Expr> x = gen();
 			Expr& x_ref = *x;
 			std::shared_ptr<Temp> t = std::make_shared<Temp>(type);
-			std::cout << t->toString() << " = " << x_ref.toString() << std::endl;
+			emit(t->toString() + " = " + x_ref.toString());
 			return t;
 		}
 	};
