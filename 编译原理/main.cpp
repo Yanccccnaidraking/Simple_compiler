@@ -101,5 +101,6 @@ int main() {
     Parser::Parser parser = Parser::Parser(lexer);
     parser.program();
     Parser::writeParserCSV("parsertable.csv");
+    parser.showScopes();
     return 0;
 }

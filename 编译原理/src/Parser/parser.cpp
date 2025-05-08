@@ -38,10 +38,35 @@ namespace Parser {
 		move();
 	}
 
+	/// <summary>
+	/// 输出符号表信息
+	/// </summary>
+	void Parser::showScopes()
+	{
+		std::cout << "\n符号表：\n";
+		// 表头
+		std::cout << "| 作用域 ID |     变量名     | 类型   | 地址偏移量 |   大小(Byte)   |\n";
+		std::cout << "|-----------|----------------|--------|------------|----------------|\n";
+		int size = scopes.size();
+		for (int i = 0; i < size; i++)
+		{
+			auto table = scopes[i]->getTable();
+			for (auto& tt : table)
+			{
+				std::cout << "| "
+					<< std::setw(9) << i << " | "
+					<< std::setw(14) << tt.first << " | "
+					<< std::setw(6) << tt.second->type->toString() << " | "
+					<< std::setw(10) << tt.second->offset << " | "
+					<< std::setw(14) <<  tt.second->type->width << " |\n";
+			}
+		}
+	}
+
 	void Parser::initActions()
 	{
 		semanticActions = {
-		    [this]() { 
+		    [this]() { //program-> block
 				std::shared_ptr<Inter::Stmt> s = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop]);
 				if (s){
 					int begin = s->newlabel(); int after = s->newlabel();
@@ -55,7 +80,7 @@ namespace Parser {
 				std::shared_ptr<Inter::Stmt> s = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop-1]);
 				stackTop = stackTop - 3;
 				nodeStack[stackTop] = s;
-				top = top->exit(top);
+				top = Symbols::Env::exit(top);
 			},
 		    [this]() {//decls->decls decl
 				stackTop--;
@@ -367,6 +392,7 @@ namespace Parser {
 					insertParserTable(stateStack, symbols, token, "移入");
 					if (token == "{"){
 						top = std::make_shared<Symbols::Env>(top);//进入新的语句块，作用域发生切换
+						scopes.push_back(top);
 					}
 					stateStack[++stackTop] = act.value;
 					nodeStack[stackTop] = std::make_shared<Inter::TerminalNode>(look);

@@ -37,8 +37,9 @@ namespace Parser {
 		SmartArray<int> stateStack;
 		SmartArray<std::shared_ptr<Inter::Node>> nodeStack;//与stateStack同步，共进共出，为了构造过程表时能方便的显示状态栈，因此采用两个栈分别存储
 		std::shared_ptr<Symbols::Env> top; // 当前或顶部的符号表
-		int used = 0; // storage used for declarations
-		std::vector<SemanticAction> semanticActions;
+		int used = 0; // storage used for declarations（声明变量所需的内存空间）
+		std::vector<SemanticAction> semanticActions;//存储所有规约的语义动作
+		std::vector<std::shared_ptr<Symbols::Env>> scopes;//存储所有的作用域，用于最后的输出
 	public:
 		Parser(Lexer::Lexer& l);
 
@@ -51,6 +52,8 @@ namespace Parser {
 				semanticActions[ruleIndex]();  // 调用语义动作
 			}
 		}
+
+		void showScopes();
 
 		// 获取下一个词法单元到 look
 		void move();

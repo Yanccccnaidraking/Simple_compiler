@@ -25,6 +25,9 @@ namespace Symbols
 		static std::shared_ptr<Env> exit(std::shared_ptr<Env> current) {
 			return current ? current->prev : nullptr;
 		}
+		unordered_map<std::string, shared_ptr<Inter::Id>> getTable() {
+			return table;
+		}
 	};
 
 	class Type :public Lexer::Word
@@ -55,7 +58,7 @@ namespace Symbols
 	public:
 		std::shared_ptr<Type> of;
 		int size = 1;
-		Array(int sz, std::shared_ptr<Type> p):Type("[]",Lexer::Tag::INDEX,sz*(p->width)) {
+		Array(int sz, std::shared_ptr<Type> p):Type("[]", Lexer::Tag::INDEX, sz* (p->width)) {
 			size = sz;
 			of = p;
 		}
