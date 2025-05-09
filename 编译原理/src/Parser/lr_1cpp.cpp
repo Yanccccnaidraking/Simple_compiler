@@ -309,49 +309,11 @@ namespace Parser {
         closure(itemSets[0]);//求闭包
 
         std::vector<std::set<Item>> arr;
-        //std::queue<std::set<Item>> lists;
         std::set<std::set<Item>> tempSets;
         
         arr.push_back(itemSets[0]);
-
-        //lists.push(itemSets[0]);
         tempSets.insert(itemSets[0]);
         int i = 0;
-        //std::set<std::string> tokens;
-        //tokens.insert(terminals.begin(), terminals.end());
-        //tokens.insert(nonTerminals.begin(), nonTerminals.end());//合并终结符和非终结符
-        //while (!lists.empty())
-        //{
-        //    std::set<Item> itemSet = lists.front();
-        //    //分成终结和非终结两个部分的原因是需要分别求Action表和GOTO表，不适合合并处理
-        //    for (const auto& token : terminals)//终结符号部分
-        //    {
-        //        std::set<Item> newItemSet = goTo(itemSet, token);
-        //        if (!newItemSet.empty())
-        //        {
-        //            if (tempSets.find(newItemSet) == tempSets.end())
-        //            {
-        //                lists.push(newItemSet);
-        //                itemSets[i++] = newItemSet;
-        //                tempSets.insert(newItemSet);
-        //            }
-        //        }
-        //    }
-        //    for (const auto& token : nonTerminals)//非终结符号部分
-        //    {
-        //        std::set<Item> newItemSet = goTo(itemSet, token);
-        //        if (!newItemSet.empty())
-        //        {
-        //            if (tempSets.find(newItemSet) == tempSets.end())
-        //            {
-        //                lists.push(newItemSet);
-        //                itemSets[i++] = newItemSet;
-        //                tempSets.insert(newItemSet);
-        //            }
-        //        }
-        //    }
-        //    lists.pop();
-        //}
         for (int j = 0; j < arr.size(); j++)
         {
             std::set<Item> itemSet = arr[j];

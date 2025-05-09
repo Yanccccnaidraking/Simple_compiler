@@ -27,7 +27,7 @@
 namespace Parser {
 	Parser::Parser(Lexer::Lexer& l) : lexer(l), top(nullptr)
 	{
-		deserializeItemSets("ItemSets.dat");
+		//deserializeItemSets("ItemSets.dat");
 		//printItemSets();
 		loadGotoTable("GOTOTable.dat");
 		loadActionTable("ActionTable.dat");
@@ -407,21 +407,6 @@ namespace Parser {
 					int newState = searchFromGoto(stateStack[stackTop-1], grammar[act.value].left);
 					stateStack[stackTop] = newState;
 					symbols.push_back(grammar[act.value].left);
-					//int beta = grammar[act.value].right[0]==""? 0 :grammar[act.value].right.size();//空串这一特殊情况设置成0
-					//while (beta--)
-					//{
-					//	symbols.pop_back();
-					//}
-					//stackTop -= beta;
-					//int newState = searchFromGoto(stateStack[stackTop], grammar[act.value].left);
-					//if (newState == -1)
-					//{
-					//	//错误处理
-					//	break;
-					//}
-					//stateStack[++stackTop]=newState;
-					//symbols.push_back(grammar[act.value].left);
-					//输出产生式（待做...）
 					break;
 				}
 				case ActionType::Accept:
