@@ -222,7 +222,7 @@ namespace Lexer {
 			CharType charType = getCharType(c, currentState);
 
 			if (currentState == State::START && charType == CharType::EOF_CHAR) {
-				return nullptr;//返回结束符
+				return make_shared<Token>(Token(Tag::END));//返回结束符
 			}
 
 			// 记录注释中的换行
@@ -252,7 +252,7 @@ namespace Lexer {
 					return Word::ne;
 				}
 				else if (charType == CharType::EOF_CHAR) {
-					return nullptr;//返回结束符
+					return make_shared<Token>(Token(Tag::END));//返回结束符
 				}
 			}
 

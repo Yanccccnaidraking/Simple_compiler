@@ -73,7 +73,7 @@ int main() {
     //// 扫描并输出词法单元
     //std::shared_ptr<Lexer::Token> token;
 
-    //while ((token = lexer.scan()) != nullptr) {
+    //while ((token = lexer.scan())->tag!=(int)Lexer::Tag::END) {
     //    if (auto num = std::dynamic_pointer_cast<Lexer::Num>(token)) {
     //        std::cout << "<" << num->toString() << ", " << getEnumString((Lexer::Tag)num->tag) << ">" << std::endl;
     //    }
