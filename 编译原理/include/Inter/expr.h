@@ -21,6 +21,19 @@ namespace Inter {
 			emitjumps(toString(), t, f);
 		}
 
+		/// <summary>
+		/// c1.t!=0 && f!=0:
+		/// if test goto L<t>
+		/// goto L<f>
+		/// c2.t!=0 && f==0
+		/// if test goto L<t>
+		/// c3.t!=0 && f==0
+		/// iffalse test goto L<f>
+		/// c4.t==0 && f==0
+		/// </summary>
+		/// <param name="test"></param>
+		/// <param name="t"></param>
+		/// <param name="f"></param>
 		virtual void emitjumps(std::string test, int t, int f) {
 			if (t != 0 && f != 0) {
 				emit("if " + test + " goto L" + std::to_string(t));
@@ -33,7 +46,7 @@ namespace Inter {
 				emit("iffalse " + test + " goto L" + std::to_string(f));
 			}
 		} 
-
+		
 		virtual std::string toString() const { return op->toString(); }
 	};
 }

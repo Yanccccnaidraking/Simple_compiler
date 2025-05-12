@@ -14,7 +14,12 @@ namespace Inter {
         Stmt() {
             after = std::make_shared<int>(0);
         }
-        virtual void gen(int b, int a) { }// 基类实现，可由子类覆盖
+        /// <summary>
+        /// 基类实现，可由子类覆盖
+        /// </summary>
+        /// <param name="b">begin是标记语句代码的开始处</param>
+        /// <param name="a">after标记语句代码之后的第一条指令</param>
+        virtual void gen(int b, int a) { }
     };
 }
 

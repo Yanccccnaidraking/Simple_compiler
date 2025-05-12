@@ -181,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="CharTypeTable.txt" />
+    <Text Include="input.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ActionTable.dat" />

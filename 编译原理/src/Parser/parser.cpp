@@ -31,6 +31,9 @@ namespace Parser {
 		//printItemSets();
 		loadGotoTable("GOTOTable.dat");
 		loadActionTable("ActionTable.dat");
+		//printActionTable();
+		//printGotoTable();
+		writeActionTableToFile("./lr_1_tab.txt");
 		top = std::make_shared<Symbols::Env>(nullptr);
 		initActions();
 		stateStack[++stackTop] = 0;
@@ -394,6 +397,7 @@ namespace Parser {
 						top = std::make_shared<Symbols::Env>(top);//进入新的语句块，作用域发生切换
 						scopes.push_back(top);
 					}
+					// else error
 					stateStack[++stackTop] = act.value;
 					nodeStack[stackTop] = std::make_shared<Inter::TerminalNode>(look);
 					move();

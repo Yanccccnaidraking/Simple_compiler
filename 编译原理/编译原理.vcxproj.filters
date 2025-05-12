@@ -48,6 +48,9 @@
     <ClCompile Include="src\Parser\parser.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\Parser\lr_1cpp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Lexer\lexer.h">
@@ -107,8 +110,72 @@
     <ClInclude Include="include\Inter\temp.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\Inter\and.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\arith.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\break.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\constant.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\do.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\else.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\if.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\logical.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\not.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\or.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\rel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\seq.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\set.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\setElem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\terminalnode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\typenode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\unary.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Inter\while.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Parser\lr_1.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="CharTypeTable.txt" />
+    <Text Include="input.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ActionTable.dat" />
+    <None Include="GOTOTable.dat" />
+    <None Include="ItemSets.dat" />
+    <None Include="parsertable.csv" />
   </ItemGroup>
 </Project>

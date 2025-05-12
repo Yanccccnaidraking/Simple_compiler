@@ -393,6 +393,68 @@ namespace Parser {
         std::cout << std::endl;
     }
 
+    // 将 ActionTable 和 GotoTable 输出到文件
+    inline void writeActionTableToFile(const std::string& filename) {
+        std::ofstream outFile(filename);
+        if (!outFile) {
+            std::cerr << "无法打开文件：" << filename << std::endl;
+            return;
+        }
+
+        // 输出格式
+        const int width_state = 20;
+        const int width_action = 110;
+        const int width_goto = 110;
+
+        outFile << std::left
+            << std::setw(width_state) << "STATE"
+            << std::setw(width_action) << "ACTIONS"
+            << std::setw(width_goto) << "GOTO"
+            << std::endl;
+
+        outFile << std::string(width_state + width_action + width_goto, '-') << std::endl;
+
+        // 合并action和goto
+        for (const auto& [state, actionTransitions] : actionTable) {
+            outFile << std::left << std::setw(width_state) << state;
+            std::ostringstream actionStream;
+
+            for (const auto& [symbol, action] : actionTransitions) {
+                Action act = decodeAction(action);
+                outFile << "  On '" << symbol << "' -> " << getActionStr(act.type) << act.value << ";";
+            }
+            outFile << std::setw(width_action) << actionStream.str();
+            std::ostringstream gotoStream;
+            if (gotoTable.find(state) != gotoTable.end()) {
+                // 有goto状态
+                for (const auto& [symbol, nextState] : gotoTable.at(state)) {
+                    gotoStream << "On'" << symbol << "'->" << nextState << ";";
+                }
+            }
+            outFile << std::setw(width_goto) << gotoStream.str();
+            outFile << std::endl;
+        }
+        // 检查剩余GOTO表(ACTION空)
+        for (const auto& [state, gotoTransitions] : gotoTable) {
+            if (actionTable.find(state) == actionTable.end()) {
+                // 输出空的 Action 信息
+                outFile << std::setw(width_action) << "";
+
+                // 输出 Goto 信息
+                std::ostringstream gotoStream;
+                for (const auto& [symbol, nextState] : gotoTransitions) {
+                    gotoStream << "On '" << symbol << "' -> " << nextState << "; ";
+                }
+                outFile << std::setw(width_goto) << gotoStream.str();
+                outFile << std::endl;
+            }
+        }
+        outFile.close();
+        std::cout << "Action Table 已成功写入到文件：" << filename << std::endl;
+    }
+
+
+
     Action searchFromAction(int state, std::string token);
 
     int searchFromGoto(int state, std::string token);
