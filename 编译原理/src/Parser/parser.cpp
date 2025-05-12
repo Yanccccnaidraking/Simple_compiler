@@ -410,6 +410,7 @@ namespace Parser {
 					applyAction(act.value);
 					int newState = searchFromGoto(stateStack[stackTop - 1], grammar[act.value].left);
 					stateStack[stackTop] = newState;
+					stateStack.setMaxSize(stackTop+1);
 					symbols.push_back(grammar[act.value].left);
 					break;
 				}

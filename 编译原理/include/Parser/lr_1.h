@@ -55,6 +55,10 @@ namespace Parser {
             return maxIndexUsed;
         }
 
+        void setMaxSize(int num) {
+            maxIndexUsed = num;
+        }
+
         void print() const {
             for (size_t i = 0; i < maxIndexUsed; ++i) {
                 std::cout << data[i] << " ";
