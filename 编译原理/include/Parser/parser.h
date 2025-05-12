@@ -64,38 +64,5 @@ namespace Parser {
 
 		// program -> block
 		void program(); 
-
-		// block -> { decls stmts }
-		shared_ptr<Inter::Stmt> block();
-
-		void decls();
-
-		shared_ptr<Symbols::Type> type();
-
-		shared_ptr<Symbols::Type> dims(std::shared_ptr<Symbols::Type> p);
-
-		shared_ptr<Inter::Stmt> stmts();
-
-		shared_ptr<Inter::Stmt> stmt();
-
-		shared_ptr<Inter::Stmt> assign();
-
-		shared_ptr<Inter::Expr> bool_();
-
-		shared_ptr<Inter::Expr> join();
-
-		shared_ptr<Inter::Expr> equality();
-
-		shared_ptr<Inter::Expr> rel();
-
-		shared_ptr<Inter::Expr> expr();
-
-		shared_ptr<Inter::Expr> term();
-
-		shared_ptr<Inter::Expr> unary();
-
-		shared_ptr<Inter::Expr> factor();
-
-		shared_ptr<Inter::Access> offset(shared_ptr<Inter::Id> a);
 	};
 }
