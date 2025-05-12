@@ -24,6 +24,7 @@
 #include "Inter/rel.h"
 #include "Inter/unary.h"
 #include "Inter/not.h"
+#include <stack>
 namespace Parser {
 	Parser::Parser(Lexer::Lexer& l) : lexer(l), top(nullptr)
 	{
@@ -94,6 +95,18 @@ namespace Parser {
 			[this]() {//decl->type id;
 				std::shared_ptr<Inter::TerminalNode> idNode = std::dynamic_pointer_cast<Inter::TerminalNode>(nodeStack[stackTop - 1]);
 				std::shared_ptr<Inter::TypeNode> typeNode = std::dynamic_pointer_cast<Inter::TypeNode>(nodeStack[stackTop - 2]);
+				auto type = typeNode->type;
+				if (std::dynamic_pointer_cast<Symbols::Array>(type))
+				{
+					std::stack<int> sizeStack;
+					auto temp = type;
+					while (temp->tag != (int)(Lexer::Tag::BASIC))
+					{
+						sizeStack.push((std::dynamic_pointer_cast<Symbols::Array>(temp))->size);
+						temp = (std::dynamic_pointer_cast<Symbols::Array>(temp))->of;
+					}
+					(std::dynamic_pointer_cast<Symbols::Array>(type))->setWidth(sizeStack);
+				}
 				auto word = std::dynamic_pointer_cast<Lexer::Word>(idNode->token);
 				std::shared_ptr<Inter::Id> id = std::make_shared<Inter::Id>(word, typeNode->type, used);
 				top->put(idNode->token->toString(), id);
@@ -158,10 +171,6 @@ namespace Parser {
 			[this]() {//stmt->while (bool) stmt
 				auto stmt = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop]);
 				auto boolNode = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 2]);
-				if (!boolNode)
-				{
-					cout << "llllll" << endl;
-				}
 				auto curStmt = std::make_shared<Inter::While>();
 				curStmt->init(boolNode, stmt);
 				stackTop -= 4;
@@ -186,15 +195,14 @@ namespace Parser {
 			[this]() {//loc->loc[bool]
 				auto boolNode = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 1]);
 				auto loc = std::dynamic_pointer_cast<Inter::Access>(nodeStack[stackTop - 3]);
-				std::shared_ptr<Symbols::Type> originType(loc->array->type);
+				std::shared_ptr<Symbols::Type> originType(loc->type);
 				std::shared_ptr<Symbols::Type> type = originType;
 				std::shared_ptr<Inter::Expr> w,t1,t2,loc1;
-				type = std::dynamic_pointer_cast<Symbols::Array>(type);
 				type = std::dynamic_pointer_cast<Symbols::Array>(type)->of;
 				w = std::make_shared<Inter::Constant>(type->width);
 				t1 = std::make_shared<Inter::Arith>(std::make_shared<Lexer::Token>('*'), boolNode, w);
 				if (loc->isArray) {
-					t2 = std::make_shared<Inter::Arith>(std::make_shared<Lexer::Token>('+'), loc->index, t1);
+					t2 = std::make_shared<Inter::Arith>(std::make_shared<Lexer::Token>('+'),loc->index, t1 );
 					loc1 = t2;
 				}
 				else {

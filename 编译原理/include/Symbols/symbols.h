@@ -2,6 +2,7 @@
 #include<unordered_map>
 #include "Lexer/lexer.h"
 #include "Lexer/Word.h"
+#include<stack>
 using namespace std;
 
 
@@ -64,6 +65,20 @@ namespace Symbols
 		}
 		std::string toString() {
 			return "[" + std::to_string(size) + "]" + of->toString();
+		}
+		void setWidth( std::stack<int>stack)
+		{
+			int size = stack.top();
+			stack.pop();
+			if (of->tag == (int)(Lexer::Tag::BASIC))
+			{
+				this->width = of->width * size;
+			}
+			else
+			{
+				(std::dynamic_pointer_cast<Array>(of))->setWidth(stack);
+				this->width = of->width * size;
+			}
 		}
 	};
 }
