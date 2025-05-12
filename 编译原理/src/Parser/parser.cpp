@@ -61,7 +61,7 @@ namespace Parser {
 					<< std::setw(14) << tt.first << " | "
 					<< std::setw(10) << tt.second->type->toString() << " | "
 					<< std::setw(10) << tt.second->offset << " | "
-					<< std::setw(14) <<  tt.second->type->width << " |\n";
+					<< std::setw(14) << tt.second->type->width << " |\n";
 			}
 		}
 	}
@@ -69,39 +69,39 @@ namespace Parser {
 	void Parser::initActions()
 	{
 		semanticActions = {
-		    [this]() { //program-> block
+			[this]() { //program-> block
 				std::shared_ptr<Inter::Stmt> s = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop]);
-				if (s){
+				if (s) {
 					int begin = s->newlabel(); int after = s->newlabel();
 					s->emitlabel(begin); s->gen(begin, after); s->emitlabel(after);
 				}
-				else{
+				else {
 					throw std::runtime_error("语句块解析异常");
 				}
 			},
-		    [this]() {//block->{decls stmts} 
-				std::shared_ptr<Inter::Stmt> s = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop-1]);
+			[this]() {//block->{decls stmts} 
+				std::shared_ptr<Inter::Stmt> s = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop - 1]);
 				stackTop = stackTop - 3;
 				nodeStack[stackTop] = s;
 				top = Symbols::Env::exit(top);
 			},
-		    [this]() {//decls->decls decl
+			[this]() {//decls->decls decl
 				stackTop--;
 			},
-		    [this]() {//decls->ε
+			[this]() {//decls->ε
 				nodeStack[++stackTop] = nullptr;//不参与中间代码生成，仅用于与状态栈对齐
 			},
 			[this]() {//decl->type id;
-				std::shared_ptr<Inter::TerminalNode> idNode = std::dynamic_pointer_cast<Inter::TerminalNode>(nodeStack[stackTop-1]);
+				std::shared_ptr<Inter::TerminalNode> idNode = std::dynamic_pointer_cast<Inter::TerminalNode>(nodeStack[stackTop - 1]);
 				std::shared_ptr<Inter::TypeNode> typeNode = std::dynamic_pointer_cast<Inter::TypeNode>(nodeStack[stackTop - 2]);
 				auto word = std::dynamic_pointer_cast<Lexer::Word>(idNode->token);
 				std::shared_ptr<Inter::Id> id = std::make_shared<Inter::Id>(word, typeNode->type, used);
 				top->put(idNode->token->toString(), id);
 				used += typeNode->type->width;
-				stackTop-=2;
+				stackTop -= 2;
 			},
 			[this]() {//type->type[num]
-				auto terNode = std::dynamic_pointer_cast<Inter::TypeNode>(nodeStack[stackTop-3]);
+				auto terNode = std::dynamic_pointer_cast<Inter::TypeNode>(nodeStack[stackTop - 3]);
 				auto t = terNode->type;
 				auto terNumNode = std::dynamic_pointer_cast<Inter::TerminalNode>(nodeStack[stackTop - 1]);
 				int size = (std::dynamic_pointer_cast<Lexer::Num>(terNumNode->token))->value;
@@ -111,31 +111,31 @@ namespace Parser {
 				nodeStack[stackTop] = typeNode;
 			},
 			[this]() {//type->basic
-				std::shared_ptr<Inter::TerminalNode> terNode = std::dynamic_pointer_cast<Inter::TerminalNode>(nodeStack[stackTop]);	
+				std::shared_ptr<Inter::TerminalNode> terNode = std::dynamic_pointer_cast<Inter::TerminalNode>(nodeStack[stackTop]);
 				std::shared_ptr<Symbols::Type> t = std::dynamic_pointer_cast<Symbols::Type>(terNode->token);
 				std::shared_ptr<Inter::TypeNode> typeNode = std::make_shared<Inter::TypeNode>(t);
 				nodeStack[stackTop] = typeNode;
 			},
 			[this]() {//stmts->stmts stmt
 				auto stmt = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop]);
-				auto stmts = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop-1]);
+				auto stmts = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop - 1]);
 				auto curStmts = std::make_shared<Inter::Seq>(stmts, stmt);
 				stackTop--;
 				nodeStack[stackTop] = curStmts;
 			},
 			[this]() {//stmts->ε
-				std::shared_ptr<Inter::Stmt> stmts= Inter::Stmt::Null;
+				std::shared_ptr<Inter::Stmt> stmts = Inter::Stmt::Null;
 				nodeStack[++stackTop] = stmts;
 			},
 			[this]() {//stmt->loc=bool;
 				auto loc = std::dynamic_pointer_cast<Inter::Access>(nodeStack[stackTop - 3]);
-				auto boolNode = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop-1]);
+				auto boolNode = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 1]);
 				stackTop -= 3;
-				if (loc->isArray){
+				if (loc->isArray) {
 					auto stmt = std::make_shared<Inter::SetElem>(loc, boolNode);
 					nodeStack[stackTop] = stmt;
 				}
-				else{
+				else {
 					auto stmt = std::make_shared<Inter::Set>(loc->array, boolNode);
 					nodeStack[stackTop] = stmt;
 				}
@@ -148,7 +148,7 @@ namespace Parser {
 				nodeStack[stackTop] = curStmt;
 			},
 			[this]() {//stmt->if (bool) stmt else stmt
-				auto stmt1 = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop-2]);
+				auto stmt1 = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop - 2]);
 				auto stmt2 = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop]);
 				auto boolNode = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 4]);
 				stackTop -= 6;
@@ -156,15 +156,19 @@ namespace Parser {
 				nodeStack[stackTop] = curStmt;
 			},
 			[this]() {//stmt->while (bool) stmt
-				auto stmt= std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop]);
+				auto stmt = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop]);
 				auto boolNode = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 2]);
+				if (!boolNode)
+				{
+					cout << "llllll" << endl;
+				}
 				auto curStmt = std::make_shared<Inter::While>();
 				curStmt->init(boolNode, stmt);
 				stackTop -= 4;
 				nodeStack[stackTop] = curStmt;
 			},
 			[this]() {//stmt->do stmt while (bool);
-				auto stmt = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop-5]);
+				auto stmt = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop - 5]);
 				auto boolNode = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 2]);
 				auto curStmt = std::make_shared<Inter::Do>();
 				curStmt->init(stmt, boolNode);
@@ -220,7 +224,7 @@ namespace Parser {
 			[this]() {//join->join && equality
 				auto e = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop]);
 				auto token = std::dynamic_pointer_cast<Inter::TerminalNode>(nodeStack[stackTop - 1]);
-				auto join = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop-2]);
+				auto join = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 2]);
 				auto curJoin = std::make_shared<Inter::And>(token->token, join, e);
 				stackTop -= 2;
 				nodeStack[stackTop] = curJoin;
@@ -324,7 +328,7 @@ namespace Parser {
 				auto unary1 = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop]);
 				auto token = std::dynamic_pointer_cast<Inter::TerminalNode>(nodeStack[stackTop - 1]);
 				auto unary = std::make_shared<Inter::Not>(token->token, unary1);
-				stackTop --;
+				stackTop--;
 				nodeStack[stackTop] = unary;
 			},
 			[this]() {//unary-> - unary
@@ -337,8 +341,8 @@ namespace Parser {
 				//不需要任何操作
 			},
 			[this]() {//factor->(bool)
-				auto boolNode = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop-1]);
-				stackTop-=2;
+				auto boolNode = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 1]);
+				stackTop -= 2;
 				nodeStack[stackTop] = boolNode;
 			},
 			[this]() {//factor->loc
@@ -393,7 +397,7 @@ namespace Parser {
 				{
 				case ActionType::Shift:
 					insertParserTable(stateStack, symbols, token, "移入");
-					if (token == "{"){
+					if (token == "{") {
 						top = std::make_shared<Symbols::Env>(top);//进入新的语句块，作用域发生切换
 						scopes.push_back(top);
 					}
@@ -406,10 +410,11 @@ namespace Parser {
 					break;
 				case ActionType::Reduce:
 				{
-					insertParserTable(stateStack, symbols, token, "根据"+toStringProduction(grammar[act.value]) + "规约");
+					insertParserTable(stateStack, symbols, token, "根据" + toStringProduction(grammar[act.value]) + "规约");
 					applyAction(act.value);
-					int newState = searchFromGoto(stateStack[stackTop-1], grammar[act.value].left);
+					int newState = searchFromGoto(stateStack[stackTop - 1], grammar[act.value].left);
 					stateStack[stackTop] = newState;
+					stateStack.setMaxSize(stackTop+1);
 					symbols.push_back(grammar[act.value].left);
 					break;
 				}
@@ -429,70 +434,5 @@ namespace Parser {
 				break;
 			}
 		}
-		
-	}
-	shared_ptr<Inter::Stmt> Parser::block()
-	{
-		return shared_ptr<Inter::Stmt>();
-	}
-	void Parser::decls()
-	{
-	}
-	shared_ptr<Symbols::Type> Parser::type()
-	{
-		return shared_ptr<Symbols::Type>();
-	}
-	shared_ptr<Symbols::Type> Parser::dims(std::shared_ptr<Symbols::Type> p)
-	{
-		return shared_ptr<Symbols::Type>();
-	}
-	shared_ptr<Inter::Stmt> Parser::stmts()
-	{
-		return shared_ptr<Inter::Stmt>();
-	}
-	shared_ptr<Inter::Stmt> Parser::stmt()
-	{
-		return shared_ptr<Inter::Stmt>();
-	}
-	shared_ptr<Inter::Stmt> Parser::assign()
-	{
-		return shared_ptr<Inter::Stmt>();
-	}
-	shared_ptr<Inter::Expr> Parser::bool_()
-	{
-		return shared_ptr<Inter::Expr>();
-	}
-	shared_ptr<Inter::Expr> Parser::join()
-	{
-		return shared_ptr<Inter::Expr>();
-	}
-	shared_ptr<Inter::Expr> Parser::equality()
-	{
-		return shared_ptr<Inter::Expr>();
-	}
-	shared_ptr<Inter::Expr> Parser::rel()
-	{
-		return shared_ptr<Inter::Expr>();
-	}
-	shared_ptr<Inter::Expr> Parser::expr()
-	{
-		return shared_ptr<Inter::Expr>();
-	}
-	shared_ptr<Inter::Expr> Parser::term()
-	{
-		return shared_ptr<Inter::Expr>();
-	}
-	shared_ptr<Inter::Expr> Parser::unary()
-	{
-		return shared_ptr<Inter::Expr>();
-	}
-	shared_ptr<Inter::Expr> Parser::factor()
-	{
-		return shared_ptr<Inter::Expr>();
-	}
-	shared_ptr<Inter::Access> Parser::offset(shared_ptr<Inter::Id> a)
-	{
-		return shared_ptr<Inter::Access>();
 	}
 }
-

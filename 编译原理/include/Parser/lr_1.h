@@ -34,10 +34,15 @@ namespace Parser {
     class SmartArray {
     private:
         std::vector<T> data;
+        size_t maxIndexUsed = 0;  // 当前已使用的最大下标（+1）
+
     public:
         T& operator[](size_t index) {
             if (index >= data.size()) {
                 data.resize(index + 50);  // 自动扩容
+            }
+            if (index + 1 > maxIndexUsed) {
+                maxIndexUsed = index + 1;
             }
             return data[index];
         }
@@ -47,18 +52,22 @@ namespace Parser {
         }
 
         size_t size() const {
-            return data.size();
+            return maxIndexUsed;
+        }
+
+        void setMaxSize(int num) {
+            maxIndexUsed = num;
         }
 
         void print() const {
-            for (const auto& val : data) {
-                std::cout << val << " ";
+            for (size_t i = 0; i < maxIndexUsed; ++i) {
+                std::cout << data[i] << " ";
             }
             std::cout << "\n";
         }
 
-        std::vector<T> getVector() {
-            return data;
+        std::vector<T> getVector() const {
+            return std::vector<T>(data.begin(), data.begin() + maxIndexUsed);
         }
     };
 

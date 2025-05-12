@@ -9,7 +9,6 @@ namespace Inter
     public:
         std::shared_ptr<Expr> expr;
         std::shared_ptr<Stmt> stmt;
-        std::shared_ptr<int> after;
 
         While() {};
 
