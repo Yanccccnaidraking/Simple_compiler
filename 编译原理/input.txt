@@ -1,5 +1,19 @@
 {
     int x;
-    while (x>1) 
-        x=1;
-} 
+    float[10] y;
+    x=2.1;
+    y[3]=1;
+    if (x>1) {
+        bool flag;
+        x = 3 + 5 * (2 - 1);
+        y[3]=1.2;
+        if ((x > 2||x<1) && y[3] < 5.5) {
+            y[1] = y[3] + 1;
+        } else {
+            do {
+                x = x - 1;
+                break;
+            } while (x > 0);
+        }
+    }
+}
