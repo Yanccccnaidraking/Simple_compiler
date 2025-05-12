@@ -28,4 +28,3 @@ namespace Inter
         std::string toString() const { return array->toString() + " [ " + index->toString() + " ]";}
     };
 }
-

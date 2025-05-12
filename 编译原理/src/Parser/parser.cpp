@@ -155,6 +155,10 @@ namespace Parser {
 			[this]() {//stmt->while (bool) stmt
 				auto stmt= std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop]);
 				auto boolNode = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 2]);
+				if (!boolNode)
+				{
+					cout << "llllll" << endl;
+				}
 				auto curStmt = std::make_shared<Inter::While>();
 				curStmt->init(boolNode, stmt);
 				stackTop -= 4;
