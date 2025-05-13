@@ -124,8 +124,8 @@ namespace Parser {
 
     void printItemSets() {
         for (const auto& pair : itemSets) {
-            if (pair.first != 6)
-                continue;
+            //if (pair.first != 6)
+                //continue;
             std::cout << "Key: " << pair.first << "\n";
             std::cout << "Items: ";
             // 遍历每个 set<Item> 并打印其元素

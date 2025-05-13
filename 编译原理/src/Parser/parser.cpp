@@ -33,7 +33,7 @@ namespace Parser {
 		loadActionTable("ActionTable.dat");
 		//printActionTable();
 		//printGotoTable();
-		writeActionTableToFile("./lr_1_tab.txt");
+		//writeActionTableToFile("./lr_1_tab.txt");
 		top = std::make_shared<Symbols::Env>(nullptr);
 		initActions();
 		stateStack[++stackTop] = 0;
@@ -401,7 +401,6 @@ namespace Parser {
 						top = std::make_shared<Symbols::Env>(top);//进入新的语句块，作用域发生切换
 						scopes.push_back(top);
 					}
-					// else error
 					stateStack[++stackTop] = act.value;
 					nodeStack[stackTop] = std::make_shared<Inter::TerminalNode>(look);
 					move();
@@ -424,8 +423,15 @@ namespace Parser {
 					finished = true;//语法分析结束
 					break;
 				case ActionType::Error:
-					//调用错误恢复例程
-					error("语法分析错误");
+					try {
+						//调用错误恢复例程
+						error("语法分析错误");
+					}
+					catch (exception e) {
+						std::cout<< e.what() << std::endl;
+						finished = true;
+					}
+					
 					break;
 				}
 			}
