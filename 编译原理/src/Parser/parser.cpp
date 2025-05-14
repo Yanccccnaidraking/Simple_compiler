@@ -203,28 +203,46 @@ namespace Parser {
 			[this]() {//loc->loc[bool]
 				auto boolNode = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 1]);
 				auto loc = std::dynamic_pointer_cast<Inter::Access>(nodeStack[stackTop - 3]);
-				std::shared_ptr<Symbols::Type> originType(loc->type);
-				std::shared_ptr<Symbols::Type> type = originType;
-				std::shared_ptr<Inter::Expr> w,t1,t2,loc1;
-				type = std::dynamic_pointer_cast<Symbols::Array>(type)->of;
-				w = std::make_shared<Inter::Constant>(type->width);
-				t1 = std::make_shared<Inter::Arith>(std::make_shared<Lexer::Token>('*'), boolNode, w);
-				if (loc->isArray) {
-					t2 = std::make_shared<Inter::Arith>(std::make_shared<Lexer::Token>('+'),loc->index, t1 );
-					loc1 = t2;
+				try {
+					std::shared_ptr<Symbols::Type> originType(loc->type);
+					std::shared_ptr<Symbols::Type> type = originType;
+					std::shared_ptr<Inter::Expr> w, t1, t2, loc1;
+					type = std::dynamic_pointer_cast<Symbols::Array>(type);
+					if (!type) {
+						error("访问非数组变量");
+					}
+					type = std::dynamic_pointer_cast<Symbols::Array>(type)->of;
+					w = std::make_shared<Inter::Constant>(type->width);
+					t1 = std::make_shared<Inter::Arith>(std::make_shared<Lexer::Token>('*'), boolNode, w);
+					if (loc->isArray) {
+						t2 = std::make_shared<Inter::Arith>(std::make_shared<Lexer::Token>('+'), loc->index, t1);
+						loc1 = t2;
+					}
+					else {
+						loc1 = t1;
+					}
+					auto curLoc = std::make_shared<Inter::Access>(loc->array, loc1, type, true);
+					stackTop -= 3;
+					nodeStack[stackTop] = curLoc;
 				}
-				else {
-					loc1 = t1;
+				catch (exception e) {
+					std::cout << e.what() << std::endl;
 				}
-				auto curLoc = std::make_shared<Inter::Access>(loc->array, loc1, type,true);
-				stackTop -= 3;
-				nodeStack[stackTop] = curLoc;
 			},
 			[this]() {//loc->id
 				auto idNode = std::dynamic_pointer_cast<Inter::TerminalNode>(nodeStack[stackTop]);
-				auto id = top->get(idNode->token->toString());
-				auto curLoc = std::make_shared<Inter::Access>(id, nullptr,id->type, false);
-				nodeStack[stackTop] = curLoc;
+				try { // 处理使用没有声明的变量异常
+					auto id = top->get(idNode->token->toString());
+					if (id == nullptr) {
+						error("未声明的变量:" + idNode->token->toString());
+					}
+					auto curLoc = std::make_shared<Inter::Access>(id, nullptr,id->type, false);
+					nodeStack[stackTop] = curLoc;
+				}
+				catch (exception e) {
+					std::cout << e.what() << std::endl;
+				}
+				
 			},
 			[this]() {//bool->bool || join
 				auto join = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop]);
@@ -447,7 +465,6 @@ namespace Parser {
 						std::cout<< e.what() << std::endl;
 						finished = true;
 					}
-					
 					break;
 				}
 			}
