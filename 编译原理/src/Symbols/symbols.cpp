@@ -1,6 +1,8 @@
 #include "Symbols/symbols.h"
 #include "Lexer/Token.h"
 #include "Inter/id.h"
+#include "Inter/constant.h"
+#include "Lexer/Word.h"
 #include<math.h>
 
 namespace Symbols
@@ -120,7 +122,14 @@ namespace Symbols
 	std::shared_ptr<Type> Type::Long = std::make_shared<Type>("long", Lexer::Tag::BASIC, 4);
 	std::shared_ptr<Type> Type::Float = std::make_shared<Type>("float", Lexer::Tag::BASIC, 4);
 	std::shared_ptr<Type> Type::Double = std::make_shared<Type>("double", Lexer::Tag::BASIC, 8);
-
-
 }
 
+namespace Lexer {
+	std::shared_ptr<Word> Word::true_ = std::make_shared<Word>("true", Tag::TRUE);
+	std::shared_ptr<Word> Word::false_ = std::make_shared<Word>("false", Tag::FALSE);
+}
+
+namespace Inter {
+	std::shared_ptr<Constant> Constant::True = std::make_shared<Constant>(Lexer::Word::true_, Symbols::Type::Bool);
+	std::shared_ptr<Constant> Constant::False = std::make_shared<Constant>(Lexer::Word::false_, Symbols::Type::Bool);
+}

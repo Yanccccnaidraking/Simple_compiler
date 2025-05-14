@@ -10,9 +10,11 @@ namespace Inter {
         //static std::shared_ptr<Stmt> Enclosing;// used for break stmts
 
         std::shared_ptr<int> after ; // saves label after
+        std::shared_ptr<int> begin;
 
         Stmt() {
             after = std::make_shared<int>(0);
+            begin = std::make_shared<int>(0);
         }
         /// <summary>
         /// 基类实现，可由子类覆盖

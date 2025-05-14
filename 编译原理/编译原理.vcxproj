@@ -151,6 +151,7 @@
     <ClInclude Include="include\Inter\arith.h" />
     <ClInclude Include="include\Inter\break.h" />
     <ClInclude Include="include\Inter\constant.h" />
+    <ClInclude Include="include\Inter\continue.h" />
     <ClInclude Include="include\Inter\do.h" />
     <ClInclude Include="include\Inter\else.h" />
     <ClInclude Include="include\Inter\expr.h" />

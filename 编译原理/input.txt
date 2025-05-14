@@ -1,4 +1,8 @@
 {
-    int[2][10][3] z;
-    z[0][1][2]=10;
+    bool a;
+    a=true;
+    while (true)
+    {
+        continue;
+    }
 }

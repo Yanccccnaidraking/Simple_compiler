@@ -26,6 +26,7 @@ namespace Inter
 
         void gen(int b, int a){
             *after = a;
+            *begin = b;
             expr->jumping(0, a);
 
             int label = newlabel();

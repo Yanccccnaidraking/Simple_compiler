@@ -26,6 +26,7 @@ namespace Inter
 
         void gen(int b, int a) {
             *after = a;
+            *begin = b;
             int label = newlabel();
             stmt->gen(b, label);
             emitlabel(label);

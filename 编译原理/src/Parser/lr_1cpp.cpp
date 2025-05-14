@@ -28,6 +28,7 @@ namespace Parser {
        {"stmt", {"while", "(", "bool", ")", "stmt"}},  // while 语句
        {"stmt", {"do", "stmt", "while", "(", "bool", ")", ";"}},  // do-while 语句
        {"stmt", {"break", ";"}},  // break 语句
+       {"stmt", {"continue",";"}}, //continue语句
        {"stmt", {"block"}},  // 块语句
 
        {"loc", {"loc", "[","bool","]"}},  // 数组访问
@@ -68,7 +69,7 @@ namespace Parser {
        {"factor", {"true"}},  // 布尔常量 true
        {"factor", {"false"}}  // 布尔常量 false
     };
-    std::set<std::string> terminals = { "[","]","{", "}", ";", "(", ")", "+", "-", "*", "/", "!","=","==", "!=", "<", "<=", ">", ">=", "||", "&&", "$","num", "real", "true", "false","if","while","else","do","break","id","basic","" };
+    std::set<std::string> terminals = { "[","]","{", "}", ";", "(", ")", "+", "-", "*", "/", "!","=","==", "!=", "<", "<=", ">", ">=", "||", "&&", "$","num", "real", "true", "false","if","while","else","do","break","continue","id","basic",""};
     std::set<std::string> nonTerminals = { "program", "block", "decls", "decl", "type", "stmts", "stmt", "loc", "bool", "join", "equality", "rel", "expr", "term", "unary", "factor"};
     std::map<std::string, std::set<std::string>> firstSets;
     std::unordered_map<int, std::unordered_map<std::string, int>> actionTable; // Action Table
