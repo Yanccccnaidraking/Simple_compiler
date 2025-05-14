@@ -35,7 +35,7 @@ namespace Inter
 
         void error(const std::string& msg) {
             // 错误处理实现
-            throw std::runtime_error(msg);
+            throw std::runtime_error("Set Error:" + msg);
         }
     };
 }

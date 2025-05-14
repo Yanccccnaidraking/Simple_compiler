@@ -49,7 +49,12 @@ namespace Parser {
 		//调用对应的语义动作
 		void applyAction(int ruleIndex) {
 			if (ruleIndex >= 0 && ruleIndex < semanticActions.size()) {
-				semanticActions[ruleIndex]();  // 调用语义动作
+				try {
+					semanticActions[ruleIndex]();  // 调用语义动作
+				}
+				catch (const exception& e) {
+					error(e.what());
+				}
 			}
 		}
 
