@@ -8,6 +8,7 @@ namespace Inter {
 	public:
 		Continue() {
 			stmt = Stmt::Null;
+			Enclosing.insert(stmt);
 		}
 		void gen(int b, int a) { emit("goto L" + std::to_string(*(stmt->begin))); };
 	};
