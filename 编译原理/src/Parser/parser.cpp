@@ -24,12 +24,15 @@
 #include "Inter/rel.h"
 #include "Inter/unary.h"
 #include "Inter/not.h"
+#include "Inter/continue.h"
 #include <stack>
 namespace Parser {
 	Parser::Parser(Lexer::Lexer& l) : lexer(l), top(nullptr)
 	{
 		//deserializeItemSets("ItemSets.dat");
 		//printItemSets();
+		/*computeFirstSets();
+		printFirstSets();*/
 		loadGotoTable("GOTOTable.dat");
 		loadActionTable("ActionTable.dat");
 		//printActionTable();
@@ -186,6 +189,11 @@ namespace Parser {
 			},
 			[this]() {//stmt->break;
 				auto curStmt = std::make_shared<Inter::Break>();
+				stackTop--;
+				nodeStack[stackTop] = curStmt;
+			},
+			[this]() {//stmt->continue;
+				auto curStmt = std::make_shared<Inter::Continue>();
 				stackTop--;
 				nodeStack[stackTop] = curStmt;
 			},

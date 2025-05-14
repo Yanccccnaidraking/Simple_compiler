@@ -8,7 +8,7 @@ namespace Lexer {
 	  std::shared_ptr<Word> Word::le = std::make_shared<Word>("<=", Tag::LE);
 	  std::shared_ptr<Word> Word::ge = std::make_shared<Word>(">=", Tag::GE);
 	  std::shared_ptr<Word> Word::minus = std::make_shared<Word>("minus", Tag::MINUS);
-	  std::shared_ptr<Word> Word::true_ = std::make_shared<Word>("true", Tag::TRUE);
-	  std::shared_ptr<Word> Word::false_ = std::make_shared<Word>("false", Tag::FALSE);
+	  /*std::shared_ptr<Word> Word::true_ = std::make_shared<Word>("true", Tag::TRUE);
+	  std::shared_ptr<Word> Word::false_ = std::make_shared<Word>("false", Tag::FALSE);*/
 	  std::shared_ptr<Word> Word::temp = std::make_shared<Word>("temp", Tag::TEMP);
 }
