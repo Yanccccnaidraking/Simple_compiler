@@ -43,7 +43,7 @@ namespace Inter
 
     private:
         void error(const std::string& msg) {
-            throw std::runtime_error(msg);
+            throw std::runtime_error("Arith Error:" + msg);
         }
     };
 }

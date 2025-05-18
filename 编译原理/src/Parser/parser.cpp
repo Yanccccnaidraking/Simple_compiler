@@ -97,25 +97,25 @@ namespace Parser {
 				nodeStack[++stackTop] = nullptr;//不参与中间代码生成，仅用于与状态栈对齐
 			},
 			[this]() {//decl->type id;
-				std::shared_ptr<Inter::TerminalNode> idNode = std::dynamic_pointer_cast<Inter::TerminalNode>(nodeStack[stackTop - 1]);
-				std::shared_ptr<Inter::TypeNode> typeNode = std::dynamic_pointer_cast<Inter::TypeNode>(nodeStack[stackTop - 2]);
-				auto type = typeNode->type;
-				if (std::dynamic_pointer_cast<Symbols::Array>(type))
-				{
-					std::stack<int> sizeStack;
-					auto temp = type;
-					while (temp->tag != (int)(Lexer::Tag::BASIC))
+					std::shared_ptr<Inter::TerminalNode> idNode = std::dynamic_pointer_cast<Inter::TerminalNode>(nodeStack[stackTop - 1]);
+					std::shared_ptr<Inter::TypeNode> typeNode = std::dynamic_pointer_cast<Inter::TypeNode>(nodeStack[stackTop - 2]);
+					auto type = typeNode->type;
+					if (std::dynamic_pointer_cast<Symbols::Array>(type))
 					{
-						sizeStack.push((std::dynamic_pointer_cast<Symbols::Array>(temp))->size);
-						temp = (std::dynamic_pointer_cast<Symbols::Array>(temp))->of;
+						std::stack<int> sizeStack;
+						auto temp = type;
+						while (temp->tag != (int)(Lexer::Tag::BASIC))
+						{
+							sizeStack.push((std::dynamic_pointer_cast<Symbols::Array>(temp))->size);
+							temp = (std::dynamic_pointer_cast<Symbols::Array>(temp))->of;
+						}
+						(std::dynamic_pointer_cast<Symbols::Array>(type))->setWidth(sizeStack);
 					}
-					(std::dynamic_pointer_cast<Symbols::Array>(type))->setWidth(sizeStack);
-				}
-				auto word = std::dynamic_pointer_cast<Lexer::Word>(idNode->token);
-				std::shared_ptr<Inter::Id> id = std::make_shared<Inter::Id>(word, typeNode->type, used);
-				top->put(idNode->token->toString(), id);
-				used += typeNode->type->width;
-				stackTop -= 2;
+					auto word = std::dynamic_pointer_cast<Lexer::Word>(idNode->token);
+					std::shared_ptr<Inter::Id> id = std::make_shared<Inter::Id>(word, typeNode->type, used);
+					top->put(idNode->token->toString(), id);
+					used += typeNode->type->width;
+					stackTop -= 2;
 			},
 			[this]() {//type->type[num]
 				auto terNode = std::dynamic_pointer_cast<Inter::TypeNode>(nodeStack[stackTop - 3]);
@@ -147,7 +147,7 @@ namespace Parser {
 			[this]() {//stmt->loc=bool;
 				auto loc = std::dynamic_pointer_cast<Inter::Access>(nodeStack[stackTop - 3]);
 				auto boolNode = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 1]);
-				stackTop -= 3;
+				stackTop -= 3;				
 				if (loc->isArray) {
 					auto stmt = std::make_shared<Inter::SetElem>(loc, boolNode);
 					nodeStack[stackTop] = stmt;
@@ -155,7 +155,7 @@ namespace Parser {
 				else {
 					auto stmt = std::make_shared<Inter::Set>(loc->array, boolNode);
 					nodeStack[stackTop] = stmt;
-				}
+				}				
 			},
 			[this]() {//stmt->if (bool) stmt
 				auto stmt = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop]);
@@ -204,46 +204,38 @@ namespace Parser {
 			[this]() {//loc->loc[bool]
 				auto boolNode = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 1]);
 				auto loc = std::dynamic_pointer_cast<Inter::Access>(nodeStack[stackTop - 3]);
-				try {
-					std::shared_ptr<Symbols::Type> originType(loc->type);
-					std::shared_ptr<Symbols::Type> type = originType;
-					std::shared_ptr<Inter::Expr> w, t1, t2, loc1;
-					type = std::dynamic_pointer_cast<Symbols::Array>(type);
-					if (!type) {
-						error("访问非数组变量");
-					}
-					type = std::dynamic_pointer_cast<Symbols::Array>(type)->of;
-					w = std::make_shared<Inter::Constant>(type->width);
-					t1 = std::make_shared<Inter::Arith>(std::make_shared<Lexer::Token>('*'), boolNode, w);
-					if (loc->isArray) {
-						t2 = std::make_shared<Inter::Arith>(std::make_shared<Lexer::Token>('+'), loc->index, t1);
-						loc1 = t2;
-					}
-					else {
-						loc1 = t1;
-					}
-					auto curLoc = std::make_shared<Inter::Access>(loc->array, loc1, type, true);
-					stackTop -= 3;
-					nodeStack[stackTop] = curLoc;
+
+				std::shared_ptr<Symbols::Type> originType(loc->type);
+				std::shared_ptr<Symbols::Type> type = originType;
+				std::shared_ptr<Inter::Expr> w, t1, t2, loc1;
+				type = std::dynamic_pointer_cast<Symbols::Array>(type);
+				if (!type) {
+					throw std::runtime_error("访问非数组类型");
 				}
-				catch (exception e) {
-					std::cout << e.what() << std::endl;
+				type = std::dynamic_pointer_cast<Symbols::Array>(type)->of;
+				w = std::make_shared<Inter::Constant>(type->width);
+				t1 = std::make_shared<Inter::Arith>(std::make_shared<Lexer::Token>('*'), boolNode, w);
+				if (loc->isArray) {
+					t2 = std::make_shared<Inter::Arith>(std::make_shared<Lexer::Token>('+'), loc->index, t1);
+					loc1 = t2;
 				}
+				else {
+					loc1 = t1;
+				}
+				auto curLoc = std::make_shared<Inter::Access>(loc->array, loc1, type, true);
+				stackTop -= 3;
+				nodeStack[stackTop] = curLoc;
+
+				
 			},
 			[this]() {//loc->id
 				auto idNode = std::dynamic_pointer_cast<Inter::TerminalNode>(nodeStack[stackTop]);
-				try { // 处理使用没有声明的变量异常
-					auto id = top->get(idNode->token->toString());
-					if (id == nullptr) {
-						error("未声明的变量:" + idNode->token->toString());
-					}
-					auto curLoc = std::make_shared<Inter::Access>(id, nullptr,id->type, false);
-					nodeStack[stackTop] = curLoc;
+				auto id = top->get(idNode->token->toString());
+				if (id == nullptr) {
+					throw std::runtime_error("未声明的变量:" + idNode->token->toString());
 				}
-				catch (exception e) {
-					std::cout << e.what() << std::endl;
-				}
-				
+				auto curLoc = std::make_shared<Inter::Access>(id, nullptr,id->type, false);
+				nodeStack[stackTop] = curLoc;			
 			},
 			[this]() {//bool->bool || join
 				auto join = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop]);
@@ -459,59 +451,64 @@ namespace Parser {
 		bool finished = false;
 		std::deque<std::string> symbols;
 		std::string token = Lexer::tagToString(Lexer::Tag(look->tag));
-		while (!finished)
-		{
-			int cur = stateStack[stackTop];
-			//cout << "栈顶的数值是：" << cur << endl;
-			//cout<<token<<endl;
-			if (cur >= 0)
+		try{
+			while (!finished)
 			{
-				Action act = searchFromAction(cur, token);
-				switch (act.type)
+				int cur = stateStack[stackTop];
+				//cout << "栈顶的数值是：" << cur << endl;
+				//cout<<token<<endl;
+				if (cur >= 0)
 				{
-				case ActionType::Shift:
-					insertParserTable(stateStack, symbols, token, "移入");
-					if (token == "{") {
-						top = std::make_shared<Symbols::Env>(top);//进入新的语句块，作用域发生切换
-						scopes.push_back(top);
+					Action act = searchFromAction(cur, token);
+					switch (act.type)
+					{
+					case ActionType::Shift:
+						insertParserTable(stateStack, symbols, token, "移入");
+						if (token == "{") {
+							top = std::make_shared<Symbols::Env>(top);//进入新的语句块，作用域发生切换
+							scopes.push_back(top);
+						}
+						stateStack[++stackTop] = act.value;
+						nodeStack[stackTop] = std::make_shared<Inter::TerminalNode>(look);
+						move();
+						symbols.push_back(token);
+						token = Lexer::tagToString(Lexer::Tag(look->tag));
+						break;
+					case ActionType::Reduce:
+					{
+						try {
+							insertParserTable(stateStack, symbols, token, "根据" + toStringProduction(grammar[act.value]) + "规约");
+							applyAction(act.value);
+							int newState = searchFromGoto(stateStack[stackTop - 1], grammar[act.value].left);
+							stateStack[stackTop] = newState;
+							stateStack.setMaxSize(stackTop + 1);
+							symbols.push_back(grammar[act.value].left);
+							break;
+						}
+						catch (const std::exception& e) {
+							std::cerr << "在规约时发生错误: " << e.what() << std::endl;
+						}						
 					}
-					stateStack[++stackTop] = act.value;
-					nodeStack[stackTop] = std::make_shared<Inter::TerminalNode>(look);
-					move();
-					symbols.push_back(token);
-					token = Lexer::tagToString(Lexer::Tag(look->tag));
-					break;
-				case ActionType::Reduce:
-				{
-					insertParserTable(stateStack, symbols, token, "根据" + toStringProduction(grammar[act.value]) + "规约");
-					applyAction(act.value);
-					int newState = searchFromGoto(stateStack[stackTop - 1], grammar[act.value].left);
-					stateStack[stackTop] = newState;
-					stateStack.setMaxSize(stackTop+1);
-					symbols.push_back(grammar[act.value].left);
-					break;
-				}
-				case ActionType::Accept:
-					insertParserTable(stateStack, symbols, token, "接收");
-					applyAction(0);
-					finished = true;//语法分析结束
-					break;
-				case ActionType::Error:
-					try {
+					case ActionType::Accept:
+						insertParserTable(stateStack, symbols, token, "接收");
+						applyAction(0);
+						finished = true;//语法分析结束
+						break;
+					case ActionType::Error:
 						//调用错误恢复例程
 						error("语法分析错误");
+						break;
 					}
-					catch (exception e) {
-						std::cout<< e.what() << std::endl;
-						finished = true;
-					}
+				}
+				else
+				{
 					break;
 				}
 			}
-			else
-			{
-				break;
-			}
 		}
+		catch (const std::exception& e) {
+			std::cerr << e.what() << std::endl;
+		}
+		
 	}
 }
