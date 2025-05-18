@@ -67,10 +67,18 @@ namespace Parser {
        {"factor", {"num"}},  // 数字常量
        {"factor", {"real"}},  // 浮点数常量
        {"factor", {"true"}},  // 布尔常量 true
-       {"factor", {"false"}}  // 布尔常量 false
+       {"factor", {"false"}},  // 布尔常量 false
+
+       {"stmt",{"switch","(","expr",")","{","case_list","default_opt","}"}},//新增switch语句
+       {"case_list",{"case_list","case_stmt"}},
+       {"case_list",{""}},
+       {"case_stmt",{"case","expr",":","stmts"}},
+       {"default_opt",{"default",":","stmts"}},
+       {"default_opt",{""}},
+
     };
-    std::set<std::string> terminals = { "[","]","{", "}", ";", "(", ")", "+", "-", "*", "/", "!","=","==", "!=", "<", "<=", ">", ">=", "||", "&&", "$","num", "real", "true", "false","if","while","else","do","break","continue","id","basic",""};
-    std::set<std::string> nonTerminals = { "program", "block", "decls", "decl", "type", "stmts", "stmt", "loc", "bool", "join", "equality", "rel", "expr", "term", "unary", "factor"};
+    std::set<std::string> terminals = { "[","]","{", "}", ":",";", "(", ")", "+", "-", "*", "/", "!","=","==", "!=", "<", "<=", ">", ">=", "||", "&&", "$","num", "real", "true", "false","if","while","else","do","break","continue","switch","case","default","id","basic",""};
+    std::set<std::string> nonTerminals = { "program", "block", "decls", "decl", "type", "stmts", "stmt","case_list","default_opt","case_stmt","loc", "bool", "join", "equality", "rel", "expr","term", "unary", "factor"};
     std::map<std::string, std::set<std::string>> firstSets;
     std::unordered_map<int, std::unordered_map<std::string, int>> actionTable; // Action Table
     std::unordered_map<int, std::unordered_map<std::string, int>> gotoTable; // Goto Table

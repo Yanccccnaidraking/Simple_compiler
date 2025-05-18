@@ -1,8 +1,23 @@
 {
-    bool a;
-    a=true;
-    while (true)
+    int b;
+    b=1;
+    b=2;
+    switch(b)
     {
-        continue;
+        case 1:
+        b=1;
+        b=2;
+        b=3;
+        break;
+        case 2:
+        b=1;
+        b=2;
+        b=3;
+        break;
+        default:
+        b=1;
+        b=2;
+        b=3;
+        break;
     }
 }

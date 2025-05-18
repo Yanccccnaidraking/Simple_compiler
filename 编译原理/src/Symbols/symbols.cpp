@@ -86,13 +86,13 @@ namespace Symbols
 	/// <returns></returns>
 	std::shared_ptr<Type> Type::max(const std::shared_ptr<Type> p1, const std::shared_ptr<Type> p2)
 	{
-		int pr1 = typePriority(p1);
-		int pr2 = typePriority(p2);
+		const int pr1 = typePriority(p1);
+		const int pr2 = typePriority(p2);
 		if (pr1 == -1 || pr2 == -1)
 		{
 			return nullptr;
 		}
-		int maxPr = std::max(pr1, pr2);
+		const int maxPr = std::max(pr1,pr2);
 		switch (maxPr)
 		{
 		case 0:

@@ -1,6 +1,5 @@
 #include "Parser/parser.h"
 #include "Lexer/lexer.h"
-#include "Inter/stmt.h"
 #include "Lexer/Tag.h"
 #include "Lexer/Num.h"
 #include "Parser/lr_1.h"
@@ -25,6 +24,8 @@
 #include "Inter/unary.h"
 #include "Inter/not.h"
 #include "Inter/continue.h"
+#include "Inter/case.h"
+#include "Inter/switch.h"
 #include <stack>
 namespace Parser {
 	Parser::Parser(Lexer::Lexer& l) : lexer(l), top(nullptr)
@@ -397,6 +398,45 @@ namespace Parser {
 			},
 			[this]() {//factor->false
 				nodeStack[stackTop] = Inter::Constant::False;
+			},
+			[this]() {//stmt->switch(expr){case_list default_opt}
+				auto list = std::dynamic_pointer_cast<Inter::CaseList>(nodeStack[stackTop - 2]);
+				auto caseNode = std::dynamic_pointer_cast<Inter::Case>(nodeStack[stackTop-1]);
+				auto expr = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 5]);
+				auto swit = std::make_shared<Inter::Switch>(expr, list, caseNode);
+				stackTop -= 7;
+				nodeStack[stackTop] = swit;
+			},
+			[this]() {//case_list->case_list case_stmt
+				auto list = std::dynamic_pointer_cast<Inter::CaseList>(nodeStack[stackTop-1]);
+				auto caseNode = std::dynamic_pointer_cast<Inter::Case>(nodeStack[stackTop]);
+				list->addCase(caseNode);
+				stackTop--;
+			},
+			[this]() {//case_list->ε
+				auto list = std::make_shared<Inter::CaseList>();
+				stackTop++;
+				nodeStack[stackTop] = list;
+			},
+			[this]() {//case_stmt->case expr : stmts
+				auto stmt = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop]);
+				auto expr = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 2]);
+				if (!expr||!expr->isConst)
+				{
+					error("case语句必须仅包含常量");
+				}
+				auto caseNode = std::make_shared<Inter::Case>(expr, stmt);
+				stackTop -= 3;
+				nodeStack[stackTop] = caseNode;
+			},
+			[this]() {//default_opt->default : stmt
+				auto stmt = std::dynamic_pointer_cast<Inter::Stmt>(nodeStack[stackTop]);
+				auto caseNode = std::make_shared<Inter::Case>(nullptr, stmt);
+				stackTop -= 2;
+				nodeStack[stackTop] = caseNode;
+			},
+			[this]() {//default_opt->ε
+				nodeStack[++stackTop] = nullptr;
 			},
 		};
 	}

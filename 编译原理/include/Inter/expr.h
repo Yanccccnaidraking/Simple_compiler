@@ -11,8 +11,8 @@ namespace Inter {
 	public:
 		std::shared_ptr<Lexer::Token> op;
 		std::shared_ptr<Symbols::Type> type;
-
-		Expr(std::shared_ptr<Lexer::Token> tok, std::shared_ptr<Symbols::Type>  p) : op(tok), type(p) {}
+		bool isConst;
+		Expr(std::shared_ptr<Lexer::Token> tok, std::shared_ptr<Symbols::Type>  p, bool isConst = false) : op(tok), type(p),isConst(isConst) {}
 
 		virtual std::shared_ptr<Expr> gen() { return make_shared<Expr>(op,type); }
 		virtual std::shared_ptr<Expr> reduce() { return make_shared<Expr>(op,type); }

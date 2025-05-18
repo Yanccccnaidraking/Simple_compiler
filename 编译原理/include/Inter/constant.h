@@ -24,9 +24,9 @@ namespace Inter
         }*/
 
         // 构造函数实现
-        Constant(std::shared_ptr<Lexer::Token> tok, std::shared_ptr<Symbols::Type> p) : Expr(tok, p) {}
+        Constant(std::shared_ptr<Lexer::Token> tok, std::shared_ptr<Symbols::Type> p) : Expr(tok, p,true) {}
 
-        Constant(int i) : Expr(std::make_shared<Lexer::Num>(i), Symbols::Type::Int) {}
+        Constant(int i) : Expr(std::make_shared<Lexer::Num>(i), Symbols::Type::Int,true) {}
 
         // jumping方法实现
         void jumping(int t, int f) {

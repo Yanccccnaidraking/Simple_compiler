@@ -17,6 +17,8 @@ namespace Inter
             if (type == nullptr) {
                 error("type error");
             }
+            if (expr->isConst)
+                this->isConst = true;
         }
         std::shared_ptr<Expr> gen() { return std::make_shared<Unary>(op, expr->reduce()); }
         std::string toString() const { return op->toString() + " " + expr->toString(); }

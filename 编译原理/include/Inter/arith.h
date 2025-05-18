@@ -23,6 +23,10 @@ namespace Inter
             if (!type) {
                 error("type error");
             }
+            if (expr1->isConst && expr2->isConst)
+            {
+                this->isConst = true;//记录当前的表达式是否仅由常数构成
+            }
         }
 
         std::shared_ptr<Expr> gen() {
