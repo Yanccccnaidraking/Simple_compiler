@@ -53,7 +53,7 @@ namespace Parser {
 					semanticActions[ruleIndex]();  // 调用语义动作
 				}
 				catch (const exception& e) {
-					error(e.what());
+					throw runtime_error(e.what());
 				}
 			}
 		}
