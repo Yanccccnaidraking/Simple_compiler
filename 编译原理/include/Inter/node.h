@@ -19,7 +19,7 @@ namespace Inter {
 		virtual ~Node() = default;
 
 		void error(std::string s) {
-			throw std::runtime_error("line + " + std::to_string(lexline) + ": " + s);
+			throw std::runtime_error(": " + s);
 		}
 
 		int newlabel() { return labels++; }
