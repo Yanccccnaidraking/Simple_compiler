@@ -395,6 +395,10 @@ namespace Parser {
 				auto list = std::dynamic_pointer_cast<Inter::CaseList>(nodeStack[stackTop - 2]);
 				auto caseNode = std::dynamic_pointer_cast<Inter::Case>(nodeStack[stackTop-1]);
 				auto expr = std::dynamic_pointer_cast<Inter::Expr>(nodeStack[stackTop - 5]);
+				if (expr&&expr->type!=Symbols::Type::Int)
+				{
+					error("switch”Ôæ‰±ÿ–Î «Int–Õ");
+				}
 				auto swit = std::make_shared<Inter::Switch>(expr, list, caseNode);
 				stackTop -= 7;
 				nodeStack[stackTop] = swit;

@@ -1,23 +1,9 @@
 {
-    int b;
-    b=1;
-    b=2;
-    switch(b)
+    float f;
+    f=3.14;
+    switch(f)
     {
         case 1:
-        b=1;
-        b=2;
-        b=3;
-        break;
-        case 2:
-        b=1;
-        b=2;
-        b=3;
-        break;
-        default:
-        b=1;
-        b=2;
-        b=3;
         break;
     }
 }
