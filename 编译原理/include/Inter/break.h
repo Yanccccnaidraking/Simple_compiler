@@ -16,6 +16,10 @@ namespace Inter
 			Enclosing.insert(stmt);
 		}
 
-		void gen(int b, int a) { emit("goto L" + std::to_string(*(stmt->after))); };
+		void gen(int b, int a) { 
+			if (*(stmt->after) == 0)
+				error("break语句必须在循环或switch中使用");
+			emit("goto L" + std::to_string(*(stmt->after))); 
+		}
 	};
 }
