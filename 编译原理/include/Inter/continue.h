@@ -10,6 +10,12 @@ namespace Inter {
 			stmt = Stmt::Null;
 			Enclosing.insert(stmt);
 		}
-		void gen(int b, int a) { emit("goto L" + std::to_string(*(stmt->begin))); };
+		void gen(int b, int a) { 
+			if (*(stmt->begin)==0)
+			{
+				error("continue语句必须在循环或switch语句内");
+			}
+			emit("goto L" + std::to_string(*(stmt->begin))); 
+		}
 	};
 }
