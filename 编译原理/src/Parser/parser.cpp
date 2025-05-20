@@ -81,7 +81,7 @@ namespace Parser {
 					s->emitlabel(begin); s->gen(begin, after); s->emitlabel(after);
 				}
 				else {
-					throw std::runtime_error("Óï¾ä¿é½âÎöÒì³£");
+					error("Óï¾ä¿é½âÎöÒì³£");
 				}
 			},
 			[this]() {//block->{decls stmts} 
