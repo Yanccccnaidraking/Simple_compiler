@@ -55,6 +55,8 @@ std::map<Lexer::Tag, std::string> tagToString = {
     {Lexer::Tag::ARROW, "ARROW"},
     {Lexer::Tag::STRING,"STRING"},
     {Lexer::Tag::CHAR,"CHAR"},
+    {Lexer::Tag::CONTINUE,"CONTINUE"},
+    {Lexer::Tag::SWITCH,"SWITCH"},
 };
 
 // 获取枚举对应的字符串
@@ -67,40 +69,40 @@ static std::string getEnumString(Lexer::Tag tag) {
 }
 
 int main() {
-    ////词法分析部分输出
-    //// 创建Lexer对象
-    //Lexer::Lexer lexer = Lexer::Lexer("input.txt");
-    //// 扫描并输出词法单元
-    //std::shared_ptr<Lexer::Token> token;
-
-    //while ((token = lexer.scan())->tag!=(int)Lexer::Tag::END) {
-    //    if (auto num = std::dynamic_pointer_cast<Lexer::Num>(token)) {
-    //        std::cout << "<" << num->toString() << ", " << getEnumString((Lexer::Tag)num->tag) << ">" << std::endl;
-    //    }
-    //    else if (auto real = std::dynamic_pointer_cast<Lexer::Real>(token)) {
-    //        std::cout << "<" << real->toString() << ", " << getEnumString((Lexer::Tag)real->tag) << ">" << std::endl;
-    //    }
-    //    else if (auto word = std::dynamic_pointer_cast<Lexer::Word>(token)) {
-    //        std::cout << "<" << word->toString() << ", " << getEnumString((Lexer::Tag)word->tag) << ">" << std::endl;
-    //    }
-    //    else if (auto str = std::dynamic_pointer_cast<Lexer::String>(token)) {
-    //        std::cout << "<" << str->toString() << ", " << getEnumString((Lexer::Tag)str->tag) << ">" << std::endl;
-    //    }
-    //    else if (auto str = std::dynamic_pointer_cast<Lexer::Char>(token)) {
-    //        std::cout << "<" << str->toString() << ", " << getEnumString((Lexer::Tag)str->tag) << ">" << std::endl;
-    //    }
-    //    else {
-    //        std::cout << "<" << token->toString() <<","<<token->toString() << ">" << std::endl;
-    //    }
-    //}
-    //// 输出错误信息
-    //std::cout << "\n错误信息：\n" << "\033[31m" << lexer.error_info << "\033[0m" << std::endl;
-
-    //语法分析阶段输出
+    //词法分析部分输出
+    // 创建Lexer对象
     Lexer::Lexer lexer = Lexer::Lexer("input.txt");
-    Parser::Parser parser = Parser::Parser(lexer);
-    parser.program();
-    Parser::writeParserCSV("parsertable.csv");
-    parser.showScopes();
+    // 扫描并输出词法单元
+    std::shared_ptr<Lexer::Token> token;
+
+    while ((token = lexer.scan())->tag!=(int)Lexer::Tag::END) {
+        if (auto num = std::dynamic_pointer_cast<Lexer::Num>(token)) {
+            std::cout << "<" << num->toString() << ", " << getEnumString((Lexer::Tag)num->tag) << ">" << std::endl;
+        }
+        else if (auto real = std::dynamic_pointer_cast<Lexer::Real>(token)) {
+            std::cout << "<" << real->toString() << ", " << getEnumString((Lexer::Tag)real->tag) << ">" << std::endl;
+        }
+        else if (auto word = std::dynamic_pointer_cast<Lexer::Word>(token)) {
+            std::cout << "<" << word->toString() << ", " << getEnumString((Lexer::Tag)word->tag) << ">" << std::endl;
+        }
+        else if (auto str = std::dynamic_pointer_cast<Lexer::String>(token)) {
+            std::cout << "<" << str->toString() << ", " << getEnumString((Lexer::Tag)str->tag) << ">" << std::endl;
+        }
+        else if (auto str = std::dynamic_pointer_cast<Lexer::Char>(token)) {
+            std::cout << "<" << str->toString() << ", " << getEnumString((Lexer::Tag)str->tag) << ">" << std::endl;
+        }
+        else {
+            std::cout << "<" << token->toString() <<","<<token->toString() << ">" << std::endl;
+        }
+    }
+    // 输出错误信息
+    std::cout << "\n错误信息：\n" << "\033[31m" << lexer.error_info << "\033[0m" << std::endl;
+
+    ////语法分析阶段输出
+    //Lexer::Lexer lexer = Lexer::Lexer("input.txt");
+    //Parser::Parser parser = Parser::Parser(lexer);
+    //parser.program();
+    //Parser::writeParserCSV("parsertable.csv");
+    //parser.showScopes();
     return 0;
 }

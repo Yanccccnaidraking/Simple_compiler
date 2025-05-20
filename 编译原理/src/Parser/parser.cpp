@@ -499,7 +499,7 @@ namespace Parser {
 						finished = true;//语法分析结束
 						break;
 					case ActionType::Error:
-						//调用错误恢复例程
+						//调用错误报告例程
 						error("语法分析错误");
 						break;
 					}
@@ -513,6 +513,10 @@ namespace Parser {
 		catch (const std::exception& e) {
 			std::cerr << e.what() << std::endl;
 		}
-		
+		if (lexer.error_info != "")
+		{
+			cout <<"\033[31m"<< "\n词法分析错误详情：" << endl;
+			cout << lexer.error_info << "\033[0m" << endl;
+		}
 	}
 }
