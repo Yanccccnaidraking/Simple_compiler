@@ -12,7 +12,7 @@ namespace Lexer {
 		Char(std::string v) :  string_value(v), value(transformToChar(v)), Token(Tag::CHAR) {}
 
 		//std::string toString() const { return string_value; }
-		std::string toString() const { return ""+value; }
+		std::string toString() const { return  std::string(1, value);}
 
         inline char transformToChar(std::string s) {
             char c;
